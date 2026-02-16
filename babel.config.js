@@ -26,6 +26,13 @@ module.exports = function (api) {
         }
       ],
       "react-native-reanimated/plugin",
+      // Define import.meta.env.MODE for web compatibility
+      [
+        "babel-plugin-transform-define",
+        {
+          "import.meta.env.MODE": JSON.stringify("production")
+        }
+      ]
     ],
   };
 };
