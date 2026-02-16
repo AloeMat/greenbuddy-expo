@@ -211,11 +211,26 @@ export default function Page5() {
 
         <Animated.View entering={FadeInDown.delay(1200)}>
           <TouchableOpacity
-            disabled
-            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, opacity: 0.5 }}
+            onPress={async () => {
+              // Skip camera for testing - use placeholder identification
+              const identification = {
+                commonName: 'Monstera Deliciosa',
+                scientificName: 'Monstera deliciosa',
+                genus: 'Monstera',
+                family: 'Araceae',
+                confidence: 75,
+                description: 'A tropical flowering plant native to Mexico',
+                source: 'cache' as const,
+              };
+              setPlantData('placeholder_base64', identification);
+              addXP(5);
+              markPageComplete('page5');
+              router.push('/onboarding/page5_identification');
+            }}
+            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
           >
             <Search size={20} color={onboardingColors.green[700]} />
-            <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Je connais le nom</Text>
+            <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Skip (test)</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
