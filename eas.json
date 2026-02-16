@@ -9,7 +9,6 @@
       "distribution": "internal"
     },
     "preview": {
-      "appVersionSource": "local",
       "autoIncrement": true,
       "distribution": "internal",
       "android": {
@@ -20,7 +19,6 @@
       }
     },
     "production": {
-      "appVersionSource": "local",
       "autoIncrement": true,
       "android": {
         "buildType": "app-bundle"
