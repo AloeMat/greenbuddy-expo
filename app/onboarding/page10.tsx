@@ -57,7 +57,7 @@ export default function Page10() {
         <ConfettiExplosion visible={showConfetti} />
       </View>
 
-      <ScrollView className="flex-1 bg-gradient-to-b from-green-50 to-green-100">
+      <ScrollView className="flex-1 bg-green-50">
       {/* Header with progress bar (100%) */}
       <View className="pt-12 px-6">
         <View className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">

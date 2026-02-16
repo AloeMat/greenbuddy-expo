@@ -11,8 +11,7 @@ export default function OnboardingLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
-        animationEnabled: true
+        headerShown: false
       }}
     >
       {/* Page 1: Welcome */}

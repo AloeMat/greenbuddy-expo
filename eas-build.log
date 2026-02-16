@@ -1,0 +1,4 @@
+eas.json is not valid.
+- "build.preview.appVersionSource" is not allowed
+- "build.production.appVersionSource" is not allowed
+    Error: build command failed.

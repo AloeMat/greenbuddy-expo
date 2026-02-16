@@ -5,7 +5,14 @@ import { OptionCard } from '@onboarding/components';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAIN_POINTS, PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 
-const options = [
+interface Option {
+  label: string;
+  value: string;
+  xp: number;
+  feedback: string;
+}
+
+const options: Option[] = [
   {
     label: PAIN_POINTS.oui_une.label,
     value: 'oui_une',
@@ -34,7 +41,7 @@ export default function Page4() {
     setCurrentPage('page4');
   }, [setCurrentPage]);
 
-  const handleSelect = (option: any) => {
+  const handleSelect = (option: Option) => {
     setPainPoint(option.value);
     addXP(option.xp);
     markPageComplete('page4');
