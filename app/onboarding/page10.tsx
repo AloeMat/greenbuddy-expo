@@ -10,7 +10,6 @@ import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { useGamificationStore } from '@gamification/store';
 import { ConfettiExplosion } from '@design-system/animations';
 import { trackPageView, trackCompletion } from '@onboarding/utils/analytics';
-import { PAGE_PROGRESS, TOTAL_POSSIBLE_XP } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
 
 export default function Page10() {
@@ -157,7 +156,7 @@ export default function Page10() {
         </Animated.View>
 
         {/* Footer button */}
-        <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] ]}>
+        <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
           <Animated.View entering={FadeInDown.delay(1600)}>
             <TouchableOpacity
               testID="button-discover-garden"
