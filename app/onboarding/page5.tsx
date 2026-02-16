@@ -28,13 +28,14 @@ export default function Page5() {
   useEffect(() => {
     if (cameraRef.current) {
       cameraService.setRef(cameraRef.current);
+      console.log('📸 CameraRef set successfully');
     }
 
     return () => {
       cameraService.setRef(null);
       cameraService.setReady(false);
     };
-  }, []);
+  }, [state]); // Re-run when state changes (camera mounts/unmounts)
 
   const handleTakePicture = async () => {
     if (!cameraRef.current) {
