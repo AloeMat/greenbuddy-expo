@@ -21,23 +21,22 @@ export default function Page1() {
   };
 
   return (
-    <View className="flex-1 bg-green-50" testID="onboarding-page1">
+    <View style={{ flex: 1, backgroundColor: '#F0FDF4' }} testID="onboarding-page1">
       {/* Header with progress bar */}
-      <View className="pt-12 px-6">
-        <View className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2" testID="progress-bar">
+      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
+        <View style={{ height: 8, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }} testID="progress-bar">
           <Animated.View
             entering={FadeIn}
-            className="h-full bg-green-500"
-            style={{ width: `${PAGE_PROGRESS.page1}%` }}
+            style={{ height: '100%', backgroundColor: '#10B981', width: `${PAGE_PROGRESS.page1}%` }}
           />
         </View>
-        <Text className="text-xs text-gray-500 text-right">Étape 1/14</Text>
+        <Text style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'right' }}>Étape 1/14</Text>
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} className="flex-1 justify-center px-6">
+      <Animated.View entering={FadeInDown.springify()} style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 24 }}>
         {/* Icon */}
-        <View className="items-center mb-8">
+        <View style={{ alignItems: 'center', marginBottom: 32 }}>
           <Animated.View entering={FadeInDown.delay(200).springify()}>
             <Leaf size={80} color="#10B981" strokeWidth={1.5} />
           </Animated.View>
@@ -46,7 +45,7 @@ export default function Page1() {
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          className="text-3xl font-bold text-green-900 text-center mb-4"
+          style={{ fontSize: 30, fontWeight: 'bold', color: '#065F46', textAlign: 'center', marginBottom: 16 }}
         >
           Vos plantes ont déjà une voix
         </Animated.Text>
@@ -54,27 +53,27 @@ export default function Page1() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(600)}
-          className="text-lg text-gray-700 text-center mb-8"
+          style={{ fontSize: 18, color: '#4B5563', textAlign: 'center', marginBottom: 32 }}
         >
           Nous allons simplement vous aider à l'entendre.
         </Animated.Text>
       </Animated.View>
 
       {/* Footer buttons */}
-      <View className="px-6 pb-8 gap-3">
+      <View style={{ paddingHorizontal: 24, paddingBottom: 32, gap: 12 }}>
         <Animated.View entering={FadeInDown.delay(800)}>
           <TouchableOpacity
             testID="button-start"
             onPress={handleStart}
-            className="bg-green-500 rounded-lg py-4 items-center"
+            style={{ backgroundColor: '#10B981', borderRadius: 8, paddingVertical: 16, alignItems: 'center' }}
           >
-            <Text className="text-white font-semibold text-lg">Commencer</Text>
+            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Commencer</Text>
           </TouchableOpacity>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1000)}>
-          <TouchableOpacity testID="button-how-it-works" className="border-2 border-green-500 rounded-lg py-4 items-center">
-            <Text className="text-green-700 font-semibold text-lg">Comment ça marche ?</Text>
+          <TouchableOpacity testID="button-how-it-works" style={{ borderWidth: 2, borderColor: '#10B981', borderRadius: 8, paddingVertical: 16, alignItems: 'center' }}>
+            <Text style={{ color: '#047857', fontWeight: '600', fontSize: 18 }}>Comment ça marche ?</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
