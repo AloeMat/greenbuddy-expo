@@ -3,102 +3,82 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput, ActivityIndicator,
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Lock, Mail } from 'lucide-react-native';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { useAuth } from '@auth/store';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
-import { logger } from '@lib/services/logger';
+import { onboardingColors } from '@design-system/onboarding/colors';
+import { page9Schema, type Page9FormData } from '@lib/validation/onboarding';
 
 export default function Page9() {
   const { setCurrentPage, plantName, addXP, markPageComplete } = useOnboardingStore();
   const { signUp } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const {
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
+    setValue,
+  } = useForm<Page9FormData>({
+    resolver: zodResolver(page9Schema),
+    mode: 'onChange',
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
   useEffect(() => {
     trackPageView('page9');
     setCurrentPage('page9');
   }, [setCurrentPage]);
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!email.trim()) {
-      newErrors.email = 'Email requis';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Email invalide';
-    }
-
-    if (!password) {
-      newErrors.password = 'Mot de passe requis';
-    } else if (password.length < 6) {
-      newErrors.password = 'Au moins 6 caractères';
-    }
-
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSignUp = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
+  const handleSignUp = handleSubmit(async (data) => {
     if (!signUp) {
-      logger.error('❌ SignUp function not available');
       Alert.alert('Erreur', 'Service d\'authentification indisponible', [{ text: 'OK' }]);
       return;
     }
 
     setIsLoading(true);
     try {
-      logger.info('📝 Creating account...');
-      await signUp(email, password);
+      await signUp(data.email, data.password);
 
       addXP(10);
       markPageComplete('page9');
 
-      logger.info('✅ Account created successfully');
-
-      // Navigate to page10
       router.push('/onboarding/page10');
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Erreur lors de la création du compte';
-      logger.error('❌ Signup error:', errorMessage);
       Alert.alert('Erreur', errorMessage, [{ text: 'OK' }]);
     } finally {
       setIsLoading(false);
     }
-  };
+  });
 
   return (
-    <ScrollView testID="onboarding-page9" className="flex-1 bg-green-50">
+    <ScrollView testID="onboarding-page9" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View className="pt-12 px-6">
-        <View testID="progress-bar" className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
+        <View testID="progress-bar" style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
           <Animated.View
             entering={FadeIn}
-            className="h-full bg-green-500"
-            style={{ width: `${PAGE_PROGRESS.page9}%` }}
+            style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page9}%` }}
           />
         </View>
-        <Text className="text-xs text-gray-500 text-right">Étape 13/14</Text>
+        <Text style={{ fontSize: 12, color: onboardingColors.text.muted, textAlign: 'right' }}>Étape 13/14</Text>
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} className="px-6 py-8">
+      <Animated.View entering={FadeInDown.springify()} style={{ paddingHorizontal: 24, paddingVertical: 32 }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          className="text-3xl font-bold text-green-900 text-center mb-2"
+          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
         >
           Sauvegardez {plantName}
         </Animated.Text>
@@ -106,100 +86,106 @@ export default function Page9() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          className="text-base text-gray-700 text-center mb-8"
+          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 32 }}
         >
           Créez un compte pour sauvegarder vos plantes et recevoir des alertes
         </Animated.Text>
 
         {/* Email field */}
-        <Animated.View entering={FadeInDown.delay(600)} className="mb-6">
-          <Text className="text-sm font-semibold text-gray-900 mb-2">Adresse email</Text>
-          <View className="flex-row items-center border-2 border-gray-300 rounded-lg bg-white">
-            <Mail size={20} color="#999" className="ml-3" />
+        <Animated.View entering={FadeInDown.delay(600)} style={{ marginBottom: 24 }}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 8 }}>Adresse email</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: errors.email ? onboardingColors.error : onboardingColors.gray[200], borderRadius: 8, backgroundColor: 'white' }}>
+            <Mail size={20} color={onboardingColors.text.muted} style={{ marginLeft: 12 }} />
             <TextInput
               testID="input-email"
-              value={email}
-              onChangeText={setEmail}
+              value={watch('email')}
+              onChangeText={(value) => setValue('email', value)}
               placeholder="votre@email.com"
               editable={!isLoading}
-              className="flex-1 px-3 py-3 text-base"
+              style={{ flex: 1, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 }}
               keyboardType="email-address"
               autoCapitalize="none"
-              placeholderTextColor="#999"
+              placeholderTextColor={onboardingColors.text.muted}
             />
           </View>
-          {errors.email && <Text className="text-red-600 text-xs mt-1">{errors.email}</Text>}
+          {errors.email && <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: 4 }}>{errors.email.message}</Text>}
         </Animated.View>
 
         {/* Password field */}
-        <Animated.View entering={FadeInDown.delay(800)} className="mb-6">
-          <Text className="text-sm font-semibold text-gray-900 mb-2">Mot de passe</Text>
-          <View className="flex-row items-center border-2 border-gray-300 rounded-lg bg-white">
-            <Lock size={20} color="#999" className="ml-3" />
+        <Animated.View entering={FadeInDown.delay(800)} style={{ marginBottom: 24 }}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 8 }}>Mot de passe</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: errors.password ? onboardingColors.error : onboardingColors.gray[200], borderRadius: 8, backgroundColor: 'white' }}>
+            <Lock size={20} color={onboardingColors.text.muted} style={{ marginLeft: 12 }} />
             <TextInput
               testID="input-password"
-              value={password}
-              onChangeText={setPassword}
+              value={watch('password')}
+              onChangeText={(value) => setValue('password', value)}
               placeholder="••••••"
               editable={!isLoading}
-              className="flex-1 px-3 py-3 text-base"
+              style={{ flex: 1, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 }}
               secureTextEntry
-              placeholderTextColor="#999"
+              placeholderTextColor={onboardingColors.text.muted}
             />
           </View>
-          {errors.password && <Text className="text-red-600 text-xs mt-1">{errors.password}</Text>}
+          {errors.password && <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: 4 }}>{errors.password.message}</Text>}
         </Animated.View>
 
         {/* Confirm password field */}
-        <Animated.View entering={FadeInDown.delay(1000)} className="mb-8">
-          <Text className="text-sm font-semibold text-gray-900 mb-2">Confirmer le mot de passe</Text>
-          <View className="flex-row items-center border-2 border-gray-300 rounded-lg bg-white">
-            <Lock size={20} color="#999" className="ml-3" />
+        <Animated.View entering={FadeInDown.delay(1000)} style={{ marginBottom: 32 }}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 8 }}>Confirmer le mot de passe</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: errors.confirmPassword ? onboardingColors.error : onboardingColors.gray[200], borderRadius: 8, backgroundColor: 'white' }}>
+            <Lock size={20} color={onboardingColors.text.muted} style={{ marginLeft: 12 }} />
             <TextInput
               testID="input-confirm-password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
+              value={watch('confirmPassword')}
+              onChangeText={(value) => setValue('confirmPassword', value)}
               placeholder="••••••"
               editable={!isLoading}
-              className="flex-1 px-3 py-3 text-base"
+              style={{ flex: 1, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 }}
               secureTextEntry
-              placeholderTextColor="#999"
+              placeholderTextColor={onboardingColors.text.muted}
             />
           </View>
           {errors.confirmPassword && (
-            <Text className="text-red-600 text-xs mt-1">{errors.confirmPassword}</Text>
+            <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: 4 }}>{errors.confirmPassword.message}</Text>
           )}
         </Animated.View>
 
         {/* Info box */}
         <Animated.View
           entering={FadeInDown.delay(1200)}
-          className="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-4 mb-8"
+          style={{ backgroundColor: onboardingColors.green[50], borderLeftWidth: 4, borderLeftColor: onboardingColors.green[500], borderBottomRightRadius: 8, borderTopRightRadius: 8, padding: 16, marginBottom: 32 }}
         >
-          <Text className="text-sm text-green-900">
+          <Text style={{ fontSize: 14, color: onboardingColors.text.primary }}>
             🔒 Vos données sont sécurisées et ne seront jamais partagées sans votre consentement.
           </Text>
         </Animated.View>
       </Animated.View>
 
       {/* Footer button */}
-      <View className="px-6 pb-8">
+      <View style={{ paddingHorizontal: 24, paddingBottom: 32 }}>
         <Animated.View entering={FadeInDown.delay(1400)}>
           <TouchableOpacity
             testID="button-signup"
             onPress={handleSignUp}
-            disabled={isLoading}
-            className={`rounded-lg py-4 items-center flex-row justify-center gap-2 ${
-              isLoading ? 'bg-gray-300' : 'bg-green-500'
-            }`}
+            disabled={isLoading || !isValid}
+            style={{
+              borderRadius: 8,
+              paddingVertical: 16,
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              gap: 8,
+              backgroundColor: isLoading || !isValid ? onboardingColors.gray[200] : onboardingColors.green[500]
+            }}
           >
             {isLoading ? (
               <>
                 <ActivityIndicator color="white" />
-                <Text className="text-white font-semibold text-lg">Création en cours...</Text>
+                <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Création en cours...</Text>
               </>
             ) : (
-              <Text className="text-white font-semibold text-lg">Créer mon compte</Text>
+              <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Créer mon compte</Text>
             )}
           </TouchableOpacity>
         </Animated.View>

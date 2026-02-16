@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
-import { logger } from '@lib/services/logger';
+import { onboardingColors } from '@design-system/onboarding/colors';
 
 export default function Page5Identification() {
   const { setCurrentPage, markPageComplete, identifiedPlant } = useOnboardingStore();
@@ -43,24 +43,23 @@ export default function Page5Identification() {
   }, [markPageComplete]);
 
   return (
-    <View className="flex-1 bg-green-50">
+    <View style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View className="pt-12 px-6">
-        <View className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
+        <View style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
           <Animated.View
-            style={{ width: `${PAGE_PROGRESS.page5_identification}%` }}
-            className="h-full bg-green-500"
+            style={{ width: `${PAGE_PROGRESS.page5_identification}%`, height: '100%', backgroundColor: onboardingColors.green[500] }}
           />
         </View>
-        <Text className="text-xs text-gray-500 text-right">Étape 8/14</Text>
+        <Text style={{ fontSize: 12, color: onboardingColors.text.muted, textAlign: 'right' }}>Étape 8/14</Text>
       </View>
 
       {/* Main content */}
-      <View className="flex-1 justify-center items-center px-6">
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown}
-          className="text-2xl font-bold text-green-900 text-center mb-4"
+          style={{ fontSize: 24, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 16 }}
         >
           Identification en cours...
         </Animated.Text>
@@ -68,17 +67,16 @@ export default function Page5Identification() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          className="text-base text-gray-700 text-center mb-8"
+          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 32 }}
         >
           On analyse votre plante pour vous donner les meilleurs conseils.
         </Animated.Text>
 
         {/* Loading spinner */}
-        <Animated.View entering={FadeInDown.delay(400)} className="items-center">
-          <ActivityIndicator size="large" color="#10B981" />
+        <Animated.View entering={FadeInDown.delay(400)} style={{ alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={onboardingColors.green[500]} />
           <Animated.Text
-            style={animatedStyle}
-            className="text-xl text-green-600 font-semibold mt-8"
+            style={[animatedStyle, { fontSize: 20, color: onboardingColors.green[500], fontWeight: '600', marginTop: 32 }]}
           >
             🌿
           </Animated.Text>
@@ -86,11 +84,11 @@ export default function Page5Identification() {
 
         {/* Identified plant info (if available) */}
         {identifiedPlant && (
-          <Animated.View entering={FadeInDown.delay(600)} className="mt-8 text-center">
-            <Text className="text-base text-gray-700">
+          <Animated.View entering={FadeInDown.delay(600)} style={{ marginTop: 32, alignItems: 'center' }}>
+            <Text style={{ fontSize: 16, color: onboardingColors.text.secondary }}>
               Nous avons identifié : {identifiedPlant.commonName}
             </Text>
-            <Text className="text-sm text-gray-500 mt-2">{identifiedPlant.scientificName}</Text>
+            <Text style={{ fontSize: 14, color: onboardingColors.text.muted, marginTop: 8 }}>{identifiedPlant.scientificName}</Text>
           </Animated.View>
         )}
       </View>

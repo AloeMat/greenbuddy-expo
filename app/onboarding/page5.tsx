@@ -9,7 +9,7 @@ import { trackPageView } from '@onboarding/utils/analytics';
 import { cameraService } from '@plants/services/camera';
 import { plantNetService } from '@plants/services/plantnet';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
-import { logger } from '@lib/services/logger';
+import { onboardingColors } from '@design-system/onboarding/colors';
 
 type CameraState = 'ready' | 'error' | 'camera_open';
 
@@ -39,7 +39,6 @@ export default function Page5() {
   const handleTakePicture = async () => {
     if (!cameraRef.current) {
       const msg = 'Camera reference not available';
-      logger.error(msg);
       setState('error');
       setErrorMsg(msg);
       return;
@@ -68,7 +67,6 @@ export default function Page5() {
       const base64 = await cameraService.getBase64(compressed);
 
       // Identify plant
-      logger.info('🌿 Identifying plant with PlantNet + Gemini...');
       const identification = await plantNetService.identifyPlant(base64);
 
       // Save to store
@@ -80,7 +78,6 @@ export default function Page5() {
       router.push('/onboarding/page5_identification');
     } catch (error) {
       const errorText = error instanceof Error ? error.message : 'Erreur inconnue';
-      logger.error('📸 Camera error:', errorText);
       setState('error');
       setErrorMsg(errorText);
     }
@@ -95,31 +92,30 @@ export default function Page5() {
 
   if (state === 'camera_open') {
     return (
-      <View className="flex-1 bg-black">
+      <View style={{ flex: 1, backgroundColor: 'black' }}>
         <CameraView
           ref={cameraRef}
           facing="back"
-          className="flex-1"
+          style={{ flex: 1 }}
           onCameraReady={handleCameraReady}
         >
           {/* Progress bar */}
-          <View className="absolute top-0 left-0 right-0 px-6 pt-12">
-            <View className="h-2 bg-gray-300 rounded-full overflow-hidden mb-2">
+          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, paddingHorizontal: 24, paddingTop: 48 }}>
+            <View style={{ height: 8, backgroundColor: 'rgba(229, 231, 235, 0.5)', borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
               <Animated.View
                 entering={FadeIn}
-                className="h-full bg-green-500"
-                style={{ width: `${PAGE_PROGRESS.page5}%` }}
+                style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page5}%` }}
               />
             </View>
-            <Text className="text-xs text-gray-300 text-right">Étape 7/14</Text>
+            <Text style={{ fontSize: 12, color: 'rgba(255, 255, 255, 0.7)', textAlign: 'right' }}>Étape 7/14</Text>
           </View>
 
           {/* Capture button */}
-          <View className="absolute bottom-8 left-0 right-0 items-center">
+          <View style={{ position: 'absolute', bottom: 32, left: 0, right: 0, alignItems: 'center' }}>
             <TouchableOpacity
               onPress={handleTakePicture}
               disabled={isCapturing}
-              className="w-20 h-20 rounded-full bg-green-500 items-center justify-center"
+              style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: onboardingColors.green[500], alignItems: 'center', justifyContent: 'center' }}
             >
               {isCapturing ? (
                 <ActivityIndicator color="white" size="large" />
@@ -127,15 +123,15 @@ export default function Page5() {
                 <Camera size={40} color="white" />
               )}
             </TouchableOpacity>
-            <Text className="text-white mt-4 text-center">Appuyez pour prendre une photo</Text>
+            <Text style={{ color: 'white', marginTop: 16, textAlign: 'center' }}>Appuyez pour prendre une photo</Text>
           </View>
 
           {/* Back button */}
           <TouchableOpacity
             onPress={() => router.back()}
-            className="absolute top-12 left-6 bg-black/50 rounded-full p-2"
+            style={{ position: 'absolute', top: 48, left: 24, backgroundColor: 'rgba(0, 0, 0, 0.5)', borderRadius: 20, paddingHorizontal: 8, paddingVertical: 8 }}
           >
-            <Text className="text-white text-xl">←</Text>
+            <Text style={{ color: 'white', fontSize: 20 }}>←</Text>
           </TouchableOpacity>
         </CameraView>
       </View>
@@ -143,25 +139,24 @@ export default function Page5() {
   }
 
   return (
-    <View className="flex-1 bg-green-50">
+    <View style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View className="pt-12 px-6">
-        <View className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
+        <View style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
           <Animated.View
             entering={FadeIn}
-            className="h-full bg-green-500"
-            style={{ width: `${PAGE_PROGRESS.page5}%` }}
+            style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page5}%` }}
           />
         </View>
-        <Text className="text-xs text-gray-500 text-right">Étape 7/14</Text>
+        <Text style={{ fontSize: 12, color: onboardingColors.text.muted, textAlign: 'right' }}>Étape 7/14</Text>
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} className="flex-1 justify-center px-6">
+      <Animated.View entering={FadeInDown.springify()} style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 24 }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          className="text-3xl font-bold text-green-900 text-center mb-2"
+          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
         >
           Ajoutons votre première plante
         </Animated.Text>
@@ -169,7 +164,7 @@ export default function Page5() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          className="text-base text-gray-700 text-center mb-2"
+          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 8 }}
         >
           Prenez une photo ou choisissez dans votre galerie. On va l'identifier ensemble.
         </Animated.Text>
@@ -177,47 +172,47 @@ export default function Page5() {
         {/* Note */}
         <Animated.Text
           entering={FadeInDown.delay(600)}
-          className="text-sm text-gray-500 text-center mb-8"
+          style={{ fontSize: 14, color: onboardingColors.text.muted, textAlign: 'center', marginBottom: 32 }}
         >
           Pas besoin de compte pour l'instant, on sauvegarde tout localement.
         </Animated.Text>
 
         {/* Error message */}
         {errorMsg && (
-          <Animated.Text className="text-red-600 text-center mb-4">{errorMsg}</Animated.Text>
+          <Animated.Text style={{ color: onboardingColors.error, textAlign: 'center', marginBottom: 16 }}>{errorMsg}</Animated.Text>
         )}
       </Animated.View>
 
       {/* Action buttons */}
-      <View className="px-6 pb-8 gap-3">
+      <View style={{ paddingHorizontal: 24, paddingBottom: 32, gap: 12 }}>
         <Animated.View entering={FadeInDown.delay(800)}>
           <TouchableOpacity
             onPress={handleTakePicture}
             disabled={isCapturing}
-            className="bg-green-500 rounded-lg py-4 items-center flex-row justify-center gap-2"
+            style={{ backgroundColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
           >
             <Camera size={20} color="white" />
-            <Text className="text-white font-semibold text-lg">Prendre une photo</Text>
+            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Prendre une photo</Text>
           </TouchableOpacity>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1000)}>
           <TouchableOpacity
             disabled
-            className="border-2 border-green-500 rounded-lg py-4 items-center flex-row justify-center gap-2 opacity-50"
+            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, opacity: 0.5 }}
           >
-            <ImageIcon size={20} color="#059669" />
-            <Text className="text-green-700 font-semibold text-lg">Choisir dans la galerie</Text>
+            <ImageIcon size={20} color={onboardingColors.green[700]} />
+            <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Choisir dans la galerie</Text>
           </TouchableOpacity>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1200)}>
           <TouchableOpacity
             disabled
-            className="border-2 border-green-500 rounded-lg py-4 items-center flex-row justify-center gap-2 opacity-50"
+            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, opacity: 0.5 }}
           >
-            <Search size={20} color="#059669" />
-            <Text className="text-green-700 font-semibold text-lg">Je connais le nom</Text>
+            <Search size={20} color={onboardingColors.green[700]} />
+            <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Je connais le nom</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>

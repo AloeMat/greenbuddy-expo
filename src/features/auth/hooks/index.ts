@@ -3,3 +3,4 @@
  */
 
 export { useAuthHook } from './useAuthHook';
+export { useLoginMutation, useSignupMutation } from './useAuthMutations';

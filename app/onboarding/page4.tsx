@@ -42,7 +42,7 @@ export default function Page4() {
   }, [setCurrentPage]);
 
   const handleSelect = (option: Option) => {
-    setPainPoint(option.value);
+    setPainPoint(option.value as 'oui_une' | 'plusieurs' | 'jamais');
     addXP(option.xp);
     markPageComplete('page4');
   };

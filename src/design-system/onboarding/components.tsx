@@ -196,7 +196,7 @@ export const OnboardingHeader: React.FC<HeaderProps> = ({
 }) => (
   <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
     <ProgressBar progress={progress} testID="progress-bar" />
-    <Label>Étape {step}/{totalSteps}</Label>
+    <Label>{`Étape ${step}/${totalSteps}`}</Label>
   </View>
 );
 

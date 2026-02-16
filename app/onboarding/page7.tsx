@@ -6,6 +6,7 @@ import { Droplet, Sun, Thermometer, Leaf, Lock } from 'lucide-react-native';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
+import { onboardingColors } from '@design-system/onboarding/colors';
 
 export default function Page7() {
   const { setCurrentPage, plantName, identifiedPlant, markPageComplete } = useOnboardingStore();
@@ -29,25 +30,24 @@ export default function Page7() {
   };
 
   return (
-    <ScrollView testID="onboarding-page7" className="flex-1 bg-green-50">
+    <ScrollView testID="onboarding-page7" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View className="pt-12 px-6">
-        <View testID="progress-bar" className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
+        <View testID="progress-bar" style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
           <Animated.View
             entering={FadeIn}
-            className="h-full bg-green-500"
-            style={{ width: `${PAGE_PROGRESS.page7}%` }}
+            style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page7}%` }}
           />
         </View>
-        <Text className="text-xs text-gray-500 text-right">Étape 12/14</Text>
+        <Text style={{ fontSize: 12, color: onboardingColors.text.muted, textAlign: 'right' }}>Étape 12/14</Text>
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} className="px-6 py-8">
+      <Animated.View entering={FadeInDown.springify()} style={{ paddingHorizontal: 24, paddingVertical: 32 }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          className="text-3xl font-bold text-green-900 text-center mb-2"
+          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
         >
           Voici mon plan de soins
         </Animated.Text>
@@ -55,14 +55,14 @@ export default function Page7() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          className="text-base text-gray-700 text-center mb-2"
+          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 8 }}
         >
           Aujourd'hui, {plantName} a besoin de...
         </Animated.Text>
 
         <Animated.Text
           entering={FadeInDown.delay(600)}
-          className="text-sm text-gray-500 text-center mb-8 italic"
+          style={{ fontSize: 14, color: onboardingColors.text.muted, textAlign: 'center', marginBottom: 32, fontStyle: 'italic' }}
         >
           Actions disponibles après création du compte
         </Animated.Text>
@@ -70,21 +70,21 @@ export default function Page7() {
         {/* Plant info card */}
         <Animated.View
           entering={FadeInDown.delay(800)}
-          className="bg-white rounded-lg p-6 mb-8 shadow-sm border border-gray-200"
+          style={{ backgroundColor: 'white', borderRadius: 8, padding: 24, marginBottom: 32, borderWidth: 1, borderColor: onboardingColors.gray[200] }}
         >
-          <View className="gap-2 mb-4">
-            <Text className="text-xl font-bold text-green-900">{plantName}</Text>
-            <Text className="text-sm text-gray-600">{identifiedPlant?.scientificName}</Text>
+          <View style={{ gap: 8, marginBottom: 16 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: onboardingColors.text.primary }}>{plantName}</Text>
+            <Text style={{ fontSize: 14, color: onboardingColors.text.secondary }}>{identifiedPlant?.scientificName}</Text>
           </View>
 
           {/* Health bar */}
-          <View className="gap-2">
-            <View className="flex-row justify-between items-center">
-              <Text className="text-sm font-semibold text-gray-700">Santé</Text>
-              <Text className="text-sm text-green-600 font-semibold">80%</Text>
+          <View style={{ gap: 8 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.secondary }}>Santé</Text>
+              <Text style={{ fontSize: 14, color: onboardingColors.green[500], fontWeight: '600' }}>80%</Text>
             </View>
-            <View className="h-3 bg-gray-200 rounded-full overflow-hidden">
-              <View className="h-full bg-green-500" style={{ width: '80%' }} />
+            <View style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden' }}>
+              <View style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: '80%' }} />
             </View>
           </View>
         </Animated.View>
@@ -92,25 +92,25 @@ export default function Page7() {
         {/* Care actions */}
         <Animated.Text
           entering={FadeInDown.delay(1000)}
-          className="text-sm font-semibold text-gray-900 mb-3"
+          style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 12 }}
         >
           Soins recommandés
         </Animated.Text>
 
-        <View className="gap-3 mb-8">
+        <View style={{ gap: 12, marginBottom: 32 }}>
           {/* Water action */}
           <Animated.View entering={FadeInDown.delay(1100).springify()}>
             <TouchableOpacity
               onPress={handleDisabledAction}
               disabled
-              className="bg-white rounded-lg p-4 border-2 border-gray-200 flex-row items-center gap-3 opacity-60"
+              style={{ backgroundColor: 'white', borderRadius: 8, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
             >
-              <View className="bg-blue-100 rounded-lg p-3">
+              <View style={{ backgroundColor: '#DBEAFE', borderRadius: 8, padding: 12 }}>
                 <Droplet size={20} color="#3B82F6" />
               </View>
-              <View className="flex-1">
-                <Text className="text-base font-semibold text-gray-900">Arrosage</Text>
-                <Text className="text-xs text-gray-500">Dans 3 jours</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: onboardingColors.text.primary }}>Arrosage</Text>
+                <Text style={{ fontSize: 12, color: onboardingColors.text.muted }}>Dans 3 jours</Text>
               </View>
               <Lock size={16} color="#999" />
             </TouchableOpacity>
@@ -121,14 +121,14 @@ export default function Page7() {
             <TouchableOpacity
               onPress={handleDisabledAction}
               disabled
-              className="bg-white rounded-lg p-4 border-2 border-gray-200 flex-row items-center gap-3 opacity-60"
+              style={{ backgroundColor: 'white', borderRadius: 8, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
             >
-              <View className="bg-yellow-100 rounded-lg p-3">
+              <View style={{ backgroundColor: '#FEF3C7', borderRadius: 8, padding: 12 }}>
                 <Sun size={20} color="#FBBF24" />
               </View>
-              <View className="flex-1">
-                <Text className="text-base font-semibold text-gray-900">Ensoleillement</Text>
-                <Text className="text-xs text-gray-500">Luminosité: OK ✓</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: onboardingColors.text.primary }}>Ensoleillement</Text>
+                <Text style={{ fontSize: 12, color: onboardingColors.text.muted }}>Luminosité: OK ✓</Text>
               </View>
               <Lock size={16} color="#999" />
             </TouchableOpacity>
@@ -139,14 +139,14 @@ export default function Page7() {
             <TouchableOpacity
               onPress={handleDisabledAction}
               disabled
-              className="bg-white rounded-lg p-4 border-2 border-gray-200 flex-row items-center gap-3 opacity-60"
+              style={{ backgroundColor: 'white', borderRadius: 8, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
             >
-              <View className="bg-orange-100 rounded-lg p-3">
+              <View style={{ backgroundColor: '#FFEDD5', borderRadius: 8, padding: 12 }}>
                 <Thermometer size={20} color="#FB923C" />
               </View>
-              <View className="flex-1">
-                <Text className="text-base font-semibold text-gray-900">Température</Text>
-                <Text className="text-xs text-gray-500">20°C (OK)</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: onboardingColors.text.primary }}>Température</Text>
+                <Text style={{ fontSize: 12, color: onboardingColors.text.muted }}>20°C (OK)</Text>
               </View>
               <Lock size={16} color="#999" />
             </TouchableOpacity>
@@ -156,21 +156,21 @@ export default function Page7() {
         {/* Upcoming tasks preview */}
         <Animated.Text
           entering={FadeInDown.delay(1400)}
-          className="text-sm font-semibold text-gray-900 mb-3"
+          style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 12 }}
         >
           Prochaines tâches
         </Animated.Text>
 
-        <View className="gap-2 mb-8">
+        <View style={{ gap: 8, marginBottom: 32 }}>
           {['Vérifier l\'humidité', 'Rotation de la plante'].map((task, index) => (
             <Animated.View
               key={task}
               entering={FadeInDown.delay(1500 + index * 100).springify()}
-              className="bg-white rounded-lg p-3 flex-row items-center gap-3 opacity-60 border border-gray-200"
+              style={{ backgroundColor: 'white', borderRadius: 8, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6, borderWidth: 1, borderColor: onboardingColors.gray[200] }}
             >
               <Leaf size={16} color="#999" />
-              <Text className="text-sm text-gray-700">{task}</Text>
-              <Lock size={14} color="#999" className="ml-auto" />
+              <Text style={{ fontSize: 14, color: onboardingColors.text.secondary }}>{task}</Text>
+              <Lock size={14} color="#999" style={{ marginLeft: 'auto' }} />
             </Animated.View>
           ))}
         </View>
@@ -178,23 +178,23 @@ export default function Page7() {
         {/* Note */}
         <Animated.View
           entering={FadeInDown.delay(1700)}
-          className="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-4 mb-8"
+          style={{ backgroundColor: onboardingColors.green[50], borderLeftWidth: 4, borderLeftColor: onboardingColors.green[500], borderBottomRightRadius: 8, borderTopRightRadius: 8, padding: 16, marginBottom: 32 }}
         >
-          <Text className="text-sm text-green-900">
-            💡 <Text className="font-semibold">Info:</Text> Créez un compte pour accéder à tous les soins, recevoir des rappels et suivre la santé de votre plante en temps réel.
+          <Text style={{ fontSize: 14, color: onboardingColors.text.primary }}>
+            💡 <Text style={{ fontWeight: '600' }}>Info:</Text> Créez un compte pour accéder à tous les soins, recevoir des rappels et suivre la santé de votre plante en temps réel.
           </Text>
         </Animated.View>
       </Animated.View>
 
       {/* Footer button */}
-      <View className="px-6 pb-8">
+      <View style={{ paddingHorizontal: 24, paddingBottom: 32 }}>
         <Animated.View entering={FadeInDown.delay(1800)}>
           <TouchableOpacity
             testID="button-continue"
             onPress={handleContinue}
-            className="bg-green-500 rounded-lg py-4 items-center"
+            style={{ backgroundColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center' }}
           >
-            <Text className="text-white font-semibold text-lg">Sauvegarder ma plante</Text>
+            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Sauvegarder ma plante</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>

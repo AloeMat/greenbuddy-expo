@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Check } from 'lucide-react-native';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
-import { logger } from '@lib/services/logger';
+import { onboardingColors } from '@design-system/onboarding/colors';
+import { page8Schema, type Page8FormData } from '@lib/validation/onboarding';
 
 const personalityOptions = [
   { id: 'funny', label: 'Drôle 😄', emoji: '😄' },
@@ -17,55 +20,57 @@ const personalityOptions = [
 export default function Page8() {
   const { setCurrentPage, plantName, setPlantName, setPlantPersonality, addXP, markPageComplete } =
     useOnboardingStore();
-  const [selectedPersonality, setSelectedPersonality] = useState<string | null>(null);
-  const [nameInput, setNameInput] = useState(plantName);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
+    setValue,
+  } = useForm<Page8FormData>({
+    resolver: zodResolver(page8Schema),
+    mode: 'onChange',
+    defaultValues: {
+      plantName: plantName || '',
+      personality: undefined,
+    },
+  });
+
+  const selectedPersonality = watch('personality');
 
   useEffect(() => {
     trackPageView('page8');
     setCurrentPage('page8');
   }, [setCurrentPage]);
 
-  const handleContinue = () => {
-    if (!nameInput.trim()) {
-      logger.warn('⚠️ Plant name is empty');
-      return;
-    }
-
-    if (!selectedPersonality) {
-      logger.warn('⚠️ Personality not selected');
-      return;
-    }
-
-    setPlantName(nameInput);
-    setPlantPersonality(selectedPersonality as 'funny' | 'gentle' | 'expert');
+  const handleContinue = handleSubmit(async (data) => {
+    setPlantName(data.plantName);
+    setPlantPersonality(data.personality);
     addXP(5);
     markPageComplete('page8');
 
     router.push('/onboarding/page8_confirmation');
-  };
-
-  const isFormValid = nameInput.trim() && selectedPersonality;
+  });
 
   return (
-    <ScrollView testID="onboarding-page8" className="flex-1 bg-green-50">
+    <ScrollView testID="onboarding-page8" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View className="pt-12 px-6">
-        <View testID="progress-bar" className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
+      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
+        <View testID="progress-bar" style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
           <Animated.View
             entering={FadeIn}
-            className="h-full bg-green-500"
-            style={{ width: `${PAGE_PROGRESS.page8}%` }}
+            style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page8}%` }}
           />
         </View>
-        <Text className="text-xs text-gray-500 text-right">Étape 10/14</Text>
+        <Text style={{ fontSize: 12, color: onboardingColors.text.muted, textAlign: 'right' }}>Étape 10/14</Text>
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} className="px-6 py-8">
+      <Animated.View entering={FadeInDown.springify()} style={{ paddingHorizontal: 24, paddingVertical: 32 }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          className="text-3xl font-bold text-green-900 text-center mb-2"
+          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
         >
           Donnez-moi un nom
         </Animated.Text>
@@ -73,28 +78,41 @@ export default function Page8() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          className="text-base text-gray-700 text-center mb-8"
+          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 32 }}
         >
           Comment voulez-vous m'appeler ? Et quelle personnalité souhaitez-vous que j'aie ?
         </Animated.Text>
 
         {/* Name input */}
-        <Animated.View entering={FadeInDown.delay(600)} className="mb-8">
-          <Text className="text-sm font-semibold text-gray-900 mb-3">Nom de votre plante</Text>
+        <Animated.View entering={FadeInDown.delay(600)} style={{ marginBottom: 32 }}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 12 }}>Nom de votre plante</Text>
           <TextInput
             testID="input-plant-name"
-            value={nameInput}
-            onChangeText={setNameInput}
+            value={watch('plantName')}
+            onChangeText={(value) => setValue('plantName', value)}
             placeholder="ex: Rosalie, Monstera..."
-            className="border-2 border-gray-300 rounded-lg px-4 py-3 text-base bg-white"
-            placeholderTextColor="#999"
+            style={{
+              borderWidth: 2,
+              borderColor: errors.plantName ? onboardingColors.error : onboardingColors.gray[200],
+              borderRadius: 8,
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              fontSize: 16,
+              backgroundColor: 'white'
+            }}
+            placeholderTextColor={onboardingColors.text.muted}
           />
+          {errors.plantName && (
+            <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: 4 }}>
+              {errors.plantName.message}
+            </Text>
+          )}
         </Animated.View>
 
         {/* Personality selection */}
         <Animated.View entering={FadeInDown.delay(800)}>
-          <Text className="text-sm font-semibold text-gray-900 mb-3">Personnalité</Text>
-          <View className="gap-3 mb-8">
+          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 12 }}>Personnalité</Text>
+          <View style={{ gap: 12, marginBottom: 32 }}>
             {personalityOptions.map((option, index) => (
               <Animated.View
                 key={option.id}
@@ -102,17 +120,23 @@ export default function Page8() {
               >
                 <TouchableOpacity
                   testID={`personality-${option.id}`}
-                  onPress={() => setSelectedPersonality(option.id)}
-                  className={`p-4 rounded-lg border-2 flex-row items-center gap-3 ${
-                    selectedPersonality === option.id
-                      ? 'bg-green-100 border-green-500'
-                      : 'bg-white border-gray-200'
-                  }`}
+                  onPress={() => setValue('personality', option.id as any)}
+                  style={{
+                    paddingHorizontal: 16,
+                    paddingVertical: 16,
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 12,
+                    backgroundColor: selectedPersonality === option.id ? onboardingColors.green[100] : 'white',
+                    borderColor: selectedPersonality === option.id ? onboardingColors.green[500] : onboardingColors.gray[200]
+                  }}
                 >
-                  <Text className="text-2xl">{option.emoji}</Text>
-                  <Text className="text-base font-semibold text-gray-900 flex-1">{option.label}</Text>
+                  <Text style={{ fontSize: 24 }}>{option.emoji}</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '600', color: onboardingColors.text.primary, flex: 1 }}>{option.label}</Text>
                   {selectedPersonality === option.id && (
-                    <Check size={20} color="#10B981" strokeWidth={3} />
+                    <Check size={20} color={onboardingColors.green[500]} strokeWidth={3} />
                   )}
                 </TouchableOpacity>
               </Animated.View>
@@ -122,15 +146,20 @@ export default function Page8() {
       </Animated.View>
 
       {/* Footer button */}
-      <View className="px-6 pb-8">
+      <View style={{ paddingHorizontal: 24, paddingBottom: 32 }}>
         <Animated.View entering={FadeInDown.delay(1200)}>
           <TouchableOpacity
             testID="button-continue"
             onPress={handleContinue}
-            disabled={!isFormValid}
-            className={`rounded-lg py-4 items-center ${isFormValid ? 'bg-green-500' : 'bg-gray-300'}`}
+            disabled={!isValid}
+            style={{
+              borderRadius: 8,
+              paddingVertical: 16,
+              alignItems: 'center',
+              backgroundColor: isValid ? onboardingColors.green[500] : onboardingColors.gray[200]
+            }}
           >
-            <Text className="text-white font-semibold text-lg">Continuer</Text>
+            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Continuer</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>

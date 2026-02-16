@@ -35,7 +35,7 @@ export default function Page8Confirmation() {
         text={`Moi c'est ${plantName}, et je suis ${personalityLabel}. On va bien s'entendre ! 🌿`}
         icon={
           <Animated.View entering={FadeInDown.delay(200).springify()}>
-            <Text className="text-6xl">{personalityEmoji}</Text>
+            <Text style={{ fontSize: 72 }}>{personalityEmoji}</Text>
           </Animated.View>
         }
         autoAdvanceMs={2500}
