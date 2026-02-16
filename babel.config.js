@@ -16,6 +16,7 @@ module.exports = function (api) {
             "@plants": "./src/features/plants",
             "@gamification": "./src/features/gamification",
             "@auth": "./src/features/auth",
+            "@onboarding": "./src/features/onboarding",
             "@design-system": "./src/design-system",
             "@tokens": "./src/design-system/tokens",
             "@lib": "./src/lib",
