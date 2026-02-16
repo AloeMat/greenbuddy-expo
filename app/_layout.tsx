@@ -1,5 +1,5 @@
 // Polyfill for import.meta in web environment
-if (typeof globalThis !== 'undefined' && !globalThis.import) {
+if (typeof globalThis !== 'undefined' && !(globalThis as any).import) {
   (globalThis as any).import = {
     meta: {
       env: {
