@@ -1,0 +1,28 @@
+{
+  "testRunner": "jest",
+  "runnerConfig": {
+    "reportPath": "artifacts",
+    "reportFilename": "index.html"
+  },
+  "apps": {
+    "ios": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/greenbuddy.app",
+      "build": "xcodebuild -workspace ios/greenbuddy.xcworkspace -scheme greenbuddy -configuration Release -sdk iphonesimulator -derivedDataPath ios/build"
+    }
+  },
+  "devices": {
+    "simulator": {
+      "type": "ios.simulator",
+      "device": {
+        "type": "iPhone 14"
+      }
+    }
+  },
+  "configurations": {
+    "ios.sim.release": {
+      "device": "simulator",
+      "app": "ios"
+    }
+  }
+}

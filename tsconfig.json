@@ -1,0 +1,25 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@features/*": ["./src/features/*"],
+      "@plants/*": ["./src/features/plants/*"],
+      "@gamification/*": ["./src/features/gamification/*"],
+      "@auth/*": ["./src/features/auth/*"],
+      "@design-system/*": ["./src/design-system/*"],
+      "@tokens/*": ["./src/design-system/tokens/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@appTypes": ["./src/types/index.ts"],
+      "@appTypes/*": ["./src/types/*"],
+      "@utils/*": ["./utils/*"],
+      "@onboarding/*": ["./src/features/onboarding/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "nativewind-env.d.ts"
+  ]
+}
