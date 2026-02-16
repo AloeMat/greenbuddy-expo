@@ -52,8 +52,8 @@ export default function Page5() {
         throw new Error('Permissions caméra refusées: ' + perms.message);
       }
 
-      // Wait for camera to be fully ready
-      await cameraService.waitForCameraReady(5000);
+      // Small delay to let camera initialize
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Capture photo
       const photo = await cameraService.takePicture();
