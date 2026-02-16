@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { Sparkles, Trophy, Zap } from 'lucide-react-native';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { useGamificationStore } from '@gamification/store';
-import { ConfettiExplosion } from '@gamification/components/ConfettiAnimation';
+import { ConfettiExplosion } from '@design-system/animations';
 import { trackPageView, trackCompletion } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS, TOTAL_POSSIBLE_XP } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
