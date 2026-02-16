@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { CameraView } from 'expo-camera';
 import { Camera, Image as ImageIcon, Search } from 'lucide-react-native';
+import { radius } from '@tokens/radius';
+import { spacing } from '@tokens/spacing';
+import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { cameraService } from '@plants/services/camera';
@@ -42,8 +45,7 @@ export default function Page5() {
       setErrorMsg('⏳ La caméra se charge... Réessaye dans 2 secondes');
       return;
     }
-
-    setIsCapturing(true);
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);    setIsCapturing(true);
     setErrorMsg('');
 
     try {
@@ -103,8 +105,8 @@ export default function Page5() {
           onCameraReady={handleCameraReady}
         >
           {/* Progress bar */}
-          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, paddingHorizontal: 24, paddingTop: 48 }}>
-            <View style={{ height: 8, backgroundColor: 'rgba(229, 231, 235, 0.5)', borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
+          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, paddingHorizontal: spacing['2xl'], paddingTop: spacing['5xl'] }}>
+            <View style={{ height: 12, backgroundColor: 'rgba(229, 231, 235, 0.5)', borderRadius: radius.full, overflow: 'hidden', marginBottom: spacing.sm }}>
               <Animated.View
                 entering={FadeIn}
                 style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page5}%` }}
@@ -114,7 +116,7 @@ export default function Page5() {
           </View>
 
           {/* Capture button */}
-          <View style={{ position: 'absolute', bottom: 32, left: 0, right: 0, alignItems: 'center' }}>
+          <View style={{ position: 'absolute', bottom: spacing['3xl'], left: 0, right: 0, alignItems: 'center' }}>
             <TouchableOpacity
               onPress={handleTakePicture}
               disabled={isCapturing}
@@ -126,13 +128,13 @@ export default function Page5() {
                 <Camera size={40} color="white" />
               )}
             </TouchableOpacity>
-            <Text style={{ color: 'white', marginTop: 16, textAlign: 'center' }}>Appuyez pour prendre une photo</Text>
+            <Text style={{ color: 'white', marginTop: spacing.lg, textAlign: 'center' }}>Appuyez pour prendre une photo</Text>
           </View>
 
           {/* Back button */}
           <TouchableOpacity
             onPress={() => router.back()}
-            style={{ position: 'absolute', top: 48, left: 24, backgroundColor: 'rgba(0, 0, 0, 0.5)', borderRadius: 20, paddingHorizontal: 8, paddingVertical: 8 }}
+            style={{ position: 'absolute', top: spacing['5xl'], left: spacing['2xl'], backgroundColor: 'rgba(0, 0, 0, 0.5)', borderRadius: 20, paddingHorizontal: spacing.xs, paddingVertical: spacing.xs }}
           >
             <Text style={{ color: 'white', fontSize: 20 }}>←</Text>
           </TouchableOpacity>
@@ -144,8 +146,8 @@ export default function Page5() {
   return (
     <View style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
-        <View style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
+      <View style={{ paddingTop: spacing['5xl'], paddingHorizontal: spacing['2xl'] }}>
+        <View style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: radius.full, overflow: 'hidden', marginBottom: spacing.sm }}>
           <Animated.View
             entering={FadeIn}
             style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page5}%` }}
@@ -155,11 +157,11 @@ export default function Page5() {
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 24 }}>
+      <Animated.View entering={FadeInDown.springify()} style={{ flex: 1, justifyContent: 'center', paddingHorizontal: spacing['2xl'] }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
+          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: spacing.sm }}
         >
           Ajoutons votre première plante
         </Animated.Text>
@@ -167,7 +169,7 @@ export default function Page5() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 8 }}
+          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: spacing.sm }}
         >
           Prenez une photo ou choisissez dans votre galerie. On va l'identifier ensemble.
         </Animated.Text>
@@ -187,12 +189,12 @@ export default function Page5() {
       </Animated.View>
 
       {/* Action buttons */}
-      <View style={{ paddingHorizontal: 24, paddingBottom: 32, gap: 12 }}>
+      <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'], gap: spacing.sm }}>
         <Animated.View entering={FadeInDown.delay(800)}>
           <TouchableOpacity
             onPress={() => setState('camera_open')}
             disabled={isCapturing}
-            style={{ backgroundColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
+            style={{ backgroundColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: spacing.lg, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: spacing.sm }}
           >
             <Camera size={20} color="white" />
             <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Prendre une photo</Text>
@@ -202,7 +204,7 @@ export default function Page5() {
         <Animated.View entering={FadeInDown.delay(1000)}>
           <TouchableOpacity
             disabled
-            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, opacity: 0.5 }}
+            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, opacity: 0.5 }}
           >
             <ImageIcon size={20} color={onboardingColors.green[700]} />
             <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Choisir dans la galerie</Text>
@@ -227,7 +229,7 @@ export default function Page5() {
               markPageComplete('page5');
               router.push('/onboarding/page5_identification');
             }}
-            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
+            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
           >
             <Search size={20} color={onboardingColors.green[700]} />
             <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Skip (test)</Text>

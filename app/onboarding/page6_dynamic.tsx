@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Volume2, SkipForward } from 'lucide-react-native';
+import { radius } from '@tokens/radius';
+import { spacing } from '@tokens/spacing';
+import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { useGoogleTTS } from '@lib/hooks/useGoogleTTS';
 import { logger } from '@lib/services/logger';
@@ -22,7 +25,7 @@ export default function Page6Dynamic() {
 
   // Get variant based on user profile
   const variant =
-    userProfile && PAGE6_VARIANTS[userProfile as keyof typeof PAGE6_VARIANTS]
+    PAGE6_VARIANTS[userProfile as keyof typeof PAGE6_VARIANTS]
       ? PAGE6_VARIANTS[userProfile as keyof typeof PAGE6_VARIANTS]
       : PAGE6_VARIANTS.actif;
 
@@ -31,7 +34,7 @@ export default function Page6Dynamic() {
 
   // Get voice speed from profile
   const profile = userProfile as keyof typeof PROFILES;
-  const voiceSpeed = PROFILES[profile]?.voiceSpeed || 1.0;
+  const voiceSpeed = PROFILES[profile]?.voiceSpeed || 1;
 
   // Create TTS hook with voice speed
   const { speak, isSpeaking } = useGoogleTTS({ speed: voiceSpeed });
@@ -56,15 +59,16 @@ export default function Page6Dynamic() {
     speakText();
   }, [text, userProfile, speak, addXP, markPageComplete]);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     router.push('/onboarding/page8');
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
-        <View style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
+      <View style={{ paddingTop: spacing['5xl'], paddingHorizontal: spacing['2xl'] }}>
+        <View style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: radius.full, overflow: 'hidden', marginBottom: spacing.sm }}>
           <Animated.View
             entering={FadeIn}
             style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page6_dynamic}%` }}
@@ -74,11 +78,11 @@ export default function Page6Dynamic() {
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 24 }}>
+      <Animated.View entering={FadeInDown.springify()} style={{ flex: 1, justifyContent: 'center', paddingHorizontal: spacing['2xl'] }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          style={{ fontSize: 24, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
+          style={{ fontSize: 24, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: spacing.sm }}
         >
           Première parole
         </Animated.Text>
@@ -86,7 +90,7 @@ export default function Page6Dynamic() {
         {/* Profile tone */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          style={{ fontSize: 14, color: onboardingColors.text.muted, textAlign: 'center', marginBottom: 32, fontStyle: 'italic' }}
+          style={{ fontSize: 14, color: onboardingColors.text.muted, textAlign: 'center', marginBottom: spacing['3xl'], fontStyle: 'italic' }}
         >
           Ton: {variant.tone}
         </Animated.Text>
@@ -94,7 +98,7 @@ export default function Page6Dynamic() {
         {/* Speech text */}
         <Animated.View
           entering={FadeInDown.delay(600)}
-          style={{ backgroundColor: 'white', borderRadius: 8, padding: 24, marginBottom: 32, borderWidth: 1, borderColor: onboardingColors.gray[200] }}
+          style={{ backgroundColor: 'white', borderRadius: radius.sm, padding: spacing['2xl'], marginBottom: spacing['3xl'], borderWidth: 1, borderColor: onboardingColors.gray[200] }}
         >
           <Text style={{ fontSize: 18, color: onboardingColors.text.primary, textAlign: 'center', lineHeight: 24 }}>{text}</Text>
         </Animated.View>
@@ -102,19 +106,21 @@ export default function Page6Dynamic() {
         {/* TTS Status */}
         <Animated.View
           entering={FadeInDown.delay(800)}
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 32 }}
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.sm, marginBottom: spacing['3xl'] }}
         >
-          {isSpeaking ? (
+          {isSpeaking && (
             <>
               <ActivityIndicator color={onboardingColors.green[500]} size="small" />
               <Text style={{ color: onboardingColors.green[500], fontWeight: '600' }}>Écoute en cours...</Text>
             </>
-          ) : textSpoken ? (
+          )}
+          {!isSpeaking && textSpoken && (
             <>
               <Volume2 size={20} color={onboardingColors.green[500]} />
               <Text style={{ color: onboardingColors.green[500], fontWeight: '600' }}>Enregistrement terminé</Text>
             </>
-          ) : (
+          )}
+          {!isSpeaking && !textSpoken && (
             <>
               <ActivityIndicator color={onboardingColors.green[500]} size="small" />
               <Text style={{ color: onboardingColors.green[500], fontWeight: '600' }}>Préparation audio...</Text>
@@ -124,20 +130,24 @@ export default function Page6Dynamic() {
       </Animated.View>
 
       {/* Footer button */}
-      <View style={{ paddingHorizontal: 24, paddingBottom: 32 }}>
+      <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
         <Animated.View entering={FadeInDown.delay(1000)}>
           <TouchableOpacity
+            activeOpacity={0.7}
             onPress={handleContinue}
             disabled={!textSpoken}
             style={{
-              borderRadius: 8,
-              paddingVertical: 16,
+              borderRadius: radius.sm,
+              paddingVertical: spacing.lg,
               alignItems: 'center',
               flexDirection: 'row',
               justifyContent: 'center',
-              gap: 8,
+              gap: spacing.sm,
               backgroundColor: textSpoken ? onboardingColors.green[500] : onboardingColors.gray[200]
             }}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !textSpoken }}
+            accessibilityLabel="Continuer vers l'étape suivante"
           >
             <SkipForward size={20} color="white" />
             <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Continuer</Text>

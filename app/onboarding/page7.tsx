@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Droplet, Sun, Thermometer, Leaf, Lock } from 'lucide-react-native';
+import { radius } from '@tokens/radius';
+import { spacing } from '@tokens/spacing';
+import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
@@ -18,7 +21,8 @@ export default function Page7() {
     setCurrentPage('page7');
   }, [setCurrentPage]);
 
-  const handleDisabledAction = () => {
+  const handleDisabledAction = async () => {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     setModalVisible(true);
   };
 
@@ -26,7 +30,8 @@ export default function Page7() {
     setModalVisible(false);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     markPageComplete('page7');
     router.push('/onboarding/page9');
   };
@@ -35,8 +40,8 @@ export default function Page7() {
     <>
       <ScrollView testID="onboarding-page7" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
-      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
-        <View testID="progress-bar" style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
+      <View style={{ paddingTop: spacing['5xl'], paddingHorizontal: spacing['2xl'] }}>
+        <View testID="progress-bar" style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: radius.full, overflow: 'hidden', marginBottom: spacing.sm }}>
           <Animated.View
             entering={FadeIn}
             style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page7}%` }}
@@ -46,11 +51,11 @@ export default function Page7() {
       </View>
 
       {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} style={{ paddingHorizontal: 24, paddingVertical: 32 }}>
+      <Animated.View entering={FadeInDown.springify()} style={{ paddingHorizontal: spacing['2xl'], paddingVertical: spacing['3xl'] }}>
         {/* Title */}
         <Animated.Text
           entering={FadeInDown.delay(200)}
-          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
+          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: spacing.sm }}
         >
           Voici mon plan de soins
         </Animated.Text>
@@ -58,14 +63,14 @@ export default function Page7() {
         {/* Subtitle */}
         <Animated.Text
           entering={FadeInDown.delay(400)}
-          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 8 }}
+          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: spacing.sm }}
         >
           Aujourd'hui, {plantName} a besoin de...
         </Animated.Text>
 
         <Animated.Text
           entering={FadeInDown.delay(600)}
-          style={{ fontSize: 14, color: onboardingColors.text.muted, textAlign: 'center', marginBottom: 32, fontStyle: 'italic' }}
+          style={{ fontSize: 14, color: onboardingColors.text.muted, textAlign: 'center', marginBottom: spacing['3xl'], fontStyle: 'italic' }}
         >
           Actions disponibles après création du compte
         </Animated.Text>
@@ -73,20 +78,20 @@ export default function Page7() {
         {/* Plant info card */}
         <Animated.View
           entering={FadeInDown.delay(800)}
-          style={{ backgroundColor: 'white', borderRadius: 8, padding: 24, marginBottom: 32, borderWidth: 1, borderColor: onboardingColors.gray[200] }}
+          style={{ backgroundColor: 'white', borderRadius: radius.sm, padding: spacing['2xl'], marginBottom: spacing['3xl'], borderWidth: 1, borderColor: onboardingColors.gray[200] }}
         >
-          <View style={{ gap: 8, marginBottom: 16 }}>
+            <View style={{ gap: spacing.sm, marginBottom: spacing.lg }}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', color: onboardingColors.text.primary }}>{plantName}</Text>
             <Text style={{ fontSize: 14, color: onboardingColors.text.secondary }}>{identifiedPlant?.scientificName}</Text>
           </View>
 
           {/* Health bar */}
-          <View style={{ gap: 8 }}>
+          <View style={{ gap: spacing.sm }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.secondary }}>Santé</Text>
               <Text style={{ fontSize: 14, color: onboardingColors.green[500], fontWeight: '600' }}>80%</Text>
             </View>
-            <View style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden' }}>
+            <View style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: radius.full, overflow: 'hidden' }}>
               <View style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: '80%' }} />
             </View>
           </View>
@@ -95,20 +100,21 @@ export default function Page7() {
         {/* Care actions */}
         <Animated.Text
           entering={FadeInDown.delay(1000)}
-          style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 12 }}
+          style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: spacing.sm }}
         >
           Soins recommandés
         </Animated.Text>
 
-        <View style={{ gap: 12, marginBottom: 32 }}>
+        <View style={{ gap: spacing.sm, marginBottom: spacing['3xl'] }}>
           {/* Water action */}
           <Animated.View entering={FadeInDown.delay(1100).springify()}>
             <TouchableOpacity
+              activeOpacity={0.7}
               onPress={handleDisabledAction}
               disabled
-              style={{ backgroundColor: 'white', borderRadius: 8, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
+              style={{ backgroundColor: 'white', borderRadius: radius.sm, padding: spacing.lg, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: spacing.sm, opacity: 0.6 }}
             >
-              <View style={{ backgroundColor: '#DBEAFE', borderRadius: 8, padding: 12 }}>
+              <View style={{ backgroundColor: '#DBEAFE', borderRadius: radius.sm, padding: spacing.sm }}>
                 <Droplet size={20} color="#3B82F6" />
               </View>
               <View style={{ flex: 1 }}>
@@ -122,11 +128,12 @@ export default function Page7() {
           {/* Sun action */}
           <Animated.View entering={FadeInDown.delay(1200).springify()}>
             <TouchableOpacity
+              activeOpacity={0.7}
               onPress={handleDisabledAction}
               disabled
-              style={{ backgroundColor: 'white', borderRadius: 8, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
+              style={{ backgroundColor: 'white', borderRadius: radius.sm, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
             >
-              <View style={{ backgroundColor: '#FEF3C7', borderRadius: 8, padding: 12 }}>
+              <View style={{ backgroundColor: '#FEF3C7', borderRadius: radius.sm, padding: spacing.sm }}>
                 <Sun size={20} color="#FBBF24" />
               </View>
               <View style={{ flex: 1 }}>
@@ -140,11 +147,12 @@ export default function Page7() {
           {/* Temperature action */}
           <Animated.View entering={FadeInDown.delay(1300).springify()}>
             <TouchableOpacity
+              activeOpacity={0.7}
               onPress={handleDisabledAction}
               disabled
-              style={{ backgroundColor: 'white', borderRadius: 8, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
+              style={{ backgroundColor: 'white', borderRadius: radius.sm, padding: 16, borderWidth: 2, borderColor: onboardingColors.gray[200], flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6 }}
             >
-              <View style={{ backgroundColor: '#FFEDD5', borderRadius: 8, padding: 12 }}>
+              <View style={{ backgroundColor: '#FFEDD5', borderRadius: radius.sm, padding: spacing.sm }}>
                 <Thermometer size={20} color="#FB923C" />
               </View>
               <View style={{ flex: 1 }}>
@@ -159,17 +167,17 @@ export default function Page7() {
         {/* Upcoming tasks preview */}
         <Animated.Text
           entering={FadeInDown.delay(1400)}
-          style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 12 }}
+          style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: spacing.sm }}
         >
           Prochaines tâches
         </Animated.Text>
 
-        <View style={{ gap: 8, marginBottom: 32 }}>
+        <View style={{ gap: spacing.sm, marginBottom: spacing['3xl'] }}>
           {['Vérifier l\'humidité', 'Rotation de la plante'].map((task, index) => (
             <Animated.View
               key={task}
               entering={FadeInDown.delay(1500 + index * 100).springify()}
-              style={{ backgroundColor: 'white', borderRadius: 8, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 12, opacity: 0.6, borderWidth: 1, borderColor: onboardingColors.gray[200] }}
+              style={{ backgroundColor: 'white', borderRadius: radius.sm, padding: spacing.md, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, opacity: 0.6, borderWidth: 1, borderColor: onboardingColors.gray[200] }}
             >
               <Leaf size={16} color="#999" />
               <Text style={{ fontSize: 14, color: onboardingColors.text.secondary }}>{task}</Text>
@@ -181,7 +189,7 @@ export default function Page7() {
         {/* Note */}
         <Animated.View
           entering={FadeInDown.delay(1700)}
-          style={{ backgroundColor: onboardingColors.green[50], borderLeftWidth: 4, borderLeftColor: onboardingColors.green[500], borderBottomRightRadius: 8, borderTopRightRadius: 8, padding: 16, marginBottom: 32 }}
+          style={{ backgroundColor: onboardingColors.green[50], borderLeftWidth: 4, borderLeftColor: onboardingColors.green[500], borderBottomRightRadius: radius.sm, borderTopRightRadius: radius.sm, padding: spacing.lg, marginBottom: spacing['3xl'] }}
         >
           <Text style={{ fontSize: 14, color: onboardingColors.text.primary }}>
             💡 <Text style={{ fontWeight: '600' }}>Info:</Text> Créez un compte pour accéder à tous les soins, recevoir des rappels et suivre la santé de votre plante en temps réel.
@@ -190,12 +198,15 @@ export default function Page7() {
       </Animated.View>
 
       {/* Footer button */}
-      <View style={{ paddingHorizontal: 24, paddingBottom: 32 }}>
+      <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
         <Animated.View entering={FadeInDown.delay(1800)}>
           <TouchableOpacity
             testID="button-continue"
+            activeOpacity={0.7}
             onPress={handleContinue}
-            style={{ backgroundColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center' }}
+            style={{ backgroundColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: spacing.lg, alignItems: 'center' }}
+            accessibilityRole="button"
+            accessibilityLabel="Sauvegarder ma plante"
           >
             <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Sauvegarder ma plante</Text>
           </TouchableOpacity>

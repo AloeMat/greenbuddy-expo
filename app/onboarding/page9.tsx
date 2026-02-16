@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput, ActivityIndicator 
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Lock, Mail } from 'lucide-react-native';
+import { radius } from '@tokens/radius';
+import { spacing } from '@tokens/spacing';
+import * as Haptics from 'expo-haptics';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
@@ -12,6 +15,77 @@ import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
 import { page9Schema, type Page9FormData } from '@lib/validation/onboarding';
 import { FeedbackModal } from '@onboarding/components';
+
+interface InputFieldProps {
+  label: string;
+  icon: React.ReactNode;
+  error?: string;
+  testID: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  placeholder: string;
+  secureTextEntry?: boolean;
+  keyboardType?: 'email-address' | 'default';
+  editable?: boolean;
+  enterDelay: number;
+}
+
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  icon,
+  error,
+  testID,
+  value,
+  onChangeText,
+  placeholder,
+  secureTextEntry = false,
+  keyboardType = 'default',
+  editable = true,
+  enterDelay,
+}) => (
+  <Animated.View entering={FadeInDown.delay(enterDelay)} style={{ marginBottom: spacing.lg }}>
+    <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: spacing.sm }}>
+      {label}
+    </Text>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: error ? onboardingColors.error : onboardingColors.gray[200],
+        borderRadius: radius.sm,
+        backgroundColor: editable ? 'white' : onboardingColors.gray[100],
+        paddingHorizontal: spacing.md,
+        height: spacing.input.height,
+      }}
+    >
+      <View style={{ marginRight: spacing.md }}>
+        {icon}
+      </View>
+      <TextInput
+        testID={testID}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        editable={editable}
+        style={{
+          flex: 1,
+          fontSize: 16,
+          color: onboardingColors.text.primary,
+        }}
+        keyboardType={keyboardType}
+        autoCapitalize="none"
+        placeholderTextColor={onboardingColors.text.muted}
+        secureTextEntry={secureTextEntry}
+      />
+    </View>
+    {error && (
+      <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: spacing.xs }}>
+        {error}
+      </Text>
+    )}
+  </Animated.View>
+);
 
 export default function Page9() {
   const { setCurrentPage, plantName, addXP, markPageComplete } = useOnboardingStore();
@@ -42,6 +116,7 @@ export default function Page9() {
 
   const handleSignUp = handleSubmit(async (data) => {
     if (!signUp) {
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       setErrorMessage('Service d\'authentification indisponible');
       setErrorModalVisible(true);
       return;
@@ -49,13 +124,16 @@ export default function Page9() {
 
     setIsLoading(true);
     try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       await signUp(data.email, data.password);
 
       addXP(10);
       markPageComplete('page9');
 
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.push('/onboarding/page10');
     } catch (error) {
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       const msg =
         error instanceof Error ? error.message : 'Erreur lors de la création du compte';
       setErrorMessage(msg);
@@ -67,135 +145,166 @@ export default function Page9() {
 
   return (
     <>
-      <ScrollView testID="onboarding-page9" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
-      {/* Header with progress bar */}
-      <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
-        <View testID="progress-bar" style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
-          <Animated.View
-            entering={FadeIn}
-            style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${PAGE_PROGRESS.page9}%` }}
-          />
-        </View>
-        <Text style={{ fontSize: 12, color: onboardingColors.text.muted, textAlign: 'right' }}>Étape 13/14</Text>
-      </View>
-
-      {/* Main content */}
-      <Animated.View entering={FadeInDown.springify()} style={{ paddingHorizontal: 24, paddingVertical: 32 }}>
-        {/* Title */}
-        <Animated.Text
-          entering={FadeInDown.delay(200)}
-          style={{ fontSize: 30, fontWeight: 'bold', color: onboardingColors.text.primary, textAlign: 'center', marginBottom: 8 }}
-        >
-          Sauvegardez {plantName}
-        </Animated.Text>
-
-        {/* Subtitle */}
-        <Animated.Text
-          entering={FadeInDown.delay(400)}
-          style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginBottom: 32 }}
-        >
-          Créez un compte pour sauvegarder vos plantes et recevoir des alertes
-        </Animated.Text>
-
-        {/* Email field */}
-        <Animated.View entering={FadeInDown.delay(600)} style={{ marginBottom: 24 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 8 }}>Adresse email</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: errors.email ? onboardingColors.error : onboardingColors.gray[200], borderRadius: 8, backgroundColor: 'white' }}>
-            <Mail size={20} color={onboardingColors.text.muted} style={{ marginLeft: 12 }} />
-            <TextInput
-              testID="input-email"
-              value={watch('email')}
-              onChangeText={(value) => setValue('email', value)}
-              placeholder="votre@email.com"
-              editable={!isLoading}
-              style={{ flex: 1, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 }}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholderTextColor={onboardingColors.text.muted}
-            />
-          </View>
-          {errors.email && <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: 4 }}>{errors.email.message}</Text>}
-        </Animated.View>
-
-        {/* Password field */}
-        <Animated.View entering={FadeInDown.delay(800)} style={{ marginBottom: 24 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 8 }}>Mot de passe</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: errors.password ? onboardingColors.error : onboardingColors.gray[200], borderRadius: 8, backgroundColor: 'white' }}>
-            <Lock size={20} color={onboardingColors.text.muted} style={{ marginLeft: 12 }} />
-            <TextInput
-              testID="input-password"
-              value={watch('password')}
-              onChangeText={(value) => setValue('password', value)}
-              placeholder="••••••"
-              editable={!isLoading}
-              style={{ flex: 1, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 }}
-              secureTextEntry
-              placeholderTextColor={onboardingColors.text.muted}
-            />
-          </View>
-          {errors.password && <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: 4 }}>{errors.password.message}</Text>}
-        </Animated.View>
-
-        {/* Confirm password field */}
-        <Animated.View entering={FadeInDown.delay(1000)} style={{ marginBottom: 32 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: onboardingColors.text.primary, marginBottom: 8 }}>Confirmer le mot de passe</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: errors.confirmPassword ? onboardingColors.error : onboardingColors.gray[200], borderRadius: 8, backgroundColor: 'white' }}>
-            <Lock size={20} color={onboardingColors.text.muted} style={{ marginLeft: 12 }} />
-            <TextInput
-              testID="input-confirm-password"
-              value={watch('confirmPassword')}
-              onChangeText={(value) => setValue('confirmPassword', value)}
-              placeholder="••••••"
-              editable={!isLoading}
-              style={{ flex: 1, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 }}
-              secureTextEntry
-              placeholderTextColor={onboardingColors.text.muted}
-            />
-          </View>
-          {errors.confirmPassword && (
-            <Text style={{ color: onboardingColors.error, fontSize: 12, marginTop: 4 }}>{errors.confirmPassword.message}</Text>
-          )}
-        </Animated.View>
-
-        {/* Info box */}
-        <Animated.View
-          entering={FadeInDown.delay(1200)}
-          style={{ backgroundColor: onboardingColors.green[50], borderLeftWidth: 4, borderLeftColor: onboardingColors.green[500], borderBottomRightRadius: 8, borderTopRightRadius: 8, padding: 16, marginBottom: 32 }}
-        >
-          <Text style={{ fontSize: 14, color: onboardingColors.text.primary }}>
-            🔒 Vos données sont sécurisées et ne seront jamais partagées sans votre consentement.
-          </Text>
-        </Animated.View>
-      </Animated.View>
-
-      {/* Footer button */}
-      <View style={{ paddingHorizontal: 24, paddingBottom: 32 }}>
-        <Animated.View entering={FadeInDown.delay(1400)}>
-          <TouchableOpacity
-            testID="button-signup"
-            onPress={handleSignUp}
-            disabled={isLoading || !isValid}
+      <ScrollView
+        testID="onboarding-page9"
+        style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}
+        keyboardShouldPersistTaps="handled"
+        scrollIndicatorInsets={{ right: 1 }}
+      >
+        {/* Header with progress bar */}
+        <View style={{ paddingTop: spacing['5xl'], paddingHorizontal: spacing['2xl'] }}>
+          <View
+            testID="progress-bar"
             style={{
-              borderRadius: 8,
-              paddingVertical: 16,
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              gap: 8,
-              backgroundColor: isLoading || !isValid ? onboardingColors.gray[200] : onboardingColors.green[500]
+              height: 12,
+              backgroundColor: onboardingColors.gray[200],
+              borderRadius: radius.full,
+              overflow: 'hidden',
+              marginBottom: spacing.sm,
             }}
           >
-            {isLoading ? (
-              <>
-                <ActivityIndicator color="white" />
-                <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Création en cours...</Text>
-              </>
-            ) : (
-              <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Créer mon compte</Text>
-            )}
-          </TouchableOpacity>
+            <Animated.View
+              entering={FadeIn}
+              style={{
+                height: '100%',
+                backgroundColor: onboardingColors.green[500],
+                width: `${PAGE_PROGRESS.page9}%`,
+              }}
+            />
+          </View>
+          <Text style={{ fontSize: 12, color: onboardingColors.text.muted, textAlign: 'right' }}>
+            Étape 13/14
+          </Text>
+        </View>
+
+        {/* Main content */}
+        <Animated.View
+          entering={FadeInDown.springify()}
+          style={{ paddingHorizontal: spacing['2xl'], paddingVertical: spacing['3xl'] }}
+        >
+          {/* Title */}
+          <Animated.Text
+            entering={FadeInDown.delay(200)}
+            style={{
+              fontSize: 30,
+              fontWeight: 'bold',
+              color: onboardingColors.text.primary,
+              textAlign: 'center',
+              marginBottom: spacing.sm,
+            }}
+          >
+            Sauvegardez {plantName}
+          </Animated.Text>
+
+          {/* Subtitle */}
+          <Animated.Text
+            entering={FadeInDown.delay(400)}
+            style={{
+              fontSize: 16,
+              color: onboardingColors.text.secondary,
+              textAlign: 'center',
+              marginBottom: spacing['3xl'],
+            }}
+          >
+            Créez un compte pour sauvegarder vos plantes et recevoir des alertes
+          </Animated.Text>
+
+          {/* Form Fields */}
+          <InputField
+            label="Adresse email"
+            icon={<Mail size={20} color={onboardingColors.text.muted} />}
+            error={errors.email?.message}
+            testID="input-email"
+            value={watch('email')}
+            onChangeText={(value) => setValue('email', value)}
+            placeholder="votre@email.com"
+            keyboardType="email-address"
+            editable={!isLoading}
+            enterDelay={600}
+          />
+
+          <InputField
+            label="Mot de passe"
+            icon={<Lock size={20} color={onboardingColors.text.muted} />}
+            error={errors.password?.message}
+            testID="input-password"
+            value={watch('password')}
+            onChangeText={(value) => setValue('password', value)}
+            placeholder="••••••"
+            secureTextEntry
+            editable={!isLoading}
+            enterDelay={800}
+          />
+
+          <InputField
+            label="Confirmer le mot de passe"
+            icon={<Lock size={20} color={onboardingColors.text.muted} />}
+            error={errors.confirmPassword?.message}
+            testID="input-confirm-password"
+            value={watch('confirmPassword')}
+            onChangeText={(value) => setValue('confirmPassword', value)}
+            placeholder="••••••"
+            secureTextEntry
+            editable={!isLoading}
+            enterDelay={1000}
+          />
+
+          {/* Info box */}
+          <Animated.View
+            entering={FadeInDown.delay(1200)}
+            style={{
+              backgroundColor: onboardingColors.green[50],
+              borderLeftWidth: 4,
+              borderLeftColor: onboardingColors.green[500],
+              borderBottomRightRadius: radius.sm,
+              borderTopRightRadius: radius.sm,
+              padding: spacing.md,
+              marginBottom: spacing['3xl'],
+            }}
+          >
+            <Text style={{ fontSize: 14, color: onboardingColors.text.primary, lineHeight: 20 }}>
+              🔒 Vos données sont sécurisées et ne seront jamais partagées sans votre consentement.
+            </Text>
+          </Animated.View>
         </Animated.View>
-      </View>
+
+        {/* Footer button */}
+        <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
+          <Animated.View entering={FadeInDown.delay(1400)}>
+            <TouchableOpacity
+              testID="button-signup"
+              activeOpacity={0.7}
+              onPress={handleSignUp}
+              disabled={isLoading || !isValid}
+              style={{
+                borderRadius: radius.sm,
+                paddingVertical: spacing.lg,
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                gap: spacing.sm,
+                backgroundColor:
+                  isLoading || !isValid ? onboardingColors.gray[200] : onboardingColors.green[500],
+              }}
+              accessibilityRole="button"
+              accessibilityState={{ disabled: isLoading || !isValid }}
+              accessibilityLabel="Créer mon compte"
+            >
+              {isLoading ? (
+                <>
+                  <ActivityIndicator color="white" />
+                  <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>
+                    Création en cours...
+                  </Text>
+                </>
+              ) : (
+                <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>
+                  Créer mon compte
+                </Text>
+              )}
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </ScrollView>
 
       {/* Error Modal */}
