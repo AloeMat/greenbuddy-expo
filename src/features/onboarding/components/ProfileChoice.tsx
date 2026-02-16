@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, ScrollView, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { useOnboardingStore } from '../store/onboardingStore';
@@ -59,18 +59,21 @@ export function ProfileChoice({
   };
 
   return (
-    <ScrollView testID={`onboarding-${currentPage}`} className="flex-1 bg-green-50 px-6 pt-16">
+    <ScrollView
+      testID={`onboarding-${currentPage}`}
+      style={{ flex: 1, backgroundColor: '#F3F4F6', paddingHorizontal: 24, paddingTop: 64 }}
+    >
       {/* Progress bar */}
-      <View testID="progress-bar" className="h-2 bg-gray-200 rounded-full overflow-hidden mb-8">
-        <View className="h-full bg-green-500" style={{ width: `${progress}%` }} />
+      <View testID="progress-bar" style={{ height: 8, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden', marginBottom: 32 }}>
+        <View style={{ height: '100%', backgroundColor: '#10B981', width: `${progress}%` }} />
       </View>
 
       {/* Title */}
-      <Text className="text-2xl font-bold text-green-900 mb-2">{title}</Text>
-      <Text className="text-base text-gray-700 mb-8">{text}</Text>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1F2937', marginBottom: 8 }}>{title}</Text>
+      <Text style={{ fontSize: 16, color: '#4B5563', marginBottom: 32 }}>{text}</Text>
 
       {/* Options */}
-      <View className="pb-10">
+      <View style={{ paddingBottom: 40 }}>
         {options.map((option, index) => (
           <Animated.View
             key={option.profile}
@@ -79,13 +82,17 @@ export function ProfileChoice({
             <TouchableOpacity
               testID={`profile-${option.profile}`}
               onPress={() => handleSelect(option)}
-              className={`p-4 rounded-xl border-2 mb-4 ${
-                selectedProfile === option.profile
-                  ? 'bg-green-100 border-green-500'
-                  : 'bg-white border-gray-200'
-              }`}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 16,
+                borderRadius: 12,
+                borderWidth: 2,
+                marginBottom: 16,
+                backgroundColor: selectedProfile === option.profile ? '#DCFCE7' : '#FFFFFF',
+                borderColor: selectedProfile === option.profile ? '#10B981' : '#E5E7EB',
+              }}
             >
-              <Text className="text-lg font-semibold text-gray-900">{option.label}</Text>
+              <Text style={{ fontSize: 16, fontWeight: '600', color: '#111827' }}>{option.label}</Text>
             </TouchableOpacity>
           </Animated.View>
         ))}

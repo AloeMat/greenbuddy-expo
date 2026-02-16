@@ -29,14 +29,13 @@ export function FeedbackScreen({
   }, [autoAdvanceMs, nextRoute]);
 
   return (
-    <View className="flex-1 bg-green-50 justify-center items-center px-6">
+    <View style={{ flex: 1, backgroundColor: '#F3F4F6', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 }}>
       {/* Progress bar */}
-      <View className="absolute top-12 left-0 right-0 px-6">
-        <View className="h-2 bg-gray-200 rounded-full overflow-hidden">
+      <View style={{ position: 'absolute', top: 48, left: 0, right: 0, paddingHorizontal: 24 }}>
+        <View style={{ height: 8, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden' }}>
           <Animated.View
             entering={FadeIn}
-            className="h-full bg-green-500"
-            style={{ width: `${progress}%` }}
+            style={{ height: '100%', backgroundColor: '#10B981', width: `${progress}%` }}
           />
         </View>
       </View>
@@ -47,7 +46,7 @@ export function FeedbackScreen({
       {/* Title */}
       <Animated.Text
         entering={FadeIn.delay(200)}
-        className="text-2xl font-bold text-green-900 text-center mt-6"
+        style={{ fontSize: 24, fontWeight: 'bold', color: '#1F2937', textAlign: 'center', marginTop: 24 }}
       >
         {title}
       </Animated.Text>
@@ -55,7 +54,7 @@ export function FeedbackScreen({
       {/* Text */}
       <Animated.Text
         entering={FadeIn.delay(400)}
-        className="text-base text-gray-700 text-center mt-4"
+        style={{ fontSize: 16, color: '#4B5563', textAlign: 'center', marginTop: 16 }}
       >
         {text}
       </Animated.Text>
