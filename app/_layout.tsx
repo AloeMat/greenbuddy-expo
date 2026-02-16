@@ -1,3 +1,14 @@
+// Polyfill for import.meta in web environment
+if (typeof globalThis !== 'undefined' && !globalThis.import) {
+  (globalThis as any).import = {
+    meta: {
+      env: {
+        MODE: typeof window !== 'undefined' ? 'production' : 'development'
+      }
+    }
+  };
+}
+
 import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
