@@ -57,7 +57,10 @@ function RootLayoutNav() {
 
   // Initialize auth on app startup
   useEffect(() => {
-    initializeAuth?.();
+    const init = async () => {
+      await initializeAuth?.();
+    };
+    init();
   }, [initializeAuth]);
 
   // Hide splash screen after auth is initialized
