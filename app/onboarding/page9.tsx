@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, TextInput, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Lock, Mail } from 'lucide-react-native';
@@ -11,11 +11,14 @@ import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
 import { page9Schema, type Page9FormData } from '@lib/validation/onboarding';
+import { FeedbackModal } from '@onboarding/components';
 
 export default function Page9() {
   const { setCurrentPage, plantName, addXP, markPageComplete } = useOnboardingStore();
   const { signUp } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const {
     handleSubmit,
@@ -39,7 +42,8 @@ export default function Page9() {
 
   const handleSignUp = handleSubmit(async (data) => {
     if (!signUp) {
-      Alert.alert('Erreur', 'Service d\'authentification indisponible', [{ text: 'OK' }]);
+      setErrorMessage('Service d\'authentification indisponible');
+      setErrorModalVisible(true);
       return;
     }
 
@@ -52,16 +56,18 @@ export default function Page9() {
 
       router.push('/onboarding/page10');
     } catch (error) {
-      const errorMessage =
+      const msg =
         error instanceof Error ? error.message : 'Erreur lors de la création du compte';
-      Alert.alert('Erreur', errorMessage, [{ text: 'OK' }]);
+      setErrorMessage(msg);
+      setErrorModalVisible(true);
     } finally {
       setIsLoading(false);
     }
   });
 
   return (
-    <ScrollView testID="onboarding-page9" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
+    <>
+      <ScrollView testID="onboarding-page9" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
       <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
         <View testID="progress-bar" style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
@@ -190,6 +196,16 @@ export default function Page9() {
           </TouchableOpacity>
         </Animated.View>
       </View>
-    </ScrollView>
+      </ScrollView>
+
+      {/* Error Modal */}
+      <FeedbackModal
+        visible={errorModalVisible}
+        title="Erreur"
+        message={errorMessage}
+        buttonText="D'accord"
+        onConfirm={() => setErrorModalVisible(false)}
+      />
+    </>
   );
 }
