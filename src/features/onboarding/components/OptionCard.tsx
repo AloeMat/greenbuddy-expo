@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { router } from 'expo-router';
+import { FeedbackModal } from './FeedbackModal';
 
 interface Option {
   label: string; // "Oui 😔"
@@ -30,30 +31,29 @@ export function OptionCard({
   onSelect,
 }: OptionCardProps) {
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [feedbackText, setFeedbackText] = useState('');
 
   const handleSelect = (option: Option) => {
     setSelectedValue(option.value);
     onSelect(option);
 
-    // Show feedback alert
-    Alert.alert(
-      'Merci de votre confiance',
-      option.feedback,
-      [
-        {
-          text: 'Continuer',
-          onPress: () => router.push(nextRoute),
-        },
-      ],
-      { cancelable: false }
-    );
+    // Show feedback modal instead of alert
+    setFeedbackText(option.feedback);
+    setModalVisible(true);
+  };
+
+  const handleConfirm = () => {
+    setModalVisible(false);
+    router.push(nextRoute);
   };
 
   return (
-    <ScrollView
-      testID={`onboarding-${currentPage}`}
-      style={{ flex: 1, backgroundColor: '#F3F4F6', paddingHorizontal: 24, paddingTop: 64 }}
-    >
+    <>
+      <ScrollView
+        testID={`onboarding-${currentPage}`}
+        style={{ flex: 1, backgroundColor: '#F3F4F6', paddingHorizontal: 24, paddingTop: 64 }}
+      >
       {/* Progress bar */}
       <View testID="progress-bar" style={{ height: 8, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden', marginBottom: 32 }}>
         <View style={{ height: '100%', backgroundColor: '#10B981', width: `${progress}%` }} />
@@ -88,6 +88,16 @@ export function OptionCard({
           </Animated.View>
         ))}
       </View>
-    </ScrollView>
+      </ScrollView>
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        visible={modalVisible}
+        title="Merci de votre confiance"
+        message={feedbackText}
+        buttonText="Continuer"
+        onConfirm={handleConfirm}
+      />
+    </>
   );
 }
