@@ -38,9 +38,7 @@ export default function Page5() {
 
   const handleTakePicture = async () => {
     if (!cameraRef.current) {
-      const msg = 'Camera reference not available';
-      setState('error');
-      setErrorMsg(msg);
+      setErrorMsg('⏳ La caméra se charge... Réessaye dans 2 secondes');
       return;
     }
 
@@ -48,11 +46,14 @@ export default function Page5() {
     setErrorMsg('');
 
     try {
-      // Request permissions
+      // Request permissions FIRST
       const perms = await cameraService.requestPermissions();
       if (!perms.granted) {
-        throw new Error('Camera permissions denied: ' + perms.message);
+        throw new Error('Permissions caméra refusées: ' + perms.message);
       }
+
+      // Wait for camera to be fully ready
+      await cameraService.waitForCameraReady(5000);
 
       // Capture photo
       const photo = await cameraService.takePicture();
@@ -80,6 +81,7 @@ export default function Page5() {
       const errorText = error instanceof Error ? error.message : 'Erreur inconnue';
       setState('error');
       setErrorMsg(errorText);
+      setIsCapturing(false);
     }
   };
 
@@ -187,7 +189,7 @@ export default function Page5() {
       <View style={{ paddingHorizontal: 24, paddingBottom: 32, gap: 12 }}>
         <Animated.View entering={FadeInDown.delay(800)}>
           <TouchableOpacity
-            onPress={handleTakePicture}
+            onPress={() => setState('camera_open')}
             disabled={isCapturing}
             style={{ backgroundColor: onboardingColors.green[500], borderRadius: 8, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
           >
