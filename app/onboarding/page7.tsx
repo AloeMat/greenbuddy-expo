@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Droplet, Sun, Thermometer, Leaf, Lock } from 'lucide-react-native';
@@ -7,9 +7,11 @@ import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
+import { FeedbackModal } from '@onboarding/components';
 
 export default function Page7() {
   const { setCurrentPage, plantName, identifiedPlant, markPageComplete } = useOnboardingStore();
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     trackPageView('page7');
@@ -17,11 +19,11 @@ export default function Page7() {
   }, [setCurrentPage]);
 
   const handleDisabledAction = () => {
-    Alert.alert(
-      'Actions verrouillées',
-      'Créez un compte pour débloquer toutes les actions et sauvegarder votre plante.',
-      [{ text: 'OK' }]
-    );
+    setModalVisible(true);
+  };
+
+  const handleModalConfirm = () => {
+    setModalVisible(false);
   };
 
   const handleContinue = () => {
@@ -30,7 +32,8 @@ export default function Page7() {
   };
 
   return (
-    <ScrollView testID="onboarding-page7" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
+    <>
+      <ScrollView testID="onboarding-page7" style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
       <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
         <View testID="progress-bar" style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
@@ -198,6 +201,16 @@ export default function Page7() {
           </TouchableOpacity>
         </Animated.View>
       </View>
-    </ScrollView>
+      </ScrollView>
+
+      {/* Disabled Action Modal */}
+      <FeedbackModal
+        visible={modalVisible}
+        title="Actions verrouillées"
+        message="Créez un compte pour débloquer toutes les actions et sauvegarder votre plante."
+        buttonText="D'accord"
+        onConfirm={handleModalConfirm}
+      />
+    </>
   );
 }
