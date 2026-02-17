@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence, withTiming } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
+import { radius } from '@tokens/radius';
 
 interface LevelUpModalProps {
   visible: boolean;
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: 'white',
     padding: 32,
-    borderRadius: 24,
+    borderRadius: radius.xl,
     alignItems: 'center',
     width: '80%',
     shadowColor: '#000',
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: '#FFF9C4',
     padding: 20,
-    borderRadius: 50,
+    borderRadius: radius.full,
   },
   title: {
     fontSize: 24,
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2D5A27',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 30,
+    borderRadius: radius.xl,
   },
   buttonText: {
     color: 'white',

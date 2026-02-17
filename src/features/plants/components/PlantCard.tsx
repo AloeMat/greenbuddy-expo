@@ -1,3 +1,4 @@
+import { radius } from '@tokens/radius';
 /**
  * Plant Card Component
  * Displays plant summary with avatar, name, health status
@@ -216,7 +217,7 @@ const WateringInfo: React.FC<WateringInfoProps> = ({ label, date, value }) => {
 const styles = StyleSheet.create({
   card: {
     marginBottom: 12,
-    borderRadius: 12,
+    borderRadius: radius.sm,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

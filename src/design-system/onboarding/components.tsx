@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { radius } from '@tokens/radius';
 import { onboardingColors } from './colors';
 
 // ============================================================================
@@ -26,10 +27,11 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
 }) => (
   <TouchableOpacity
     testID={testID}
+    activeOpacity={0.7}
     onPress={onPress}
     style={{
       backgroundColor: onboardingColors.green[500],
-      borderRadius: 8,
+      borderRadius: radius.sm, // Phase 5.5: 8 → 12 (+50%)
       paddingVertical: 16,
       alignItems: 'center',
       marginBottom: 12,
@@ -54,11 +56,12 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
 }) => (
   <TouchableOpacity
     testID={testID}
+    activeOpacity={0.7}
     onPress={onPress}
     style={{
       borderWidth: 2,
       borderColor: onboardingColors.green[500],
-      borderRadius: 8,
+      borderRadius: radius.sm, // Phase 5.5: 8 → 12 (+50%)
       paddingVertical: 16,
       alignItems: 'center',
     }}
@@ -141,9 +144,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 }) => (
   <View
     style={{
-      height: 8,
+      height: 12,
       backgroundColor: onboardingColors.gray[200],
-      borderRadius: 9999,
+      borderRadius: radius.full, // Phase 5.5: 9999 (unchanged, perfect circle)
       overflow: 'hidden',
       marginBottom: 8,
     }}

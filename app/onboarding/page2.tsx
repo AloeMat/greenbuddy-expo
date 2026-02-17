@@ -13,8 +13,8 @@ import {
   IconContainer,
   Title,
   Subtitle,
-  PrimaryButton,
 } from '@design-system/onboarding';
+import { PremiumButton } from '@design-system/components';
 
 export default function Page2() {
   const { setCurrentPage, markPageComplete } = useOnboardingStore();
@@ -65,9 +65,14 @@ export default function Page2() {
 
       <OnboardingFooter>
         <Animated.View entering={FadeInDown.delay(800)}>
-          <PrimaryButton testID="button-continue" onPress={handleContinue}>
+          <PremiumButton
+            testID="button-continue"
+            variant="primary"
+            size="md"
+            onPress={handleContinue}
+          >
             Continuer
-          </PrimaryButton>
+          </PremiumButton>
         </Animated.View>
       </OnboardingFooter>
     </OnboardingScreen>

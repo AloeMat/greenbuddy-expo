@@ -1,5 +1,6 @@
 import React from 'react';
 import { TextInput, View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { radius } from '@tokens/radius';
 
 interface InputProps {
   placeholder?: string;
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderWidth: 1,
     borderColor: '#CCCCCC',
-    borderRadius: 8,
+    borderRadius: radius.sm, // Phase 5.5: 8 → 12 (+50%)
     paddingHorizontal: 12,
     paddingVertical: 10,
     color: '#1A1A1A',

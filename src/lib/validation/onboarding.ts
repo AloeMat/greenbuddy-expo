@@ -5,9 +5,6 @@
 
 import { z } from 'zod';
 
-/**
- * Page8: Plant name + personality form
- */
 export const page8Schema = z.object({
   plantName: z
     .string()
@@ -15,9 +12,10 @@ export const page8Schema = z.object({
     .max(50, 'Maximum 50 caractères'),
   personality: z
     .enum(['funny', 'gentle', 'expert'])
-    .refine((val) => ['funny', 'gentle', 'expert'].includes(val), {
-      message: 'Veuillez sélectionner une personnalité'
-    })
+    .optional()
+}).refine((data) => data.personality !== undefined, {
+  message: 'Veuillez sélectionner une personnalité',
+  path: ['personality']
 });
 
 export type Page8FormData = z.infer<typeof page8Schema>;
@@ -30,7 +28,9 @@ export const page9Schema = z
     email: z
       .string()
       .min(1, 'Email requis')
-      .email('Email invalide'),
+      .refine(val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+        message: 'Email invalide'
+      }),
     password: z
       .string()
       .min(6, 'Au moins 6 caractères')

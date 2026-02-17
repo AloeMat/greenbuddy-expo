@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { radius } from '@tokens/radius';
 
 interface XpBarProps {
   currentXp: number;
@@ -42,6 +43,6 @@ const styles = StyleSheet.create({
   textContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
   levelText: { fontWeight: 'bold', color: '#2D5A27' },
   xpText: { fontSize: 12, color: '#666' },
-  barBackground: { height: 10, backgroundColor: '#E0E0E0', borderRadius: 5, overflow: 'hidden' },
-  barFill: { height: '100%', backgroundColor: '#4CAF50', borderRadius: 5 },
+  barBackground: { height: 10, backgroundColor: '#E0E0E0', borderRadius: radius.xs, overflow: 'hidden' }, // Phase 5.5: 5 → 8 (+60%)
+  barFill: { height: '100%', backgroundColor: '#4CAF50', borderRadius: radius.xs }, // Phase 5.5: 5 → 8 (+60%)
 });

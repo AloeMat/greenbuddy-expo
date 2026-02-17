@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Flame, Zap, Trophy } from 'lucide-react-native';
 import { COLORS } from '@tokens/colors';
+import { radius } from '@tokens/radius';
 
 interface StreakCounterProps {
   currentStreak: number;
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
   },
   streakCard: {
     backgroundColor: COLORS.warning[50],
-    borderRadius: 16,
+    borderRadius: radius.lg, // Phase 5.5: 16 → 24 (+50%)
     padding: 16,
     borderWidth: 2,
     borderColor: COLORS.warning[200],
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
   milestoneBadge: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: radius.sm, // Phase 5.5: 10 → 12 (+20%)
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -309,12 +310,12 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 6,
     backgroundColor: COLORS.neutral[200],
-    borderRadius: 3,
+    borderRadius: radius.xs, // Phase 5.5: 3 → 8 (+167%)
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: COLORS.warning[500],
-    borderRadius: 3,
+    borderRadius: radius.xs, // Phase 5.5: 3 → 8 (+167%)
   },
 });

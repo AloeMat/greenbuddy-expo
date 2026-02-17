@@ -1,3 +1,4 @@
+import { radius } from '@tokens/radius';
 /**
  * Plant Form Component
  * Add or edit plant details
@@ -581,7 +582,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#D1D5DB',
-    borderRadius: 8,
+    borderRadius: radius.sm,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 14,
@@ -595,7 +596,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#D1D5DB',
-    borderRadius: 8,
+    borderRadius: radius.sm,
     paddingHorizontal: 12,
     paddingVertical: 10,
     flexDirection: 'row',
@@ -649,7 +650,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     borderWidth: 1,
     borderColor: '#D1D5DB',
-    borderRadius: 8,
+    borderRadius: radius.sm,
     paddingHorizontal: 12,
     paddingVertical: 10,
     flexDirection: 'row',
@@ -672,7 +673,7 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: radius.sm,
     alignItems: 'center'
   },
   buttonPrimary: {
@@ -725,7 +726,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     marginBottom: 8,
-    borderRadius: 8,
+    borderRadius: radius.sm,
     backgroundColor: '#F9FAFB'
   },
   modalItemSelected: {
@@ -749,7 +750,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     backgroundColor: '#10B981',
     paddingVertical: 12,
-    borderRadius: 8,
+    borderRadius: radius.sm,
     alignItems: 'center'
   },
   modalCloseText: {

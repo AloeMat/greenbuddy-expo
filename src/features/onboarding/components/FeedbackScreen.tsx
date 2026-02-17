@@ -32,7 +32,7 @@ export function FeedbackScreen({
     <View style={{ flex: 1, backgroundColor: '#F3F4F6', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 }}>
       {/* Progress bar */}
       <View style={{ position: 'absolute', top: 48, left: 0, right: 0, paddingHorizontal: 24 }}>
-        <View style={{ height: 8, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden' }}>
+        <View style={{ height: 12, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden' }}>
           <Animated.View
             entering={FadeIn}
             style={{ height: '100%', backgroundColor: '#10B981', width: `${progress}%` }}
@@ -54,7 +54,7 @@ export function FeedbackScreen({
       {/* Text */}
       <Animated.Text
         entering={FadeIn.delay(400)}
-        style={{ fontSize: 16, color: '#4B5563', textAlign: 'center', marginTop: 16 }}
+        style={{ fontSize: 16, color: '#374151', textAlign: 'center', marginTop: 16 }}
       >
         {text}
       </Animated.Text>

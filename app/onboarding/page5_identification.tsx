@@ -4,6 +4,7 @@ import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withRepeat, wit
 import { router } from 'expo-router';
 import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
+import { radius } from '@tokens/radius';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
 
@@ -46,7 +47,7 @@ export default function Page5Identification() {
     <View style={{ flex: 1, backgroundColor: onboardingColors.green[50] }}>
       {/* Header with progress bar */}
       <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
-        <View style={{ height: 8, backgroundColor: onboardingColors.gray[200], borderRadius: 9999, overflow: 'hidden', marginBottom: 8 }}>
+        <View style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: radius.full, overflow: 'hidden', marginBottom: 8 }}>
           <Animated.View
             style={{ width: `${PAGE_PROGRESS.page5_identification}%`, height: '100%', backgroundColor: onboardingColors.green[500] }}
           />

@@ -13,9 +13,8 @@ import {
   IconContainer,
   Title,
   Subtitle,
-  PrimaryButton,
-  SecondaryButton,
 } from '@design-system/onboarding';
+import { PremiumButton } from '@design-system/components';
 
 export default function Page1() {
   const { setCurrentPage, markPageComplete } = useOnboardingStore();
@@ -52,15 +51,25 @@ export default function Page1() {
       {/* Footer buttons */}
       <OnboardingFooter>
         <Animated.View entering={FadeInDown.delay(800)}>
-          <PrimaryButton testID="button-start" onPress={handleStart}>
+          <PremiumButton
+            testID="button-start"
+            variant="primary"
+            size="md"
+            onPress={handleStart}
+          >
             Commencer
-          </PrimaryButton>
+          </PremiumButton>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1000)}>
-          <SecondaryButton testID="button-how-it-works" onPress={() => {}}>
+          <PremiumButton
+            testID="button-how-it-works"
+            variant="secondary"
+            size="md"
+            onPress={() => {}}
+          >
             Comment ça marche ?
-          </SecondaryButton>
+          </PremiumButton>
         </Animated.View>
       </OnboardingFooter>
     </OnboardingScreen>

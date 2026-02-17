@@ -55,13 +55,13 @@ export function OptionCard({
         style={{ flex: 1, backgroundColor: '#F3F4F6', paddingHorizontal: 24, paddingTop: 64 }}
       >
       {/* Progress bar */}
-      <View testID="progress-bar" style={{ height: 8, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden', marginBottom: 32 }}>
+      <View testID="progress-bar" style={{ height: 12, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden', marginBottom: 32 }}>
         <View style={{ height: '100%', backgroundColor: '#10B981', width: `${progress}%` }} />
       </View>
 
       {/* Title */}
       <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1F2937', marginBottom: 8 }}>{title}</Text>
-      <Text style={{ fontSize: 16, color: '#4B5563', marginBottom: 32 }}>{text}</Text>
+      <Text style={{ fontSize: 16, color: '#374151', marginBottom: 32 }}>{text}</Text>
 
       {/* Options */}
       <View style={{ paddingBottom: 40 }}>
@@ -72,6 +72,7 @@ export function OptionCard({
           >
             <TouchableOpacity
               testID={`pain-${option.value}`}
+              activeOpacity={0.7}
               onPress={() => handleSelect(option)}
               style={{
                 paddingHorizontal: 16,

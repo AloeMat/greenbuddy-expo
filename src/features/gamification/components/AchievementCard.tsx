@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { radius } from '@tokens/radius';
 
 interface AchievementCardProps {
   title: string;
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: '#FFF',
-    borderRadius: 12,
+    borderRadius: radius.sm,
     padding: 12,
     marginBottom: 12,
     alignItems: 'center',
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: radius.xl,
     backgroundColor: '#FFF9C4',
     justifyContent: 'center',
     alignItems: 'center',

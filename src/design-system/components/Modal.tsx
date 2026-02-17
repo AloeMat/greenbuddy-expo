@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal as RNModal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { radius } from '@tokens/radius';
 
 interface ModalProps {
   visible: boolean;
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: radius.lg, // Phase 5.5: 16 → 24 (+50%)
     width: '85%',
     maxHeight: height * 0.8,
     elevation: 5,

@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Check, Lock } from 'lucide-react-native';
 import { COLORS } from '@tokens/colors';
+import { radius } from '@tokens/radius';
 
 interface BadgeCardProps {
   icon: React.ReactNode; // Lucide icon component
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     right: -4,
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: radius.sm, // Phase 5.5: 12 → 12
     backgroundColor: COLORS.neutral[200],
     alignItems: 'center',
     justifyContent: 'center',
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     right: -4,
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: radius.sm, // Phase 5.5: 12 → 12
     backgroundColor: COLORS.primary[100],
     borderWidth: 2,
     borderColor: COLORS.primary[600],

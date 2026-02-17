@@ -23,6 +23,7 @@ import Animated, {
 import { useDailyCheckIn } from '@gamification/hooks/useStreak';
 import { useGamificationStore } from '@gamification/store/gamificationStore';
 import { colors } from '@design-system/tokens/colors';
+import { radius } from '@tokens/radius';
 import { logger } from '@lib/services/logger';
 
 interface DailyCheckInButtonProps {
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: radius.lg,
     gap: 6,
   },
   compactButtonText: {
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFF',
-    borderRadius: 16,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 2,
     borderColor: colors.primary[500],
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
   flameIcon: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: radius.xl,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.neutral[50],
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: radius.sm,
   },
   personalBestLabel: {
     fontSize: 10,
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: radius.sm,
     backgroundColor: colors.neutral[100],
     borderWidth: 2,
     borderColor: colors.neutral[200],
@@ -329,7 +330,7 @@ const styles = StyleSheet.create({
   // Check-In Button
   checkInButton: {
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: radius.sm,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
@@ -354,7 +355,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#D1FAE5',
-    borderRadius: 12,
+    borderRadius: radius.sm,
     padding: 12,
     gap: 12,
   },

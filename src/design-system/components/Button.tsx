@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { radius } from '@tokens/radius';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'danger';
 type ButtonSize = 'small' | 'medium' | 'large';
@@ -39,7 +40,7 @@ export const Button = ({
 
 function getStyles(variant: ButtonVariant, size: ButtonSize, disabled: boolean) {
   const baseButton: ViewStyle = {
-    borderRadius: 8,
+    borderRadius: radius.sm, // Phase 5.5: 8 → 12 (+50%)
     justifyContent: 'center',
     alignItems: 'center',
     opacity: disabled ? 0.5 : 1,
