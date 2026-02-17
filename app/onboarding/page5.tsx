@@ -13,7 +13,7 @@ import { cameraService } from '@plants/services/camera';
 import { plantNetService } from '@plants/services/plantnet';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
-import { PremiumButton } from '@onboarding/components';
+import { PremiumButton } from '@design-system/components';
 
 type CameraState = 'ready' | 'error' | 'camera_open';
 

@@ -11,7 +11,7 @@ import { useGamificationStore } from '@gamification/store';
 import { ConfettiExplosion } from '@design-system/animations';
 import { trackPageView, trackCompletion } from '@onboarding/utils/analytics';
 import { onboardingColors } from '@design-system/onboarding/colors';
-import { PremiumButton } from '@onboarding/components';
+import { PremiumButton } from '@design-system/components';
 
 export default function Page10() {
   const { setCurrentPage, earnedXP, completeOnboarding, userProfile, plantName } =

@@ -12,7 +12,7 @@ import { logger } from '@lib/services/logger';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS, PAGE6_VARIANTS, PROFILES } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
-import { PremiumButton } from '@onboarding/components';
+import { PremiumButton } from '@design-system/components';
 
 export default function Page6Dynamic() {
   const { setCurrentPage, userProfile, identifiedPlant, addXP, markPageComplete } =

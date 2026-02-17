@@ -10,7 +10,8 @@ import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
-import { FeedbackModal, PremiumButton } from '@onboarding/components';
+import { FeedbackModal } from '@onboarding/components';
+import { PremiumButton } from '@design-system/components';
 
 export default function Page7() {
   const { setCurrentPage, plantName, identifiedPlant, markPageComplete } = useOnboardingStore();
