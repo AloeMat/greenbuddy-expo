@@ -57,13 +57,19 @@ function RootLayoutNav() {
   const { session, isLoading: authLoading, initializeAuth } = useAuthStore();
   const [splashHidden, setSplashHidden] = useState(false);
 
-  // Initialize auth on app startup
+  // Initialize auth on app startup (only once)
   useEffect(() => {
     const init = async () => {
-      await initializeAuth?.();
+      try {
+        logger.info('🔐 RootLayout: Initializing auth...');
+        await initializeAuth?.();
+        logger.info('✅ RootLayout: Auth initialized');
+      } catch (error) {
+        logger.error('❌ RootLayout: Auth init failed:', error);
+      }
     };
     init();
-  }, [initializeAuth]);
+  }, []); // Empty dependency array - run only once on mount
 
   // Preload avatar images on app startup (Flyweight Pattern optimization)
   useEffect(() => {
