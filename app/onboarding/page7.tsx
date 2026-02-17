@@ -10,7 +10,7 @@ import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
-import { FeedbackModal } from '@onboarding/components';
+import { FeedbackModal, PremiumButton } from '@onboarding/components';
 
 export default function Page7() {
   const { setCurrentPage, plantName, identifiedPlant, markPageComplete } = useOnboardingStore();
@@ -200,16 +200,14 @@ export default function Page7() {
       {/* Footer button */}
       <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
         <Animated.View entering={FadeInDown.delay(1800)}>
-          <TouchableOpacity
+          <PremiumButton
             testID="button-continue"
-            activeOpacity={0.7}
+            variant="primary"
+            size="md"
             onPress={handleContinue}
-            style={{ backgroundColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: spacing.lg, alignItems: 'center' }}
-            accessibilityRole="button"
+            label="Sauvegarder ma plante"
             accessibilityLabel="Sauvegarder ma plante"
-          >
-            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Sauvegarder ma plante</Text>
-          </TouchableOpacity>
+          />
         </Animated.View>
       </View>
       </ScrollView>

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { CameraView } from 'expo-camera';
-import { Camera, Image as ImageIcon, Search } from 'lucide-react-native';
+import { Camera } from 'lucide-react-native';
 import { radius } from '@tokens/radius';
 import { spacing } from '@tokens/spacing';
 import * as Haptics from 'expo-haptics';
@@ -13,6 +13,7 @@ import { cameraService } from '@plants/services/camera';
 import { plantNetService } from '@plants/services/plantnet';
 import { PAGE_PROGRESS } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
+import { PremiumButton } from '@onboarding/components';
 
 type CameraState = 'ready' | 'error' | 'camera_open';
 
@@ -183,7 +184,7 @@ export default function Page5() {
         </Animated.Text>
 
         {/* Error message */}
-        {errorMsg && (
+        {!!errorMsg && (
           <Animated.Text style={{ color: onboardingColors.error, textAlign: 'center', marginBottom: 16 }}>{errorMsg}</Animated.Text>
         )}
       </Animated.View>
@@ -191,28 +192,31 @@ export default function Page5() {
       {/* Action buttons */}
       <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'], gap: spacing.sm }}>
         <Animated.View entering={FadeInDown.delay(800)}>
-          <TouchableOpacity
+          <PremiumButton
+            variant="primary"
+            size="md"
             onPress={() => setState('camera_open')}
             disabled={isCapturing}
-            style={{ backgroundColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: spacing.lg, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: spacing.sm }}
-          >
-            <Camera size={20} color="white" />
-            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Prendre une photo</Text>
-          </TouchableOpacity>
+            label="Prendre une photo"
+            accessibilityLabel="Prendre une photo avec la caméra"
+          />
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1000)}>
-          <TouchableOpacity
-            disabled
-            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, opacity: 0.5 }}
-          >
-            <ImageIcon size={20} color={onboardingColors.green[700]} />
-            <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Choisir dans la galerie</Text>
-          </TouchableOpacity>
+          <PremiumButton
+            variant="secondary"
+            size="md"
+            onPress={() => {}}
+            disabled={true}
+            label="Choisir dans la galerie"
+            accessibilityLabel="Choisir une image dans la galerie (non disponible)"
+          />
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1200)}>
-          <TouchableOpacity
+          <PremiumButton
+            variant="secondary"
+            size="md"
             onPress={async () => {
               // Skip camera for testing - use placeholder identification
               const identification = {
@@ -229,11 +233,9 @@ export default function Page5() {
               markPageComplete('page5');
               router.push('/onboarding/page5_identification');
             }}
-            style={{ borderWidth: 2, borderColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
-          >
-            <Search size={20} color={onboardingColors.green[700]} />
-            <Text style={{ color: onboardingColors.green[700], fontWeight: '600', fontSize: 18 }}>Skip (test)</Text>
-          </TouchableOpacity>
+            label="Skip (test)"
+            accessibilityLabel="Ignorer cette étape (mode test)"
+          />
         </Animated.View>
       </View>
     </View>

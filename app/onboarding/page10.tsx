@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { Sparkles, Trophy, Zap } from 'lucide-react-native';
@@ -11,6 +11,7 @@ import { useGamificationStore } from '@gamification/store';
 import { ConfettiExplosion } from '@design-system/animations';
 import { trackPageView, trackCompletion } from '@onboarding/utils/analytics';
 import { onboardingColors } from '@design-system/onboarding/colors';
+import { PremiumButton } from '@onboarding/components';
 
 export default function Page10() {
   const { setCurrentPage, earnedXP, completeOnboarding, userProfile, plantName } =
@@ -158,17 +159,14 @@ export default function Page10() {
         {/* Footer button */}
         <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
           <Animated.View entering={FadeInDown.delay(1600)}>
-            <TouchableOpacity
+            <PremiumButton
               testID="button-discover-garden"
-              activeOpacity={0.7}
+              variant="primary"
+              size="md"
               onPress={handleContinue}
-              style={{ backgroundColor: onboardingColors.green[500], borderRadius: radius.sm, paddingVertical: spacing.lg, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: spacing.sm }}
-              accessibilityRole="button"
-              accessibilityLabel="D??couvrir mon jardin"
-            >
-              <Sparkles size={20} color="white" />
-              <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Découvrir mon jardin</Text>
-            </TouchableOpacity>
+              label="Découvrir mon jardin"
+              accessibilityLabel="Découvrir mon jardin"
+            />
           </Animated.View>
         </View>
       </ScrollView>

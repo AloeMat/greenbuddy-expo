@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { router } from 'expo-router';
+import { radius } from '@tokens/radius';
+import { spacing } from '@tokens/spacing';
+import { onboardingColors } from '@design-system/onboarding/colors';
 import { useOnboardingStore } from '../store/onboardingStore';
 import { trackPageView } from '../utils/analytics';
 import { FeedbackModal } from './FeedbackModal';
+import * as Haptics from 'expo-haptics';
 
 interface Option {
   label: string; // "🌿 J'agis immédiatement"
@@ -41,7 +45,8 @@ export function ProfileChoice({
     trackPageView(currentPage);
   }, [currentPage]);
 
-  const handleSelect = (option: Option) => {
+  const handleSelect = async (option: Option) => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setSelectedProfile(option.profile);
     setUserProfile(option.profile as any);
     addXP(option.xp);
@@ -66,39 +71,39 @@ export function ProfileChoice({
     <>
       <ScrollView
         testID={`onboarding-${currentPage}`}
-        style={{ flex: 1, backgroundColor: '#F3F4F6', paddingHorizontal: 24, paddingTop: 64 }}
+        style={{ flex: 1, backgroundColor: onboardingColors.green[50], paddingHorizontal: spacing['2xl'], paddingTop: spacing['5xl'] }}
       >
       {/* Progress bar */}
-      <View testID="progress-bar" style={{ height: 12, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden', marginBottom: 32 }}>
-        <View style={{ height: '100%', backgroundColor: '#10B981', width: `${progress}%` }} />
+      <View testID="progress-bar" style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: radius.full, overflow: 'hidden', marginBottom: spacing['3xl'] }}>
+        <Animated.View entering={FadeInDown} style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${progress}%` }} />
       </View>
 
       {/* Title */}
-      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1F2937', marginBottom: 8 }}>{title}</Text>
-      <Text style={{ fontSize: 16, color: '#374151', marginBottom: 32 }}>{text}</Text>
+      <Animated.Text entering={FadeInDown.delay(100)} style={{ fontSize: 28, fontWeight: '700', color: onboardingColors.text.primary, marginBottom: spacing.md, letterSpacing: 0.5 }}>{title}</Animated.Text>
+      <Animated.Text entering={FadeInDown.delay(200)} style={{ fontSize: 16, color: onboardingColors.text.secondary, marginBottom: spacing['3xl'], lineHeight: 24 }}>{text}</Animated.Text>
 
       {/* Options */}
-      <View style={{ paddingBottom: 40 }}>
+      <View style={{ paddingBottom: spacing['5xl'] }}>
         {options.map((option, index) => (
           <Animated.View
             key={option.profile}
-            entering={FadeInDown.delay(index * 100).springify()}
+            entering={FadeInDown.delay(300 + index * 100).springify()}
           >
             <TouchableOpacity
               testID={`profile-${option.profile}`}
               activeOpacity={0.7}
               onPress={() => handleSelect(option)}
               style={{
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-                borderRadius: 12,
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.md,
+                borderRadius: radius.md,
                 borderWidth: 2,
-                marginBottom: 16,
-                backgroundColor: selectedProfile === option.profile ? '#DCFCE7' : '#FFFFFF',
-                borderColor: selectedProfile === option.profile ? '#10B981' : '#E5E7EB',
+                marginBottom: spacing.md,
+                backgroundColor: selectedProfile === option.profile ? onboardingColors.green[100] : 'white',
+                borderColor: selectedProfile === option.profile ? onboardingColors.green[500] : onboardingColors.gray[200],
               }}
             >
-              <Text style={{ fontSize: 16, fontWeight: '600', color: '#111827' }}>{option.label}</Text>
+              <Text style={{ fontSize: 16, fontWeight: '600', color: onboardingColors.text.primary, letterSpacing: 0.2 }}>{option.label}</Text>
             </TouchableOpacity>
           </Animated.View>
         ))}

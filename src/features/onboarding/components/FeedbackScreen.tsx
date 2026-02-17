@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
+import { radius } from '@tokens/radius';
+import { spacing } from '@tokens/spacing';
+import { onboardingColors } from '@design-system/onboarding/colors';
 
 interface FeedbackScreenProps {
   title: string;
@@ -29,13 +32,13 @@ export function FeedbackScreen({
   }, [autoAdvanceMs, nextRoute]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F3F4F6', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 }}>
+    <View style={{ flex: 1, backgroundColor: onboardingColors.green[50], justifyContent: 'center', alignItems: 'center', paddingHorizontal: spacing['2xl'] }}>
       {/* Progress bar */}
-      <View style={{ position: 'absolute', top: 48, left: 0, right: 0, paddingHorizontal: 24 }}>
-        <View style={{ height: 12, backgroundColor: '#E5E7EB', borderRadius: 9999, overflow: 'hidden' }}>
+      <View style={{ position: 'absolute', top: spacing['5xl'], left: 0, right: 0, paddingHorizontal: spacing['2xl'] }}>
+        <View style={{ height: 12, backgroundColor: onboardingColors.gray[200], borderRadius: radius.full, overflow: 'hidden' }}>
           <Animated.View
             entering={FadeIn}
-            style={{ height: '100%', backgroundColor: '#10B981', width: `${progress}%` }}
+            style={{ height: '100%', backgroundColor: onboardingColors.green[500], width: `${progress}%` }}
           />
         </View>
       </View>
@@ -46,7 +49,7 @@ export function FeedbackScreen({
       {/* Title */}
       <Animated.Text
         entering={FadeIn.delay(200)}
-        style={{ fontSize: 24, fontWeight: 'bold', color: '#1F2937', textAlign: 'center', marginTop: 24 }}
+        style={{ fontSize: 28, fontWeight: '700', color: onboardingColors.text.primary, textAlign: 'center', marginTop: spacing.lg, letterSpacing: 0.5 }}
       >
         {title}
       </Animated.Text>
@@ -54,7 +57,7 @@ export function FeedbackScreen({
       {/* Text */}
       <Animated.Text
         entering={FadeIn.delay(400)}
-        style={{ fontSize: 16, color: '#374151', textAlign: 'center', marginTop: 16 }}
+        style={{ fontSize: 16, color: onboardingColors.text.secondary, textAlign: 'center', marginTop: spacing.md, lineHeight: 24 }}
       >
         {text}
       </Animated.Text>

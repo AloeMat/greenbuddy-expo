@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
-import { Volume2, SkipForward } from 'lucide-react-native';
+import { Volume2 } from 'lucide-react-native';
 import { radius } from '@tokens/radius';
 import { spacing } from '@tokens/spacing';
 import * as Haptics from 'expo-haptics';
@@ -12,6 +12,7 @@ import { logger } from '@lib/services/logger';
 import { trackPageView } from '@onboarding/utils/analytics';
 import { PAGE_PROGRESS, PAGE6_VARIANTS, PROFILES } from '@onboarding/constants/onboardingFlow';
 import { onboardingColors } from '@design-system/onboarding/colors';
+import { PremiumButton } from '@onboarding/components';
 
 export default function Page6Dynamic() {
   const { setCurrentPage, userProfile, identifiedPlant, addXP, markPageComplete } =
@@ -132,26 +133,15 @@ export default function Page6Dynamic() {
       {/* Footer button */}
       <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
         <Animated.View entering={FadeInDown.delay(1000)}>
-          <TouchableOpacity
-            activeOpacity={0.7}
+          <PremiumButton
+            variant="primary"
+            size="md"
             onPress={handleContinue}
             disabled={!textSpoken}
-            style={{
-              borderRadius: radius.sm,
-              paddingVertical: spacing.lg,
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              gap: spacing.sm,
-              backgroundColor: textSpoken ? onboardingColors.green[500] : onboardingColors.gray[200]
-            }}
-            accessibilityRole="button"
-            accessibilityState={{ disabled: !textSpoken }}
+            label="Continuer"
             accessibilityLabel="Continuer vers l'étape suivante"
-          >
-            <SkipForward size={20} color="white" />
-            <Text style={{ color: 'white', fontWeight: '600', fontSize: 18 }}>Continuer</Text>
-          </TouchableOpacity>
+            accessibilityState={{ disabled: !textSpoken }}
+          />
         </Animated.View>
       </View>
     </View>
