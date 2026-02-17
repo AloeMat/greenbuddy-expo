@@ -17,7 +17,7 @@ import { useAuthStore } from '@auth/store/authStore';
 import { ErrorBoundary } from '@lib/components/ErrorBoundary';
 import { LogBox } from 'react-native';
 import { notificationService } from '@lib/services/notifications';
-import { performanceMonitor } from '@utils/performanceMonitor';
+import { performanceMonitor } from '@lib/utils/performanceMonitor';
 import { initializeNotificationHandler, scheduleDailyCheckInNotification } from '@gamification/services/dailyNotificationService';
 import { logger } from '@lib/services/logger';
 import { GamificationListener } from '@gamification/listeners/GamificationListener';

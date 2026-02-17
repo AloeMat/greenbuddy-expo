@@ -20,6 +20,7 @@
 import { Image, ImageSourcePropType } from 'react-native';
 import { logger } from '@lib/services/logger';
 import { PlantPersonality } from '@appTypes';
+import { avatarImages } from '@lib/assets';
 
 /**
  * Flyweight: Shared avatar image instance
@@ -96,7 +97,7 @@ export class AvatarImageFactory {
     // Personality 1: Succulente (hardy, low-maintenance)
     this.avatarPool.set('succulente', {
       personality: 'succulente',
-      source: require('@assets/avatars/succulente.png'),
+      source: avatarImages.succulente,
       name: 'Succulent',
       description: 'Resilient and hardy',
       colors: { primary: '#A8D5BA', secondary: '#98C9A3', accent: '#7CB89F' }
@@ -105,7 +106,7 @@ export class AvatarImageFactory {
     // Personality 2: Orchidee (elegant, delicate)
     this.avatarPool.set('orchidee', {
       personality: 'orchidee',
-      source: require('@assets/avatars/orchidee.png'),
+      source: avatarImages.orchidee,
       name: 'Orchid',
       description: 'Elegant and refined',
       colors: { primary: '#FF6B6B', secondary: '#FFD93D', accent: '#FF8C42' }
@@ -114,7 +115,7 @@ export class AvatarImageFactory {
     // Personality 3: Monstera (bold, striking)
     this.avatarPool.set('monstera', {
       personality: 'monstera',
-      source: require('@assets/avatars/monstera.png'),
+      source: avatarImages.monstera,
       name: 'Monstera',
       description: 'Bold and dramatic',
       colors: { primary: '#B3E5FC', secondary: '#81D4FA', accent: '#4DD0E1' }
@@ -123,7 +124,7 @@ export class AvatarImageFactory {
     // Personality 4: Fougere (delicate, feathery)
     this.avatarPool.set('fougere', {
       personality: 'fougere',
-      source: require('@assets/avatars/fougere.png'),
+      source: avatarImages.fougere,
       name: 'Fern',
       description: 'Delicate and graceful',
       colors: { primary: '#C8E6C9', secondary: '#A5D6A7', accent: '#81C784' }
@@ -132,7 +133,7 @@ export class AvatarImageFactory {
     // Personality 5: Carnivore (exotic, unique)
     this.avatarPool.set('carnivore', {
       personality: 'carnivore',
-      source: require('@assets/avatars/carnivore.png'),
+      source: avatarImages.carnivore,
       name: 'Carnivore',
       description: 'Exotic and fascinating',
       colors: { primary: '#80DEEA', secondary: '#4DD0E1', accent: '#26C6DA' }

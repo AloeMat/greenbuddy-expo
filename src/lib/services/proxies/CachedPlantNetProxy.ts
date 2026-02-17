@@ -11,7 +11,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IPlantNetService, PlantIdentificationResult } from '@features/plants/services/plantnet';
-import { logger } from '../logger';
+import { logger } from '@lib/services/logger';
 
 interface CacheEntry<T> {
   data: T;

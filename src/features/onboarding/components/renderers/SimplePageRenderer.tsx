@@ -5,8 +5,8 @@ import { radius } from '@tokens/radius';
 import { spacing } from '@tokens/spacing';
 import { onboardingColors } from '@design-system/onboarding/colors';
 import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton, SecondaryButton } from '@design-system/onboarding/components';
-import { SimplePage } from '../../types/onboardingSchema';
-import { getStepNumber } from '../../utils/getStepNumber';
+import { SimplePage } from '@onboarding/types/onboardingSchema';
+import { getStepNumber } from '@onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
 
 interface SimplePageRendererProps {

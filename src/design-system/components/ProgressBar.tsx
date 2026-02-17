@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ViewStyle } from 'react-native';
 import Animated, { FadeInDown, useSharedValue, withTiming } from 'react-native-reanimated';
 import { shadows } from '@tokens/shadows';
-import { onboardingColors } from '../onboarding/colors';
+import { onboardingColors } from '@design-system/onboarding/colors';
 
 export interface ProgressBarProps {
   progress: number; // 0-100

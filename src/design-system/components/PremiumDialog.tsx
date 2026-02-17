@@ -12,7 +12,7 @@ import Animated, { FadeIn, SlideInUp } from 'react-native-reanimated';
 import { radius } from '@tokens/radius';
 import { spacing } from '@tokens/spacing';
 import { shadows } from '@tokens/shadows';
-import { onboardingColors } from '../onboarding/colors';
+import { onboardingColors } from '@design-system/onboarding/colors';
 import { Feather } from '@expo/vector-icons';
 
 export interface PremiumDialogProps extends Omit<ModalProps, 'children'> {

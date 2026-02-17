@@ -18,11 +18,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { PageRenderer } from './renderers/PageRenderer';
-import { useOnboardingStore } from '../store/onboardingStore';
+import { useOnboardingStore } from '@onboarding/store/onboardingStore';
 import { router } from 'expo-router';
-import onboardingConfigJson from '../constants/onboardingConfig.json';
-import { OnboardingConfig, OnboardingPage } from '../types/onboardingSchema';
-import { executeActions } from '../utils/actionExecutor';
+import onboardingConfigJson from '@onboarding/constants/onboardingConfig.json';
+import { OnboardingConfig, OnboardingPage } from '@onboarding/types/onboardingSchema';
+import { executeActions } from '@onboarding/utils/actionExecutor';
 import { onboardingColors } from '@design-system/onboarding/colors';
 
 /**

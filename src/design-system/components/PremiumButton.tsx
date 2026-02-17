@@ -5,7 +5,7 @@ import * as Haptics from 'expo-haptics';
 import { radius } from '@tokens/radius';
 import { spacing } from '@tokens/spacing';
 import { shadows } from '@tokens/shadows';
-import { onboardingColors } from '../onboarding/colors';
+import { onboardingColors } from '@design-system/onboarding/colors';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg';

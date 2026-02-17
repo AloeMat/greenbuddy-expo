@@ -8,6 +8,7 @@ import { ThemedText } from '@design-system/components';
 import { ThemedView } from '@design-system/components';
 import { IconSymbol } from '@design-system/components/icon-symbol';
 import { Fonts } from '@tokens/theme';
+import { uiImages } from '@lib/assets';
 
 // ParallaxScrollView wrapper that accepts header props
 interface ParallaxScrollViewProps extends ScrollViewProps {
@@ -73,7 +74,7 @@ export default function TabTwoScreen() {
           different screen densities
         </ThemedText>
         <Image
-          source={require('../../assets/images/react-logo.png')}
+          source={uiImages.reactLogo}
           style={{ width: 100, height: 100, alignSelf: 'center' }}
         />
         <ExternalLink href="https://reactnative.dev/docs/images">

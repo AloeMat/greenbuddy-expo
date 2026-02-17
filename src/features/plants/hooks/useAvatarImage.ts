@@ -5,7 +5,7 @@
  */
 
 import { useMemo, useCallback, useEffect, useState } from 'react';
-import { avatarFactory, AvatarImage, AvatarFactoryStats } from '../factories/AvatarImageFactory';
+import { avatarFactory, AvatarImage, AvatarFactoryStats } from '@plants/factories/AvatarImageFactory';
 import { PlantPersonality } from '@appTypes';
 import { logger } from '@lib/services/logger';
 

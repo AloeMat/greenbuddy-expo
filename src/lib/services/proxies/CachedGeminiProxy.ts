@@ -12,8 +12,8 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { IGeminiService } from '../gemini';
-import { logger } from '../logger';
+import { IGeminiService } from '@lib/services/gemini';
+import { logger } from '@lib/services/logger';
 import { PlantAnalysis, AvatarEmotion, PlantPersonality } from '@appTypes';
 
 interface CacheEntry<T> {

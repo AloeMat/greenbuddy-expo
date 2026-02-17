@@ -5,8 +5,8 @@ import { radius } from '@tokens/radius';
 import { spacing } from '@tokens/spacing';
 import { onboardingColors } from '@design-system/onboarding/colors';
 import { OnboardingScreen, OnboardingHeader, OnboardingContent, Title, Subtitle } from '@design-system/onboarding/components';
-import { FeedbackPage } from '../../types/onboardingSchema';
-import { getStepNumber } from '../../utils/getStepNumber';
+import { FeedbackPage } from '@onboarding/types/onboardingSchema';
+import { getStepNumber } from '@onboarding/utils/getStepNumber';
 
 interface FeedbackRendererProps {
   page: FeedbackPage;

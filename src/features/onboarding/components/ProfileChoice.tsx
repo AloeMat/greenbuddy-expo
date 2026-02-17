@@ -5,8 +5,8 @@ import { router } from 'expo-router';
 import { radius } from '@tokens/radius';
 import { spacing } from '@tokens/spacing';
 import { onboardingColors } from '@design-system/onboarding/colors';
-import { useOnboardingStore } from '../store/onboardingStore';
-import { trackPageView } from '../utils/analytics';
+import { useOnboardingStore } from '@onboarding/store/onboardingStore';
+import { trackPageView } from '@onboarding/utils/analytics';
 import { FeedbackModal } from './FeedbackModal';
 import * as Haptics from 'expo-haptics';
 

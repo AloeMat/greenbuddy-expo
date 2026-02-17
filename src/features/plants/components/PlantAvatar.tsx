@@ -18,6 +18,7 @@ import Animated, {
 import { GradientOverlay } from '@design-system/components/GradientOverlay';
 import { logger } from '@lib/services/logger';
 import { PlantPersonality, AvatarEmotion } from '@appTypes';
+import { avatarImages } from '@lib/assets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -31,16 +32,17 @@ export interface PlantAvatarProps {
 }
 
 // Avatar images mapping (PNG sprites)
+// Imported from @lib/assets via alias (no more relative paths!)
 const AVATAR_IMAGES: Record<PlantPersonality, any> = {
-  cactus: require('../../../../assets/avatars/cactus.png'),
-  orchidee: require('../../../../assets/avatars/orchidee.png'),
-  monstera: require('../../../../assets/avatars/monstera.png'),
-  succulente: require('../../../../assets/avatars/succulente.png'),
-  fougere: require('../../../../assets/avatars/fougere.png'),
-  carnivore: require('../../../../assets/avatars/carnivore.png'),
-  pilea: require('../../../../assets/avatars/pilea.png'),
-  palmier: require('../../../../assets/avatars/palmier.png'),
-  pothos: require('../../../../assets/avatars/pilea.png')  // Pothos/Devil's Ivy (fallback to pilea)
+  cactus: avatarImages.cactus,
+  orchidee: avatarImages.orchidee,
+  monstera: avatarImages.monstera,
+  succulente: avatarImages.succulente,
+  fougere: avatarImages.fougere,
+  carnivore: avatarImages.carnivore,
+  pilea: avatarImages.pilea,
+  palmier: avatarImages.palmier,
+  pothos: avatarImages.pilea  // Pothos/Devil's Ivy (fallback to pilea)
 };
 
 // Emotion colors for glow effect

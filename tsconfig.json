@@ -14,7 +14,8 @@
       "@appTypes": ["./src/types/index.ts"],
       "@appTypes/*": ["./src/types/*"],
       "@utils/*": ["./src/lib/utils/*"],
-      "@onboarding/*": ["./src/features/onboarding/*"]
+      "@onboarding/*": ["./src/features/onboarding/*"],
+      "@assets/*": ["./assets/*"]
     }
   },
   "include": [

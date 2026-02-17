@@ -5,10 +5,10 @@ import { spacing } from '@tokens/spacing';
 import { onboardingColors } from '@design-system/onboarding/colors';
 import { PremiumInput } from '@design-system/components/PremiumInput';
 import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@design-system/onboarding/components';
-import { InputsPage } from '../../types/onboardingSchema';
-import { useOnboardingStore } from '../../store/onboardingStore';
-import { executeActions } from '../../utils/actionExecutor';
-import { getStepNumber } from '../../utils/getStepNumber';
+import { InputsPage } from '@onboarding/types/onboardingSchema';
+import { useOnboardingStore } from '@onboarding/store/onboardingStore';
+import { executeActions } from '@onboarding/utils/actionExecutor';
+import { getStepNumber } from '@onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
 
 interface InputsRendererProps {
