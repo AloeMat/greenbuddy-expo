@@ -20,6 +20,8 @@ import { notificationService } from '@lib/services/notifications';
 import { performanceMonitor } from '@utils/performanceMonitor';
 import { initializeNotificationHandler, scheduleDailyCheckInNotification } from '@gamification/services/dailyNotificationService';
 import { logger } from '@lib/services/logger';
+import { GamificationListener } from '@gamification/listeners/GamificationListener';
+import { avatarFactory } from '@plants/factories/AvatarImageFactory';
 
 // Empêcher le splash screen de disparaître automatiquement
 SplashScreen.preventAutoHideAsync();
@@ -62,6 +64,28 @@ function RootLayoutNav() {
     };
     init();
   }, [initializeAuth]);
+
+  // Preload avatar images on app startup (Flyweight Pattern optimization)
+  useEffect(() => {
+    const preloadAvatars = async () => {
+      try {
+        logger.info('🎨 Preloading avatar images for Flyweight Pattern...');
+        await avatarFactory.preloadAvatarImages();
+        const stats = avatarFactory.getStats();
+        logger.info('✅ Avatar preloading complete', {
+          preloaded: stats.preloadedCount,
+          totalAvatars: stats.poolSize,
+          memorySavings: avatarFactory.getMemorySavingsEstimate(100)
+        });
+      } catch (error: any) {
+        logger.warn('⚠️ Avatar preloading failed (non-critical)', {
+          message: error instanceof Error ? error.message : String(error)
+        });
+      }
+    };
+
+    preloadAvatars();
+  }, []);
 
   // Hide splash screen after auth is initialized
   useEffect(() => {
@@ -112,15 +136,20 @@ function RootLayoutNav() {
   }, [authLoading]);
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      {/* Root index handles session-based routing */}
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+    <>
+      {/* Mediator Pattern: GamificationListener (invisible but listens to all events) */}
+      <GamificationListener />
 
-      {/* App groups */}
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-    </Stack>
+      <Stack screenOptions={{ headerShown: false }}>
+        {/* Root index handles session-based routing */}
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+
+        {/* App groups */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      </Stack>
+    </>
   );
 }
 
