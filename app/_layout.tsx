@@ -141,38 +141,26 @@ function RootLayoutNav() {
     }
   }, [authLoading]);
 
-  // Determine initial route based on session
-  const initialRouteName = session ? '(tabs)' : 'onboarding';
-
-  if (authLoading) {
-    // Show loading while auth initializes
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#10B981" />
-      </View>
-    );
-  }
-
   return (
     <>
       {/* Mediator Pattern: GamificationListener (invisible but listens to all events) */}
       <GamificationListener />
 
-      <Stack
-        screenOptions={{ headerShown: false }}
-        initialRouteName={initialRouteName}
-      >
-        {/* Auth groups - always available */}
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        {/* Root index - redirects to (tabs) */}
+        <Stack.Screen name="index" options={{ headerShown: false }} />
 
-        {/* Onboarding - for new users */}
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-
-        {/* Main app - for authenticated users */}
+        {/* Main app tabs */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        {/* Hidden: index.tsx is not used anymore */}
-        {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
+        {/* Onboarding flow */}
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+
+        {/* Authentication screens */}
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+
+        {/* Plant detail screen */}
+        <Stack.Screen name="plant/[id]" options={{ headerShown: false }} />
       </Stack>
     </>
   );
