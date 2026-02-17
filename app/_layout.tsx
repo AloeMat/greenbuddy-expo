@@ -15,7 +15,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from '@auth/store/authStore';
 import { ErrorBoundary } from '@lib/components/ErrorBoundary';
-import { LogBox } from 'react-native';
+import { LogBox, View, ActivityIndicator } from 'react-native';
 import { notificationService } from '@lib/services/notifications';
 import { performanceMonitor } from '@lib/utils/performanceMonitor';
 import { initializeNotificationHandler, scheduleDailyCheckInNotification } from '@gamification/services/dailyNotificationService';
@@ -141,19 +141,38 @@ function RootLayoutNav() {
     }
   }, [authLoading]);
 
+  // Determine initial route based on session
+  const initialRouteName = session ? '(tabs)' : 'onboarding';
+
+  if (authLoading) {
+    // Show loading while auth initializes
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#10B981" />
+      </View>
+    );
+  }
+
   return (
     <>
       {/* Mediator Pattern: GamificationListener (invisible but listens to all events) */}
       <GamificationListener />
 
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* Root index handles session-based routing */}
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-
-        {/* App groups */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+      <Stack
+        screenOptions={{ headerShown: false }}
+        initialRouteName={initialRouteName}
+      >
+        {/* Auth groups - always available */}
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+
+        {/* Onboarding - for new users */}
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+
+        {/* Main app - for authenticated users */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+        {/* Hidden: index.tsx is not used anymore */}
+        {/* <Stack.Screen name="index" options={{ headerShown: false }} /> */}
       </Stack>
     </>
   );
