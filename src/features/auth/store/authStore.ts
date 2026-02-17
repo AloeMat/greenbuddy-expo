@@ -5,9 +5,9 @@
  */
 
 import { create } from 'zustand';
-import { createAuthRepository } from '@auth/repositories/AuthRepository';
-import type { AuthState } from '@appTypes';
-import { logger } from '@lib/services/logger';
+import { createAuthRepository } from '@/features/auth/repositories/AuthRepository';
+import type { AuthState } from '@/types';
+import { logger } from '@/lib/services/logger';
 
 const authRepository = createAuthRepository();
 

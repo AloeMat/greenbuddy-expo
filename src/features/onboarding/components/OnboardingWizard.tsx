@@ -18,12 +18,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { PageRenderer } from './renderers/PageRenderer';
-import { useOnboardingStore } from '@onboarding/store/onboardingStore';
+import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
 import { router } from 'expo-router';
-import onboardingConfigJson from '@onboarding/constants/onboardingConfig.json';
-import { OnboardingConfig, OnboardingPage } from '@onboarding/types/onboardingSchema';
-import { executeActions } from '@onboarding/utils/actionExecutor';
-import { onboardingColors } from '@design-system/onboarding/colors';
+import onboardingConfigJson from '@/features/onboarding/constants/onboardingConfig.json';
+import { OnboardingConfig, OnboardingPage } from '@/features/onboarding/types/onboardingSchema';
+import { executeActions } from '@/features/onboarding/utils/actionExecutor';
+import { onboardingColors } from '@/design-system/onboarding/colors';
 
 /**
  * OnboardingWizard Component

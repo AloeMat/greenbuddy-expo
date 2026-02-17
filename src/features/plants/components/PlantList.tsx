@@ -17,8 +17,8 @@ import {
   RefreshControlProps
 } from 'react-native';
 import { PlantCard } from './PlantCard';
-import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@appTypes';
-import { logger } from '@lib/services/logger';
+import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@/types';
+import { logger } from '@/lib/services/logger';
 
 export interface PlantListItem {
   id: string;

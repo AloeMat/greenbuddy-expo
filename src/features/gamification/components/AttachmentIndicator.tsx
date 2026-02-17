@@ -21,9 +21,9 @@ import {
   AttachmentService,
   type AttachmentPhase,
   type AttachmentState,
-} from '@gamification/services/attachmentService';
-import { type PlantPersonality } from '@appTypes';
-import { getPersonalityProfile } from '@gamification/constants/personalities';
+} from '@/features/gamification/services/attachmentService';
+import { type PlantPersonality } from '@/types';
+import { getPersonalityProfile } from '@/features/gamification/constants/personalities';
 
 export interface AttachmentIndicatorProps {
   attachmentState: AttachmentState;

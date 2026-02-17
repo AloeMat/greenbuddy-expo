@@ -16,8 +16,8 @@ import {
   Alert,
 } from 'react-native';
 import { Bell, Clock } from 'lucide-react-native';
-import { useDailyNotification } from '@gamification/hooks/useDailyNotification';
-import { colors } from '@design-system/tokens/colors';
+import { useDailyNotification } from '@/features/gamification/hooks/useDailyNotification';
+import { colors } from '@/design-system/tokens/colors';
 
 interface NotificationSettingsProps {
   onClose?: () => void;

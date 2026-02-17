@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 
 type CardVariant = 'default' | 'elevated' | 'outlined';
 

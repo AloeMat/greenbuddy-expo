@@ -11,8 +11,8 @@ import {
   TouchableOpacity,
   StyleSheet
 } from 'react-native';
-import type { PlantPersonality, AvatarEmotion } from '@gamification/types';
-import { PlantAvatar } from '@plants/components/PlantAvatar';
+import type { PlantPersonality, AvatarEmotion } from '@/features/gamification/types';
+import { PlantAvatar } from '@/features/plants/components/PlantAvatar';
 
 interface PlantResultProps {
   identification: {

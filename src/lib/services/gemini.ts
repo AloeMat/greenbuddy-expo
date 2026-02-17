@@ -6,8 +6,8 @@
 
 import { supabase } from './supabase';
 import { logger } from './logger';
-import { PlantPersonality, PlantAnalysis, ChatMessage, AvatarEmotion } from '@appTypes';
-import { PERSONALITY_PROMPTS, CHAT_SYSTEM_INSTRUCTION_BASE } from '@lib/constants/app';
+import { PlantPersonality, PlantAnalysis, ChatMessage, AvatarEmotion } from '@/types';
+import { PERSONALITY_PROMPTS, CHAT_SYSTEM_INSTRUCTION_BASE } from '@/lib/constants/app';
 
 interface GeminiAnalysisRequest {
   image?: string; // base64

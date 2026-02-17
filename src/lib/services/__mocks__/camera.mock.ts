@@ -2,7 +2,7 @@
  * Mock Camera Service Factory
  */
 
-import { ICameraService, CameraPhoto, CameraPermissionStatus } from '@plants/services/camera';
+import { ICameraService, CameraPhoto, CameraPermissionStatus } from '@/features/plants/services/camera';
 import { CameraView } from 'expo-camera';
 
 export const createMockCameraService = (overrides?: Partial<ICameraService>): ICameraService => {

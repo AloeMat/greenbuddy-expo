@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, ListRenderItemInfo } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
-import { useGamificationStore } from '@gamification/store/gamificationStore';
-import { AchievementCard } from '@gamification/components/AchievementCard';
-import { XpBar } from '@gamification/components/XpBar';
-import { getXpNeededForNextTier } from '@gamification/constants/lifetree';
+import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
+import { AchievementCard } from '@/features/gamification/components/AchievementCard';
+import { XpBar } from '@/features/gamification/components/XpBar';
+import { getXpNeededForNextTier } from '@/features/gamification/constants/lifetree';
 
 // Mock data pour les succès (à déplacer dans un fichier de constantes plus tard)
 const ACHIEVEMENTS_LIST = [

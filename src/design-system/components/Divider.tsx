@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, ViewStyle } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { spacing } from '@tokens/spacing';
-import { onboardingColors } from '@design-system/onboarding/colors';
+import { spacing } from '@/design-system/tokens/spacing';
+import { onboardingColors } from '@/design-system/onboarding/colors';
 
 type DividerVariant = 'solid' | 'dashed' | 'dotted';
 type DividerOrientation = 'horizontal' | 'vertical';

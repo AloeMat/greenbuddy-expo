@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useCallback } from 'react';
-import { notificationService } from '@lib/services/notifications';
-import { logger } from '@lib/services/logger';
+import { notificationService } from '@/lib/services/notifications';
+import { logger } from '@/lib/services/logger';
 import { Plant } from './usePlants';
 
 export interface UseWateringRemindersOptions {

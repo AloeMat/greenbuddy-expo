@@ -20,11 +20,11 @@ import Animated, {
   BounceIn,
   ZoomIn,
 } from 'react-native-reanimated';
-import { useDailyCheckIn } from '@gamification/hooks/useStreak';
-import { useGamificationStore } from '@gamification/store/gamificationStore';
-import { colors } from '@design-system/tokens/colors';
-import { radius } from '@tokens/radius';
-import { logger } from '@lib/services/logger';
+import { useDailyCheckIn } from '@/features/gamification/hooks/useStreak';
+import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
+import { colors } from '@/design-system/tokens/colors';
+import { radius } from '@/design-system/tokens/radius';
+import { logger } from '@/lib/services/logger';
 
 interface DailyCheckInButtonProps {
   onCheckInComplete?: (result?: any) => void;

@@ -12,8 +12,8 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
-import { AttachmentService, AttachmentState, AttachmentPhase, getAttachmentStatus } from '@gamification/services/attachmentService';
-import { logger } from '@lib/services/logger';
+import { AttachmentService, AttachmentState, AttachmentPhase, getAttachmentStatus } from '@/features/gamification/services/attachmentService';
+import { logger } from '@/lib/services/logger';
 
 export interface UseAttachmentReturn {
   // State

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'danger';
 type ButtonSize = 'small' | 'medium' | 'large';

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { ScrollView, Alert, ActivityIndicator, View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { spacing } from '@tokens/spacing';
-import { onboardingColors } from '@design-system/onboarding/colors';
-import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@design-system/onboarding/components';
-import { ActionsPage } from '@onboarding/types/onboardingSchema';
-import { useOnboardingStore } from '@onboarding/store/onboardingStore';
-import { getStepNumber } from '@onboarding/utils/getStepNumber';
+import { spacing } from '@/design-system/tokens/spacing';
+import { onboardingColors } from '@/design-system/onboarding/colors';
+import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
+import { ActionsPage } from '@/features/onboarding/types/onboardingSchema';
+import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
+import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
-import { cameraService } from '@plants/services/camera';
-import { plantNetService } from '@plants/services/plantnet';
+import { cameraService } from '@/features/plants/services/camera';
+import { plantNetService } from '@/features/plants/services/plantnet';
 
 interface ActionsRendererProps {
   page: ActionsPage;

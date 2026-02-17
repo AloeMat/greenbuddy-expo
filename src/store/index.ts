@@ -4,10 +4,10 @@
  */
 
 // Auth
-export { useAuthStore, useAuth } from '@auth/store';
+export { useAuthStore, useAuth } from '@/features/auth/store';
 
 // Plants
-export { usePlantsStore } from '@plants/store';
+export { usePlantsStore } from '@/features/plants/store';
 
 // Gamification
-export { useGamificationStore, useGamification } from '@gamification/store';
+export { useGamificationStore, useGamification } from '@/features/gamification/store';

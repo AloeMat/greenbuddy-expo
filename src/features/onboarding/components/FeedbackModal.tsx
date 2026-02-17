@@ -7,7 +7,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
-import { onboardingColors } from '@design-system/onboarding/colors';
+import { onboardingColors } from '@/design-system/onboarding/colors';
 
 interface FeedbackModalProps {
   visible: boolean;

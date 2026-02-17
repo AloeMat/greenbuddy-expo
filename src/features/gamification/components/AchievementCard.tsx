@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 
 interface AchievementCardProps {
   title: string;

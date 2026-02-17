@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { router } from 'expo-router';
-import { radius } from '@tokens/radius';
-import { spacing } from '@tokens/spacing';
-import { onboardingColors } from '@design-system/onboarding/colors';
-import { useOnboardingStore } from '@onboarding/store/onboardingStore';
-import { trackPageView } from '@onboarding/utils/analytics';
+import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
+import { onboardingColors } from '@/design-system/onboarding/colors';
+import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
+import { trackPageView } from '@/features/onboarding/utils/analytics';
 import { FeedbackModal } from './FeedbackModal';
 import * as Haptics from 'expo-haptics';
 

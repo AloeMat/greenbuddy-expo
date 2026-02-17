@@ -6,8 +6,8 @@
  * Fallback: Use Gemini if quota exceeded or API fails
  */
 
-import { supabase } from '@lib/services/supabase';
-import { logger } from '@lib/services/logger';
+import { supabase } from '@/lib/services/supabase';
+import { logger } from '@/lib/services/logger';
 
 export interface PlantIdentificationResult {
   commonName: string;

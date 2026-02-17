@@ -4,8 +4,8 @@
  * Isolated from business logic and React
  */
 
-import { supabase } from '@lib/services/supabase';
-import { logger } from '@lib/services/logger';
+import { supabase } from '@/lib/services/supabase';
+import { logger } from '@/lib/services/logger';
 
 export interface Plant {
   id: string;

@@ -4,7 +4,7 @@
  */
 
 import type { IAuthRepository } from './AuthRepository';
-import type { AuthUser } from '@appTypes';
+import type { AuthUser } from '@/types';
 
 const mockUser: AuthUser = {
   id: 'mock-user-id-12345',

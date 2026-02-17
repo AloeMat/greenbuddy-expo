@@ -3,8 +3,8 @@
  * For testing components and hooks without API calls
  */
 
-import type { IGeminiService } from '@lib/services/gemini';
-import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@appTypes';
+import type { IGeminiService } from '@/lib/services/gemini';
+import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@/types';
 
 export const createMockGeminiService = (overrides?: Partial<IGeminiService>): IGeminiService => {
   return {

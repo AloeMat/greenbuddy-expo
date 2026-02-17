@@ -5,10 +5,10 @@
  */
 
 import { create } from 'zustand';
-import { supabase } from '@lib/services/supabase';
-import { logger } from '@lib/services/logger';
-import { Plant, createPlantRepository } from '@plants/repositories/PlantRepository';
-import { createPlantCareService } from '@plants/services/PlantCareService';
+import { supabase } from '@/lib/services/supabase';
+import { logger } from '@/lib/services/logger';
+import { Plant, createPlantRepository } from '@/features/plants/repositories/PlantRepository';
+import { createPlantCareService } from '@/features/plants/services/PlantCareService';
 
 // Initialize services
 const plantRepository = createPlantRepository();

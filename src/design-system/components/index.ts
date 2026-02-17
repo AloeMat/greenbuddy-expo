@@ -3,6 +3,9 @@
  * Premium UI components with shadows, animations, and haptics
  */
 
+// Navigation Components
+export { BottomTabsBar } from './BottomTabsBar';
+
 // Premium Components (Latest - v2.0)
 export { PremiumButton } from './PremiumButton';
 export type { PremiumButtonProps } from './PremiumButton';

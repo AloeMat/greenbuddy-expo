@@ -4,9 +4,9 @@
  * Isolated from business logic and React for better testability
  */
 
-import { supabase } from '@lib/services/supabase';
-import { logger } from '@lib/services/logger';
-import type { AuthUser } from '@appTypes';
+import { supabase } from '@/lib/services/supabase';
+import { logger } from '@/lib/services/logger';
+import type { AuthUser } from '@/types';
 
 export interface IAuthRepository {
   getSession(): Promise<{ user: AuthUser | null; session: any }>;

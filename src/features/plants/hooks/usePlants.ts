@@ -5,12 +5,12 @@
  */
 
 import { useEffect } from 'react';
-import { supabase } from '@lib/services/supabase';
-import { logger } from '@lib/services/logger';
-import { usePlantsStore } from '@plants/store/plantsStore';
+import { supabase } from '@/lib/services/supabase';
+import { logger } from '@/lib/services/logger';
+import { usePlantsStore } from '@/features/plants/store/plantsStore';
 // Re-export Plant type for consumers (e.g., useWateringReminders)
-export type { Plant } from '@plants/repositories/PlantRepository';
-import type { Plant } from '@plants/repositories/PlantRepository';
+export type { Plant } from '@/features/plants/repositories/PlantRepository';
+import type { Plant } from '@/features/plants/repositories/PlantRepository';
 
 export interface UsePlantsReturn {
   // State

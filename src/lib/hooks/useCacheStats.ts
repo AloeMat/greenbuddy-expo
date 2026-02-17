@@ -4,10 +4,10 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { geminiService } from '@lib/services/gemini';
-import { plantNetService } from '@features/plants/services/plantnet';
-import { CachedGeminiProxy } from '@lib/services/proxies/CachedGeminiProxy';
-import { CachedPlantNetProxy } from '@lib/services/proxies/CachedPlantNetProxy';
+import { geminiService } from '@/lib/services/gemini';
+import { plantNetService } from '@/features/plants/services/plantnet';
+import { CachedGeminiProxy } from '@/lib/services/proxies/CachedGeminiProxy';
+import { CachedPlantNetProxy } from '@/lib/services/proxies/CachedPlantNetProxy';
 
 export interface CacheStatsSnapshot {
   gemini: {

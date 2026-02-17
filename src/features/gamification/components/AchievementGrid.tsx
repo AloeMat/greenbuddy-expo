@@ -12,15 +12,15 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { BadgeCard } from '@design-system/components';
+import { BadgeCard } from '@/design-system/components';
 import {
   ALL_ACHIEVEMENTS,
   getAchievementsByCategory,
   CATEGORY_METADATA,
   AchievementCategory,
   Achievement,
-} from '@gamification/constants/achievements';
-import { COLORS } from '@tokens/colors';
+} from '@/features/gamification/constants/achievements';
+import { COLORS } from '@/design-system/tokens/colors';
 
 interface AchievementGridProps {
   unlockedIds: string[];

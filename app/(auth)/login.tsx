@@ -3,13 +3,13 @@ import { View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } fr
 import { useRouter, Link } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@auth/store/authStore';
-import { Input } from '@design-system/components/Input';
-import { Button } from '@design-system/components/Button';
-import { ErrorMessage } from '@design-system/components/ErrorMessage';
-import { Loading } from '@design-system/components/Loading';
-import { logger } from '@lib/services/logger';
-import { loginSchema, type LoginFormData } from '@lib/validation/auth';
+import { useAuth } from '@/features/auth/store/authStore';
+import { Input } from '@/design-system/components/Input';
+import { Button } from '@/design-system/components/Button';
+import { ErrorMessage } from '@/design-system/components/ErrorMessage';
+import { Loading } from '@/design-system/components/Loading';
+import { logger } from '@/lib/services/logger';
+import { loginSchema, type LoginFormData } from '@/lib/validation/auth';
 
 export default function LoginScreen() {
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 /**
  * Plant Form Component
  * Add or edit plant details
@@ -18,8 +18,8 @@ import {
   ViewStyle
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { logger } from '@lib/services/logger';
-import { PlantPersonality, PlantAnalysis } from '@appTypes';
+import { logger } from '@/lib/services/logger';
+import { PlantPersonality, PlantAnalysis } from '@/types';
 import { PlantAvatar } from './PlantAvatar';
 
 export interface PlantFormProps {

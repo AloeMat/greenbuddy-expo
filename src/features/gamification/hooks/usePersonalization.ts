@@ -9,10 +9,10 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@auth/store/authStore';
-import { PersonalizationService } from '@gamification/services/personalizationService';
+import { useAuth } from '@/features/auth/store/authStore';
+import { PersonalizationService } from '@/features/gamification/services/personalizationService';
 import type { HumanDesignSetup } from '@/types/humanDesign';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 interface UsePersonalizationResult {
   setup: HumanDesignSetup | null;

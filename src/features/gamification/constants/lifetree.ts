@@ -6,7 +6,7 @@
  * Graine → Germination → Pousse → Tige → Feuille → Fleur → Fruit → Arbre → Forêt
  */
 
-import type { LifeTreeTier, XpReward, RewardType } from '@appTypes';
+import type { LifeTreeTier, XpReward, RewardType } from '@/types';
 
 // ========================================
 // ARBRE DE VIE - 9 TIERS

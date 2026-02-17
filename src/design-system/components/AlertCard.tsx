@@ -17,7 +17,7 @@ import {
   AlertTriangle,
   X,
 } from 'lucide-react-native';
-import { COLORS } from '@tokens/colors';
+import { COLORS } from '@/design-system/tokens/colors';
 
 type AlertType = 'error' | 'warning' | 'success' | 'info';
 

@@ -12,8 +12,8 @@ import {
   Animated,
 } from 'react-native';
 import { Flame, Zap, Trophy } from 'lucide-react-native';
-import { COLORS } from '@tokens/colors';
-import { radius } from '@tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
+import { radius } from '@/design-system/tokens/radius';
 
 interface StreakCounterProps {
   currentStreak: number;

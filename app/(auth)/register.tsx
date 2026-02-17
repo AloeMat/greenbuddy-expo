@@ -3,17 +3,17 @@ import { View, Text, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } fr
 import { useRouter, Link } from 'expo-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@auth/store/authStore';
-import { Input } from '@design-system/components/Input';
-import { Button } from '@design-system/components/Button';
-import { ErrorMessage } from '@design-system/components/ErrorMessage';
-import { Loading } from '@design-system/components/Loading';
-import { logger } from '@lib/services/logger';
-import { registerSchema, type RegisterFormData } from '@lib/validation/auth';
+import { useAuth } from '@/features/auth/store/authStore';
+import { Input } from '@/design-system/components/Input';
+import { Button } from '@/design-system/components/Button';
+import { ErrorMessage } from '@/design-system/components/ErrorMessage';
+import { Loading } from '@/design-system/components/Loading';
+import { logger } from '@/lib/services/logger';
+import { registerSchema, type RegisterFormData } from '@/lib/validation/auth';
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { signUp, login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -37,9 +37,18 @@ export default function RegisterScreen() {
     setApiError(null);
 
     try {
+      // Step 1: Create account
       await signUp!(data.email, data.password);
       logger.info('User registered successfully', { email: data.email });
-      // Redirect to app (signup is now called from onboarding modal, not as separate flow)
+
+      // Step 2: Auto-login after registration
+      await login!(data.email, data.password);
+      logger.info('User auto-logged in after registration', { email: data.email });
+
+      // Step 3: Redirect to app
+      // The router will check:
+      // - isAuthenticated ✅ true (just logged in)
+      // - isOnboardingComplete? ❌ false → redirect to /onboarding
       router.replace('/(tabs)');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'inscription';

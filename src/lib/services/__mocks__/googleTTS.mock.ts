@@ -3,7 +3,7 @@
  * For testing without actual audio generation
  */
 
-import type { IGoogleTTSService, TTSOptions, TTSResult } from '@lib/services/googleTTS';
+import type { IGoogleTTSService, TTSOptions, TTSResult } from '@/lib/services/googleTTS';
 
 export const createMockGoogleTTSService = (overrides?: Partial<IGoogleTTSService>): IGoogleTTSService => {
   let mockIsSpeaking = false;

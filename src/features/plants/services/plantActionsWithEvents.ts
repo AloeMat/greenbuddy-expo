@@ -7,8 +7,8 @@
  * In production, these would be integrated into PlantCareService.
  */
 
-import { eventBus } from '@lib/events';
-import { logger } from '@lib/services/logger';
+import { eventBus } from '@/lib/events';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Example: Water plant and emit event

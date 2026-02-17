@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
-import { radius } from '@tokens/radius';
-import { spacing } from '@tokens/spacing';
-import { onboardingColors } from '@design-system/onboarding/colors';
+import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
+import { onboardingColors } from '@/design-system/onboarding/colors';
 
 interface FeedbackScreenProps {
   title: string;

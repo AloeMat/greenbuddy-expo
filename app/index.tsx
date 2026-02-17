@@ -1,11 +1,3 @@
-/**
- * Root Index - Simple Redirect
- *
- * Just redirects to (tabs), letting Expo Router handle the rest
- */
-
-import { Redirect } from 'expo-router';
-
-export default function Index() {
-  return <Redirect href="/(tabs)" />;
-}
+// This file redirects to (tabs) group
+// The actual landing page is app/(tabs)/index.tsx
+export { default } from './(tabs)/index';

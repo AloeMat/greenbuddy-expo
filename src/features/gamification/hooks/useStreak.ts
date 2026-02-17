@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   performDailyCheckIn,
   checkAndResetStreakIfNeeded,
@@ -11,9 +12,9 @@ import {
   formatStreakLabel,
   initializeStreakCheck,
   STREAK_MILESTONES,
-} from '@gamification/services/streakService';
-import { useGamificationStore } from '@gamification/store/gamificationStore';
-import { logger } from '@lib/services/logger';
+} from '@/features/gamification/services/streakService';
+import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
+import { logger } from '@/lib/services/logger';
 
 interface StreakHookData {
   currentStreak: number;
@@ -60,9 +61,14 @@ export function useStreak(): StreakHookData & {
 
   // Check if check-in is available today
   const checkCheckInStatus = async () => {
-    const lastCheckIn = localStorage.getItem('lastCheckInDate');
-    const today = new Date().toISOString().split('T')[0];
-    setIsCheckInAvailable(!lastCheckIn || lastCheckIn !== today);
+    try {
+      const lastCheckIn = await AsyncStorage.getItem('lastCheckInDate');
+      const today = new Date().toISOString().split('T')[0];
+      setIsCheckInAvailable(!lastCheckIn || lastCheckIn !== today);
+    } catch (error) {
+      logger.error('Error checking check-in status:', error);
+      setIsCheckInAvailable(true); // Allow check-in on error
+    }
   };
 
   // Perform daily check-in
@@ -75,11 +81,15 @@ export function useStreak(): StreakHookData & {
 
   // Reset streak (for testing or special cases)
   const resetStreak = async () => {
-    localStorage.removeItem('lastCheckInDate');
-    localStorage.setItem('unlockedMilestones', '[]');
-    store.resetStreak?.();
-    await updateMilestoneInfo();
-    await checkCheckInStatus();
+    try {
+      await AsyncStorage.removeItem('lastCheckInDate');
+      await AsyncStorage.setItem('unlockedMilestones', '[]');
+      store.resetStreak?.();
+      await updateMilestoneInfo();
+      await checkCheckInStatus();
+    } catch (error) {
+      logger.error('Error resetting streak:', error);
+    }
   };
 
   return {

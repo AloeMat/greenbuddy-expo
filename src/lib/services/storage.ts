@@ -5,7 +5,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Storage service with async/await pattern

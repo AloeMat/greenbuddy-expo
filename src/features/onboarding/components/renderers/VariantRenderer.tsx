@@ -1,12 +1,12 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { spacing } from '@tokens/spacing';
-import { onboardingColors } from '@design-system/onboarding/colors';
-import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@design-system/onboarding/components';
-import { VariantPage } from '@onboarding/types/onboardingSchema';
-import { useOnboardingStore } from '@onboarding/store/onboardingStore';
-import { getStepNumber } from '@onboarding/utils/getStepNumber';
+import { spacing } from '@/design-system/tokens/spacing';
+import { onboardingColors } from '@/design-system/onboarding/colors';
+import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
+import { VariantPage } from '@/features/onboarding/types/onboardingSchema';
+import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
+import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
 
 interface VariantRendererProps {

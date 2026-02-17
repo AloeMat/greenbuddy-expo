@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { ScrollView, View, TouchableOpacity, Alert } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { spacing } from '@tokens/spacing';
-import { onboardingColors } from '@design-system/onboarding/colors';
-import { PremiumInput } from '@design-system/components/PremiumInput';
-import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@design-system/onboarding/components';
-import { InputsPage } from '@onboarding/types/onboardingSchema';
-import { useOnboardingStore } from '@onboarding/store/onboardingStore';
-import { executeActions } from '@onboarding/utils/actionExecutor';
-import { getStepNumber } from '@onboarding/utils/getStepNumber';
+import { spacing } from '@/design-system/tokens/spacing';
+import { onboardingColors } from '@/design-system/onboarding/colors';
+import { PremiumInput } from '@/design-system/components/PremiumInput';
+import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
+import { InputsPage } from '@/features/onboarding/types/onboardingSchema';
+import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
+import { executeActions } from '@/features/onboarding/utils/actionExecutor';
+import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
 
 interface InputsRendererProps {

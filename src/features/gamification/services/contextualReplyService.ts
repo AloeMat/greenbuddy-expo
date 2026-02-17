@@ -11,16 +11,16 @@
  * Phase 4.2: Avatar Vocal Enrichi
  */
 
-import { PlantPersonality, AvatarEmotion, MicroActionType } from '@appTypes';
+import { PlantPersonality, AvatarEmotion, MicroActionType } from '@/types';
 import { AvatarService } from './avatarService';
 import { PersonalizationService } from './personalizationService';
 import {
   getPersonalityProfile,
   getGeminiPrompt,
   ALL_PERSONALITIES,
-} from '@gamification/constants/personalities';
+} from '@/features/gamification/constants/personalities';
 import type { AvatarPersonalityType } from '@/types/humanDesign';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 // Logger (conditional in production)
 const log = {
   debug: (msg: string, data?: any) => logger.debug(`[DEBUG] ${msg}`, data),

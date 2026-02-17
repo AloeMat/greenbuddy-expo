@@ -1,4 +1,4 @@
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 /**
  * Plant Action Buttons
  * Water, Fertilize, Delete plant actions with haptics and animations
@@ -13,7 +13,7 @@ import {
   Animated,
 } from 'react-native';
 import { Droplets, Leaf, Trash2 } from 'lucide-react-native';
-import { COLORS } from '@tokens/colors';
+import { COLORS } from '@/design-system/tokens/colors';
 
 interface ActionButtonProps {
   onPress: () => void;

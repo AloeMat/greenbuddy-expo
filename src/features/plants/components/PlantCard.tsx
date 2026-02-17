@@ -1,4 +1,4 @@
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 /**
  * Plant Card Component
  * Displays plant summary with avatar, name, health status
@@ -13,10 +13,10 @@ import {
   StyleSheet,
   ViewStyle
 } from 'react-native';
-import { GradientOverlay } from '@design-system/components/GradientOverlay';
+import { GradientOverlay } from '@/design-system/components/GradientOverlay';
 import { PlantAvatar } from './PlantAvatar';
-import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@appTypes';
-import { logger } from '@lib/services/logger';
+import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@/types';
+import { logger } from '@/lib/services/logger';
 
 export interface PlantCardProps {
   id: string;

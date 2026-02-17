@@ -8,10 +8,10 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { radius } from '@tokens/radius';
-import { spacing } from '@tokens/spacing';
-import { shadows } from '@tokens/shadows';
-import { onboardingColors } from '@design-system/onboarding/colors';
+import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
+import { shadows } from '@/design-system/tokens/shadows';
+import { onboardingColors } from '@/design-system/onboarding/colors';
 import { Feather } from '@expo/vector-icons';
 
 interface AccordionItem {

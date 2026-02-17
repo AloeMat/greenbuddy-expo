@@ -11,7 +11,7 @@
 
 import { CameraView, Camera } from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 export interface CameraPhoto {
   uri: string;

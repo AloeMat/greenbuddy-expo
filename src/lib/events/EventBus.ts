@@ -12,7 +12,7 @@
  * Plants feature emits events → EventBus → Gamification feature listens
  */
 
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Defines all possible events in the app

@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, ViewStyle, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown, SlideInRight } from 'react-native-reanimated';
-import { radius } from '@tokens/radius';
-import { spacing } from '@tokens/spacing';
-import { shadows } from '@tokens/shadows';
-import { onboardingColors } from '@design-system/onboarding/colors';
+import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
+import { shadows } from '@/design-system/tokens/shadows';
+import { onboardingColors } from '@/design-system/onboarding/colors';
 import { Feather } from '@expo/vector-icons';
 
 export type AlertType = 'success' | 'error' | 'warning' | 'info';

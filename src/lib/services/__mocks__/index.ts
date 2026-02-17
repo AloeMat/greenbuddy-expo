@@ -4,16 +4,16 @@
  */
 
 export { createMockGeminiService, mockGeminiService } from './gemini.mock';
-export type { IGeminiService } from '@lib/services/gemini';
+export type { IGeminiService } from '@/lib/services/gemini';
 
 export { createMockGoogleTTSService, mockGoogleTTSService } from './googleTTS.mock';
-export type { IGoogleTTSService } from '@lib/services/googleTTS';
+export type { IGoogleTTSService } from '@/lib/services/googleTTS';
 
 export { createMockCameraService, mockCameraService } from './camera.mock';
-export type { ICameraService } from '@plants/services/camera';
+export type { ICameraService } from '@/features/plants/services/camera';
 
 export { createMockPlantNetService, mockPlantNetService } from './plantnet.mock';
-export type { IPlantNetService } from '@plants/services/plantnet';
+export type { IPlantNetService } from '@/features/plants/services/plantnet';
 
 export { createMockNotificationService, mockNotificationService } from './notifications.mock';
 export type { INotificationService } from './notifications.mock';
@@ -24,7 +24,7 @@ export type { IGeolocationService } from './geolocation.mock';
 /**
  * Usage in tests:
  *
- * import { createMockGeminiService } from '@lib/services/__mocks__';
+ * import { createMockGeminiService } from '@/lib/services/__mocks__';
  *
  * const mockGemini = createMockGeminiService({
  *   generatePersonality: async () => ({

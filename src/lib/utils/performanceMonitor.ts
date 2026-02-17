@@ -3,7 +3,7 @@
  * Tracks app launch time, screen load times, and frame rates
  */
 
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 interface PerformanceMetrics {
   appLaunchTime?: number; // ms from start to first screen render

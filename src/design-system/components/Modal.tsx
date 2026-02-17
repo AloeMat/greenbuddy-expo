@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal as RNModal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 
 interface ModalProps {
   visible: boolean;

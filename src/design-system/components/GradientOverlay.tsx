@@ -5,7 +5,7 @@
 
 import React, { ReactNode } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 interface GradientOverlayProps {
   colors: [string, string];

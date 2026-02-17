@@ -12,7 +12,7 @@ import {
   Dimensions,
   Easing,
 } from 'react-native';
-import { COLORS } from '@tokens/colors';
+import { COLORS } from '@/design-system/tokens/colors';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 

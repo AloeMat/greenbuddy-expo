@@ -2,13 +2,13 @@ import { Image } from 'expo-image';
 import { Platform, StyleSheet, ScrollView, ScrollViewProps, View } from 'react-native';
 import React from 'react';
 
-import { Collapsible } from '@design-system/components/collapsible';
-import { ExternalLink } from '@design-system/components';
-import { ThemedText } from '@design-system/components';
-import { ThemedView } from '@design-system/components';
-import { IconSymbol } from '@design-system/components/icon-symbol';
-import { Fonts } from '@tokens/theme';
-import { uiImages } from '@lib/assets';
+import { Collapsible } from '@/design-system/components/collapsible';
+import { ExternalLink } from '@/design-system/components';
+import { ThemedText } from '@/design-system/components';
+import { ThemedView } from '@/design-system/components';
+import { IconSymbol } from '@/design-system/components/icon-symbol';
+import { Fonts } from '@/design-system/tokens/theme';
+import { uiImages } from '@/lib/assets';
 
 // ParallaxScrollView wrapper that accepts header props
 interface ParallaxScrollViewProps extends ScrollViewProps {

@@ -24,4 +24,4 @@ export type {
   Achievement,
   AchievementCategory,
   GamificationState,
-} from '@appTypes';
+} from '@/types';

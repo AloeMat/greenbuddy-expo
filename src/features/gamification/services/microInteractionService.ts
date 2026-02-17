@@ -16,8 +16,8 @@
  * Phase 4.2: Avatar Vocal Enrichi
  */
 
-import { MicroActionType } from '@appTypes';
-import { logger } from '@lib/services/logger';
+import { MicroActionType } from '@/types';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Configuration for each micro-action
@@ -357,4 +357,4 @@ export function emotionToAction(emotion: string, recentAction?: string): MicroAc
 }
 
 // Re-export types for components
-export type { MicroActionType } from '@appTypes';
+export type { MicroActionType } from '@/types';

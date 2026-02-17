@@ -11,7 +11,7 @@ import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PersonalizationService } from './personalizationService';
 import type { HumanDesignSetup } from '@/types/humanDesign';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 const NOTIFICATION_KEY = 'dailyCheckInNotificationId';
 const NOTIFICATION_TIME_KEY = 'dailyNotificationTime';

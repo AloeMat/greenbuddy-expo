@@ -6,7 +6,7 @@
  * Why this file exists:
  * - Metro bundler cannot resolve TypeScript aliases in require() calls
  * - Solution: Use relative paths here (3 levels up from src/lib/assets/), export via alias
- * - All files can now use: import { avatarImages, uiImages, appIcons } from '@lib/assets'
+ * - All files can now use: import { avatarImages, uiImages, appIcons } from '@/lib/assets'
  *
  * Benefits:
  * - Eliminates ../../../../ relative paths completely

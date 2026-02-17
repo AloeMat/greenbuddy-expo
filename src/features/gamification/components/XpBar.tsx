@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 
 interface XpBarProps {
   currentXp: number;

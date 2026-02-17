@@ -1,7 +1,7 @@
 /**
  * GreenBuddy Types — Source Unique de Vérité
  * Tous les types applicatifs centralisés
- * Import: import type { Plant, AuthUser } from '@appTypes'
+ * Import: import type { Plant, AuthUser } from '@/types'
  */
 
 // ============================================

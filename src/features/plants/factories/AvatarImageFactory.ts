@@ -18,9 +18,9 @@
  */
 
 import { Image, ImageSourcePropType } from 'react-native';
-import { logger } from '@lib/services/logger';
-import { PlantPersonality } from '@appTypes';
-import { avatarImages } from '@lib/assets';
+import { logger } from '@/lib/services/logger';
+import { PlantPersonality } from '@/types';
+import { avatarImages } from '@/lib/assets';
 
 /**
  * Flyweight: Shared avatar image instance

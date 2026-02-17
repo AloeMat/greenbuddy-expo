@@ -6,8 +6,8 @@
  * - Data validation
  */
 
-import { xpRewardService, RewardType } from '@gamification/services/xpRewardService';
-import { logger } from '@lib/services/logger';
+import { xpRewardService, RewardType } from '@/features/gamification/services/xpRewardService';
+import { logger } from '@/lib/services/logger';
 
 export interface IGardenService {
   /**

@@ -6,12 +6,12 @@
 
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, Alert, ScrollView } from 'react-native';
-import { useAuth } from '@auth/store/authStore';
-import { Input } from '@design-system/components/Input';
-import { Button } from '@design-system/components/Button';
-import { ErrorMessage } from '@design-system/components/ErrorMessage';
-import { Loading } from '@design-system/components/Loading';
-import { logger } from '@lib/services/logger';
+import { useAuth } from '@/features/auth/store/authStore';
+import { Input } from '@/design-system/components/Input';
+import { Button } from '@/design-system/components/Button';
+import { ErrorMessage } from '@/design-system/components/ErrorMessage';
+import { Loading } from '@/design-system/components/Loading';
+import { logger } from '@/lib/services/logger';
 
 interface SignupModalProps {
   visible: boolean;

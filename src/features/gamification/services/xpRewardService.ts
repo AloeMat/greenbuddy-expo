@@ -4,7 +4,7 @@
  * Used to track and award gamification points
  */
 
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 export enum RewardType {
   // Plant Management

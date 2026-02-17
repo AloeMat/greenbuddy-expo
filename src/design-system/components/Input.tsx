@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextInput, View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 
 interface InputProps {
   placeholder?: string;

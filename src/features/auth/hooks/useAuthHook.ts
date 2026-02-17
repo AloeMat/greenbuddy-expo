@@ -4,8 +4,8 @@
  * Permet une migration progressive sans casser les composants existants
  */
 
-import { useAuthStore } from '@auth/store/authStore';
-import type { AuthState } from '@appTypes';
+import { useAuthStore } from '@/features/auth/store/authStore';
+import type { AuthState } from '@/types';
 
 /**
  * Hook unifiée pour l'authentification

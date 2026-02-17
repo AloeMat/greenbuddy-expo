@@ -26,15 +26,15 @@ import {
   ContextualReplyService,
   type ReplyContext,
   type ContextualReply,
-} from '@gamification/services/contextualReplyService';
+} from '@/features/gamification/services/contextualReplyService';
 import {
   MicroInteractionService,
   type MicroActionType,
-} from '@gamification/services/microInteractionService';
-import { AvatarService, type AvatarEmotion } from '@gamification/services/avatarService';
-import { AttachmentService, type AttachmentPhase } from '@gamification/services/attachmentService';
-import { getPersonalityProfile, type PlantPersonality } from '@gamification/constants/personalities';
-import { logger } from '@lib/services/logger';
+} from '@/features/gamification/services/microInteractionService';
+import { AvatarService, type AvatarEmotion } from '@/features/gamification/services/avatarService';
+import { AttachmentService, type AttachmentPhase } from '@/features/gamification/services/attachmentService';
+import { getPersonalityProfile, type PlantPersonality } from '@/features/gamification/constants/personalities';
+import { logger } from '@/lib/services/logger';
 
 export interface VocalInteractionProps {
   // Plant context

@@ -4,8 +4,8 @@
  */
 
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from '@auth/store';
-import { logger } from '@lib/services/logger';
+import { useAuth } from '@/features/auth/store';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Mutation hook for user login

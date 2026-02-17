@@ -6,7 +6,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { radius } from '@tokens/radius';
+import { radius } from '@/design-system/tokens/radius';
 import { onboardingColors } from './colors';
 
 // ============================================================================

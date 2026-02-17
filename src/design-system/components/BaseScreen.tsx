@@ -26,9 +26,9 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from './Button';
-import { radius } from '@tokens/radius';
-import { colors } from '@tokens/colors';
-import { spacing } from '@tokens/spacing';
+import { radius } from '@/design-system/tokens/radius';
+import { colors } from '@/design-system/tokens/colors';
+import { spacing } from '@/design-system/tokens/spacing';
 
 interface BaseScreenProps {
   /**

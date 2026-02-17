@@ -11,8 +11,8 @@
  * Phase 4.2: Avatar Vocal Enrichi
  */
 
-import { PlantPersonality } from '@appTypes';
-import { logger } from '@lib/services/logger';
+import { PlantPersonality } from '@/types';
+import { logger } from '@/lib/services/logger';
 
 export interface PersonalityProfile {
   personality: PlantPersonality;
@@ -601,4 +601,4 @@ export function mapSpeciesToPersonality(
 }
 
 // Re-export types for components
-export type { PlantPersonality } from '@appTypes';
+export type { PlantPersonality } from '@/types';

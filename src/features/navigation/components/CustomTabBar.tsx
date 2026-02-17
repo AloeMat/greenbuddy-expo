@@ -25,7 +25,7 @@ import {
   Camera,
   AlertCircle,
 } from 'lucide-react-native';
-import { colors as COLORS } from '@tokens/colors';
+import { colors as COLORS } from '@/design-system/tokens/colors';
 
 interface TabBarProps {
   state: any;

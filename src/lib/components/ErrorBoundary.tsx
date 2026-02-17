@@ -5,7 +5,7 @@
 
 import React, { ReactNode, useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 interface ErrorBoundaryProps {
   children: ReactNode;

@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 // Get Supabase credentials from expo-constants (reads from .env EXPO_PUBLIC_* vars)
 const supabaseUrl = Constants.expoConfig?.extra?.supabaseUrl || process.env.EXPO_PUBLIC_SUPABASE_URL;

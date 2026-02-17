@@ -11,7 +11,7 @@
  * Phase 4.2: Human Design Integration
  */
 
-import { supabase } from '@lib/services/supabase';
+import { supabase } from '@/lib/services/supabase';
 import type {
   CaregiverProfile,
   LivingPlace,
@@ -19,12 +19,12 @@ import type {
   GuiltSensitivity,
   AvatarPersonalityType,
   HumanDesignSetup,
-} from '@appTypes/humanDesign';
-import { logger } from '@lib/services/logger';
+} from '@/types/humanDesign';
+import { logger } from '@/lib/services/logger';
 import {
   calculateCheckFrequency,
   calculateNotificationStyle,
-} from '@appTypes/humanDesign';
+} from '@/types/humanDesign';
 
 const log = {
   debug: (msg: string, data?: any) => logger.debug(`[PERSONALIZATION] ${msg}`, data),

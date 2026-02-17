@@ -2,7 +2,7 @@
  * Mock PlantNet Service Factory
  */
 
-import { IPlantNetService, PlantIdentificationResult } from '@plants/services/plantnet';
+import { IPlantNetService, PlantIdentificationResult } from '@/features/plants/services/plantnet';
 
 export const createMockPlantNetService = (overrides?: Partial<IPlantNetService>): IPlantNetService => {
   return {

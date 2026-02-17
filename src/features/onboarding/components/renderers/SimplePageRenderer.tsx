@@ -1,12 +1,12 @@
 import React from 'react';
 import { ScrollView, View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { radius } from '@tokens/radius';
-import { spacing } from '@tokens/spacing';
-import { onboardingColors } from '@design-system/onboarding/colors';
-import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton, SecondaryButton } from '@design-system/onboarding/components';
-import { SimplePage } from '@onboarding/types/onboardingSchema';
-import { getStepNumber } from '@onboarding/utils/getStepNumber';
+import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
+import { onboardingColors } from '@/design-system/onboarding/colors';
+import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton, SecondaryButton } from '@/design-system/onboarding/components';
+import { SimplePage } from '@/features/onboarding/types/onboardingSchema';
+import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
 
 interface SimplePageRendererProps {

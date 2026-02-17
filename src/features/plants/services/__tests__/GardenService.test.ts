@@ -3,7 +3,7 @@
  * Tests business logic for garden management
  */
 
-import { createMockGardenService } from '@plants/services';
+import { createMockGardenService } from '@/features/plants/services';
 
 describe('GardenService', () => {
   const service = createMockGardenService();

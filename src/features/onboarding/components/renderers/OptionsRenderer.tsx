@@ -1,8 +1,8 @@
 import React from 'react';
-import { OptionsPage } from '@onboarding/types/onboardingSchema';
-import { ProfileChoice } from '@onboarding/components/ProfileChoice';
-import { useOnboardingStore } from '@onboarding/store/onboardingStore';
-import { executeActions } from '@onboarding/utils/actionExecutor';
+import { OptionsPage } from '@/features/onboarding/types/onboardingSchema';
+import { ProfileChoice } from '@/features/onboarding/components/ProfileChoice';
+import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
+import { executeActions } from '@/features/onboarding/utils/actionExecutor';
 
 interface OptionsRendererProps {
   page: OptionsPage;

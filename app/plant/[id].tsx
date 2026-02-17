@@ -16,16 +16,16 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { usePlants } from '@plants/hooks/usePlants';
-import { useGamificationStore } from '@gamification/store/gamificationStore';
-import { PlantAvatar } from '@plants/components/PlantAvatar';
-import { xpRewardService, RewardType as RewardTypeEnum } from '@gamification/services/xpRewardService';
-import { PlantForm } from '@plants/components/PlantForm';
-import { TypingIndicator } from '@design-system/animations/TypingIndicator';
-import { logger } from '@lib/services/logger';
-import { geminiService } from '@lib/services/gemini';
-import { PlantActionHaptics, triggerHaptic } from '@lib/services/hapticsFeedback';
-import type { PlantFormData } from '@plants/components/PlantForm';
+import { usePlants } from '@/features/plants/hooks/usePlants';
+import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
+import { PlantAvatar } from '@/features/plants/components/PlantAvatar';
+import { xpRewardService, RewardType as RewardTypeEnum } from '@/features/gamification/services/xpRewardService';
+import { PlantForm } from '@/features/plants/components/PlantForm';
+import { TypingIndicator } from '@/design-system/animations/TypingIndicator';
+import { logger } from '@/lib/services/logger';
+import { geminiService } from '@/lib/services/gemini';
+import { PlantActionHaptics, triggerHaptic } from '@/lib/services/hapticsFeedback';
+import type { PlantFormData } from '@/features/plants/components/PlantForm';
 
 export default function PlantDetailScreen() {
   const router = useRouter();

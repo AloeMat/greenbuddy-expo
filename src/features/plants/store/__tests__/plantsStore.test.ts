@@ -4,8 +4,8 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
-import { usePlantsStore } from '@plants/store/plantsStore';
-import type { Plant } from '@plants/repositories/PlantRepository';
+import { usePlantsStore } from '@/features/plants/store/plantsStore';
+import type { Plant } from '@/features/plants/repositories/PlantRepository';
 
 describe('plantsStore (Zustand)', () => {
   beforeEach(() => {

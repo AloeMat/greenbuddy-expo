@@ -15,10 +15,10 @@ import Animated, {
   interpolate,
   Extrapolate
 } from 'react-native-reanimated';
-import { GradientOverlay } from '@design-system/components/GradientOverlay';
-import { logger } from '@lib/services/logger';
-import { PlantPersonality, AvatarEmotion } from '@appTypes';
-import { avatarImages } from '@lib/assets';
+import { GradientOverlay } from '@/design-system/components/GradientOverlay';
+import { logger } from '@/lib/services/logger';
+import { PlantPersonality, AvatarEmotion } from '@/types';
+import { avatarImages } from '@/lib/assets';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 

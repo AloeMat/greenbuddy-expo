@@ -3,7 +3,7 @@
  * Tests plant care operations and reward calculations
  */
 
-import { createMockPlantCareService } from '@plants/services';
+import { createMockPlantCareService } from '@/features/plants/services';
 
 describe('PlantCareService', () => {
   const service = createMockPlantCareService();

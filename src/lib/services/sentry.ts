@@ -5,7 +5,7 @@
 
 import * as Sentry from '@sentry/react-native';
 import Constants from 'expo-constants';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Initialize Sentry error monitoring

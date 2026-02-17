@@ -14,9 +14,9 @@
  */
 
 import React, { useCallback } from 'react';
-import { useEventBus, useEventBusManager } from '@lib/events';
-import { useGamification } from '@gamification/store';
-import { logger } from '@lib/services/logger';
+import { useEventBus, useEventBusManager } from '@/lib/events';
+import { useGamification } from '@/features/gamification/store';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Listener component - invisible but reactive

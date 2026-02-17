@@ -7,7 +7,7 @@ import {
   isActionsPage,
   isVariantPage,
   OnboardingPage,
-} from '@onboarding/types/onboardingSchema';
+} from '@/features/onboarding/types/onboardingSchema';
 import { SimplePageRenderer } from './SimplePageRenderer';
 import { OptionsRenderer } from './OptionsRenderer';
 import { InputsRenderer } from './InputsRenderer';

@@ -7,15 +7,15 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { GamificationState, Achievement, RewardType } from '@appTypes';
-import { logger } from '@lib/services/logger';
+import type { GamificationState, Achievement, RewardType } from '@/types';
+import { logger } from '@/lib/services/logger';
 import {
   LIFE_TREE_TIERS,
   XP_REWARDS,
   calculateTierFromXp,
   calculateTierProgress,
   getXpNeededForNextTier,
-} from '@gamification/constants/lifetree';
+} from '@/features/gamification/constants/lifetree';
 
 // Mock achievements (à remplacer par vraies données)
 const MOCK_ACHIEVEMENTS: Achievement[] = [

@@ -13,7 +13,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import Svg, { Circle, SvgProps } from 'react-native-svg';
-import { COLORS } from '@tokens/colors';
+import { COLORS } from '@/design-system/tokens/colors';
 
 interface ProgressRingProps {
   progress: number; // 0-100

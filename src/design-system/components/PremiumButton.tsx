@@ -2,10 +2,10 @@ import React from 'react';
 import { TouchableOpacity, Text, View, ViewStyle, TextStyle } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { radius } from '@tokens/radius';
-import { spacing } from '@tokens/spacing';
-import { shadows } from '@tokens/shadows';
-import { onboardingColors } from '@design-system/onboarding/colors';
+import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
+import { shadows } from '@/design-system/tokens/shadows';
+import { onboardingColors } from '@/design-system/onboarding/colors';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg';

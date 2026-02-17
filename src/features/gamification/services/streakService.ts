@@ -4,8 +4,8 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useGamificationStore } from '@gamification/store/gamificationStore';
-import { logger } from '@lib/services/logger';
+import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
+import { logger } from '@/lib/services/logger';
 
 export const STREAK_MILESTONES = {
   STREAK_7: { days: 7, xp: 50, achievementId: 'streak_7' },

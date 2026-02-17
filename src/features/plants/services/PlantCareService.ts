@@ -4,9 +4,9 @@
  * Includes achievement unlocking and XP reward logic
  */
 
-import type { IPlantRepository, Plant, UpdatePlantDto } from '@plants/repositories/PlantRepository';
-import { xpRewardService, RewardType } from '@gamification/services/xpRewardService';
-import { logger } from '@lib/services/logger';
+import type { IPlantRepository, Plant, UpdatePlantDto } from '@/features/plants/repositories/PlantRepository';
+import { xpRewardService, RewardType } from '@/features/gamification/services/xpRewardService';
+import { logger } from '@/lib/services/logger';
 
 export interface PlantWithRewards {
   plant: Plant;

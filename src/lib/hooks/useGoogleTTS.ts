@@ -5,8 +5,8 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { googleTTSService } from '@lib/services/googleTTS';
-import { logger } from '@lib/services/logger';
+import { googleTTSService } from '@/lib/services/googleTTS';
+import { logger } from '@/lib/services/logger';
 
 export interface UseGoogleTTSOptions {
   voiceType?: 'male' | 'female' | 'neutral';

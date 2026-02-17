@@ -11,8 +11,8 @@
  * Phase 4.2: Avatar Vocal Enrichi
  */
 
-import { PlantPersonality, AvatarEmotion } from '@appTypes';
-import { getPersonalityProfile } from '@gamification/constants/personalities';
+import { PlantPersonality, AvatarEmotion } from '@/types';
+import { getPersonalityProfile } from '@/features/gamification/constants/personalities';
 
 /**
  * Configuration for each emotion
@@ -546,4 +546,4 @@ export function calculateTierProgress(totalXp: number): number {
 }
 
 // Re-export types for components
-export type { AvatarEmotion } from '@appTypes';
+export type { AvatarEmotion } from '@/types';

@@ -5,9 +5,9 @@
  */
 
 import { useMemo, useCallback, useEffect, useState } from 'react';
-import { avatarFactory, AvatarImage, AvatarFactoryStats } from '@plants/factories/AvatarImageFactory';
-import { PlantPersonality } from '@appTypes';
-import { logger } from '@lib/services/logger';
+import { avatarFactory, AvatarImage, AvatarFactoryStats } from '@/features/plants/factories/AvatarImageFactory';
+import { PlantPersonality } from '@/types';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Get avatar image for a plant personality

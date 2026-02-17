@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { logger } from '@lib/services/logger';
+import { logger } from '@/lib/services/logger';
 import {
   scheduleDailyCheckInNotification,
   cancelDailyCheckInNotification,
@@ -12,7 +12,7 @@ import {
   rescheduleDailyNotification,
   addNotificationResponseListener,
   getPendingNotifications,
-} from '@gamification/services/dailyNotificationService';
+} from '@/features/gamification/services/dailyNotificationService';
 
 interface DailyNotificationState {
   isScheduled: boolean;
