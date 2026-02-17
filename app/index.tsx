@@ -1,32 +1,35 @@
+/**
+ * Root Index - Session-based Redirect
+ *
+ * Handles initial navigation based on auth session:
+ * - No session → onboarding
+ * - Session exists → (tabs) dashboard
+ */
+
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { useAuth } from '@auth/store/authStore';
-import { ActivityIndicator, View, Text } from 'react-native';
+import { useAuthStore } from '@auth/store/authStore';
+import { ActivityIndicator, View } from 'react-native';
 
-export default function Index() {
+export default function RootIndex() {
   const router = useRouter();
-  const { session, isLoading } = useAuth();
+  const { session, isLoading } = useAuthStore();
 
   useEffect(() => {
-    console.log('🔍 Index screen - isLoading:', isLoading, 'session:', !!session);
-
     if (isLoading) return;
 
+    // Redirect based on session
     if (session) {
-      console.log('✅ Session found, navigating to (tabs)');
       router.replace('/(tabs)');
     } else {
-      console.log('➡️ No session, navigating to onboarding');
       router.replace('/onboarding');
     }
   }, [session, isLoading, router]);
 
+  // Show loading while determining auth state
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ActivityIndicator size="large" color="#10B981" />
-      <Text style={{ marginTop: 20, fontSize: 14, color: '#666' }}>
-        Chargement{isLoading ? '...' : ' terminé'}
-      </Text>
     </View>
   );
 }

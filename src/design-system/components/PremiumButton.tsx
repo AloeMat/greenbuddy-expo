@@ -108,7 +108,7 @@ export const PremiumButton: React.FC<PremiumButtonProps> = ({
   };
 
   return (
-    <Animated.View entering={FadeInDown.delay(enterDelay)}>
+    <Animated.View entering={FadeInDown.delay(enterDelay)} pointerEvents="auto">
       <TouchableOpacity
         onPress={handlePress}
         disabled={disabled}

@@ -1,0 +1,324 @@
+{
+  "meta": {
+    "version": "2.0_optimized",
+    "date": "2026-02-15",
+    "changes": [
+      "Création compte déplacée après page7 (après valeur vécue)",
+      "Page8 (nom+personnalité) déplacée avant page7 pour continuité émotionnelle",
+      "Paywall déplacé en in-app (après 3-5 jours ou déclencheurs contextuels)",
+      "Flow linéaire clarifié (suppression des chemins parallèles)",
+      "Actions page7 en mode 'preview' pendant onboarding, cliquables en loop",
+      "Feedbacks explicites après chaque choix de personnalisation",
+      "Écrans de transition ajoutés pour réassurance émotionnelle"
+    ]
+  },
+  "onboarding": [
+    {
+      "id": "page1",
+      "title": "Vos plantes ont déjà une voix",
+      "text": "Nous allons simplement vous aider à l'entendre.",
+      "progress": 5,
+      "animation": "plante_respire",
+      "cta_primary": {
+        "children": "Commencer",
+        "action": "go_next"
+      },
+      "cta_secondary": {
+        "children": "Comment ça marche ?",
+        "action": "show_info"
+      },
+      "xp": 0,
+      "badges": [],
+      "on_enter": [
+        "animatePlant('respire')"
+      ],
+      "next": "page2"
+    },
+    {
+      "id": "page2",
+      "title": "Projection émotionnelle",
+      "text": "Elles ressentent plus que vous ne le pensez… 💧☀️🌡️🌿",
+      "progress": 10,
+      "animation": "plante_fremit",
+      "cta_primary": {
+        "children": "Continuer",
+        "action": "go_next"
+      },
+      "xp": 0,
+      "badges": [],
+      "on_enter": [
+        "animatePlant('fremit')"
+      ],
+      "next": "page3"
+    },
+    {
+      "id": "page3",
+      "title": "Profil énergétique",
+      "text": "Quand vous prenez soin de vos plantes… vous êtes plutôt :",
+      "options": [
+        {
+          "children": "🌿 J'agis immédiatement",
+          "profile": "actif",
+          "xp": 5,
+          "feedback": "Parfait ! On adapte les alertes à votre style réactif : notifications immédiates quand vos plantes ont besoin de vous."
+        },
+        {
+          "children": "🌱 J'aime comprendre avant d'agir",
+          "profile": "comprehension",
+          "xp": 5,
+          "feedback": "Super ! On vous donnera des explications détaillées pour chaque action recommandée."
+        },
+        {
+          "children": "🌸 J'observe et je ressens",
+          "profile": "sensible",
+          "xp": 5,
+          "feedback": "Génial ! On utilisera un ton doux et bienveillant pour vous accompagner."
+        },
+        {
+          "children": "🌳 J'aime décider du moment",
+          "profile": "libre",
+          "xp": 5,
+          "feedback": "Entendu ! On vous suggèrera des actions, mais vous gardez le contrôle du timing."
+        }
+      ],
+      "progress": 20,
+      "on_select": [
+        "addXP(option.xp)",
+        "storeProfile(option.profile)",
+        "showFeedback(option.feedback, 2000)"
+      ],
+      "next": "page3_feedback"
+    },
+    {
+      "id": "page3_feedback",
+      "title": "Personnalisation activée",
+      "text": "[feedback dynamique selon profil choisi]",
+      "progress": 25,
+      "animation": "checkmark_success",
+      "auto_advance": 2000,
+      "on_enter": [
+        "animateSuccess()"
+      ],
+      "next": "page4"
+    },
+    {
+      "id": "page4",
+      "title": "Douleur personnelle",
+      "text": "Soyons honnêtes… avez-vous déjà perdu une plante ?",
+      "options": [
+        {
+          "children": "Oui 😔",
+          "value": "oui_une",
+          "xp": 5,
+          "feedback": "On comprend cette douleur. Cette fois, on va faire en sorte que ça ne se reproduise plus."
+        },
+        {
+          "children": "Plusieurs…",
+          "value": "plusieurs",
+          "xp": 5,
+          "feedback": "On va vous aider à briser ce cycle. Cette fois, vous aurez un guide pour chaque étape."
+        },
+        {
+          "children": "Pas encore",
+          "value": "jamais",
+          "xp": 5,
+          "feedback": "Excellent ! On va vous aider à continuer sur cette lancée."
+        }
+      ],
+      "progress": 30,
+      "on_select": [
+        "addXP(option.xp)",
+        "storePainPoint(option.value)",
+        "showFeedback(option.feedback)"
+      ],
+      "next": "page4_reassurance"
+    },
+    {
+      "id": "page4_reassurance",
+      "title": "Vous n'êtes plus seul·e",
+      "text": "[feedback dynamique selon réponse page4]",
+      "progress": 35,
+      "animation": "avatar_reassure",
+      "visual": "avatar_hand_on_heart",
+      "auto_advance": 3000,
+      "on_enter": [
+        "animateAvatar('reassure')"
+      ],
+      "next": "page5"
+    },
+    {
+      "id": "page5",
+      "title": "Ajoutons votre première plante",
+      "text": "Prenez une photo ou choisissez dans votre galerie. On va l'identifier ensemble.",
+      "note": "Pas besoin de compte pour l'instant, on sauvegarde tout localement.",
+      "actions": [
+        {
+          "type": "upload_photo",
+          "children": "Prendre une photo",
+          "icon": "camera"
+        },
+        {
+          "type": "import_gallery",
+          "children": "Choisir dans la galerie",
+          "icon": "gallery"
+        },
+        {
+          "type": "manual_select",
+          "children": "Je connais le nom",
+          "icon": "search"
+        }
+      ],
+      "progress": 50,
+      "xp": 5,
+      "on_enter": [
+        "animatePlant('respire')"
+      ],
+      "on_action_complete": "go_next",
+      "next": "page5_identification"
+    },
+    {
+      "id": "page5_identification",
+      "title": "Identification en cours...",
+      "text": "On configure le profil unique de votre plante...",
+      "progress": 55,
+      "animation": "loading_scan",
+      "auto_advance": "on_identification_complete",
+      "on_enter": [
+        "startPlantIdentification()"
+      ],
+      "next": "page6_dynamic"
+    },
+    {
+      "id": "page6_dynamic",
+      "title": "Première parole",
+      "note": "Cette page s'adapte au profil choisi à page3",
+      "variants": {
+        "default": {
+          "text": "Bonjour ! Je suis prête à grandir avec toi. 🌱",
+          "tone": "neutre"
+        },
+        "actif": {
+          "text": "Hey ! Je suis ta plante 🌿. On s'occupe de moi maintenant ?",
+          "tone": "énergique"
+        },
+        "comprehension": {
+          "text": "Bonjour. Je suis [nom espèce]. Laisse-moi te montrer quelques détails sur mes besoins.",
+          "tone": "pédagogique"
+        },
+        "sensible": {
+          "text": "Je suis heureuse que tu sois là. On va prendre soin l'un de l'autre. 💚",
+          "tone": "doux"
+        },
+        "libre": {
+          "text": "Voici mon état actuel. Tu décides du moment idéal pour agir.",
+          "tone": "neutre"
+        }
+      },
+      "progress": 60,
+      "xp": 5,
+      "on_enter": [
+        "selectVariant(userProfile)"
+      ],
+      "cta_primary": {
+        "children": "Continuer",
+        "action": "go_next"
+      },
+      "next": "page8"
+    },
+    {
+      "id": "page8",
+      "title": "Donnez-moi un nom",
+      "text": "Comment voulez-vous m'appeler ? Et quelle personnalité souhaitez-vous que j'aie ?",
+      "progress": 70,
+      "xp": 5,
+      "inputs": [
+        {
+          "type": "text",
+          "name": "plantName",
+          "placeholder": "Ex: Buddy, Greeny...",
+          "required": true
+        },
+        {
+          "type": "select",
+          "name": "plantPersonality",
+          "options": ["zen", "diva", "gourmand", "timide", "joyeux", "sage"],
+          "default": "zen"
+        }
+      ],
+      "on_complete": [
+        "setPlantName(inputs.plantName)",
+        "setPlantPersonality(inputs.plantPersonality)",
+        "addXP(5)"
+      ],
+      "badges": [
+        "ma_plante_et_moi"
+      ],
+      "cta_primary": {
+        "children": "Valider",
+        "action": "go_next"
+      },
+      "next": "page8_confirmation"
+    },
+    {
+      "id": "page8_confirmation",
+      "title": "Enchanté·e !",
+      "text": "Moi c'est [nom plante], et je suis [personnalité]. On va bien s'entendre ! 🌿",
+      "progress": 75,
+      "auto_advance": 2500,
+      "next": "page7"
+    },
+    {
+      "id": "page7",
+      "title": "Voici mon plan de soins",
+      "text": "Aujourd'hui, [nom plante] a besoin de...",
+      "mode": "preview",
+      "note": "Actions non cliquables en onboarding, uniquement en preview",
+      "progress": 85,
+      "fallback_data": {
+        "plantName": "Votre plante"
+      },
+      "cta_primary": {
+        "children": "Suivant",
+        "action": "go_next"
+      },
+      "next": "page9"
+    },
+    {
+      "id": "page9",
+      "title": "Sauvegardez [nom plante]",
+      "text": "Créez un compte pour sauvegarder vos plantes et recevoir des alertes",
+      "progress": 90,
+      "xp": 10,
+      "on_complete": [
+        "addXP(10)"
+      ],
+      "cta_primary": {
+        "children": "Créer un compte",
+        "action": "signup"
+      },
+      "cta_secondary": {
+        "children": "Plus tard",
+        "action": "go_next"
+      },
+      "next": "page10"
+    },
+    {
+      "id": "page10",
+      "title": "Tout est prêt ! 🎉",
+      "text": "Vous avez débloqué la version gratuite de GreenBuddy",
+      "progress": 100,
+      "xp": 5,
+      "badges": [
+        "onboarding_complete"
+      ],
+      "on_enter": [
+        "addXP(5)"
+      ],
+      "cta_primary": {
+        "children": "C'est parti !",
+        "action": "finish_onboarding"
+      },
+      "next": "dashboard"
+    }
+  ]
+}

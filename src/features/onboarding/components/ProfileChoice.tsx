@@ -88,6 +88,7 @@ export function ProfileChoice({
           <Animated.View
             key={option.profile}
             entering={FadeInDown.delay(300 + index * 100).springify()}
+            pointerEvents="auto"
           >
             <TouchableOpacity
               testID={`profile-${option.profile}`}

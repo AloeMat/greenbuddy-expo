@@ -206,9 +206,9 @@ export default function Page7() {
             variant="primary"
             size="md"
             onPress={handleContinue}
-            label="Sauvegarder ma plante"
-            accessibilityLabel="Sauvegarder ma plante"
-          />
+          >
+            Sauvegarder ma plante
+          </PremiumButton>
         </Animated.View>
       </View>
       </ScrollView>

@@ -247,12 +247,24 @@ class PlantNetService implements IPlantNetService {
 
 /**
  * Factory function for creating PlantNet service instances
+ * @param useCache - Enable caching (default: true)
+ * Returns either cached proxy or raw service
  */
-export const createPlantNetService = (): IPlantNetService => {
-  return new PlantNetService();
+export const createPlantNetService = (useCache: boolean = true): IPlantNetService => {
+  const rawService = new PlantNetService();
+
+  if (useCache) {
+    // Import here to avoid circular dependencies
+    const { createCachedPlantNetProxy } = require('@lib/services/proxies');
+    return createCachedPlantNetProxy(rawService);
+  }
+
+  return rawService;
 };
 
 /**
  * Default singleton instance
+ * Uses caching by default to reduce API quota usage
+ * Can be replaced with factory in tests: createPlantNetService(false)
  */
-export const plantNetService = createPlantNetService();
+export const plantNetService = createPlantNetService(true);

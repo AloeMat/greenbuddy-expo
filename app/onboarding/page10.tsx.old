@@ -164,9 +164,9 @@ export default function Page10() {
               variant="primary"
               size="md"
               onPress={handleContinue}
-              label="Découvrir mon jardin"
-              accessibilityLabel="Découvrir mon jardin"
-            />
+            >
+              Découvrir mon jardin
+            </PremiumButton>
           </Animated.View>
         </View>
       </ScrollView>

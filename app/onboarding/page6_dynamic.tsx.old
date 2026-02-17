@@ -138,10 +138,9 @@ export default function Page6Dynamic() {
             size="md"
             onPress={handleContinue}
             disabled={!textSpoken}
-            label="Continuer"
-            accessibilityLabel="Continuer vers l'étape suivante"
-            accessibilityState={{ disabled: !textSpoken }}
-          />
+          >
+            Continuer
+          </PremiumButton>
         </Animated.View>
       </View>
     </View>

@@ -113,19 +113,13 @@ function RootLayoutNav() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {session ? (
-        // Authenticated routes - user has signed up
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      ) : (
-        // Unauthenticated routes - onboarding as primary entry point
-        // (signup modal appears at end of onboarding step5)
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-      )}
-      {/* Auth routes accessible if user wants to login with existing account */}
+      {/* Root index handles session-based routing */}
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+
+      {/* App groups */}
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      {/* Debug/test routes - always available */}
-      <Stack.Screen name="test-nav" options={{ headerShown: false }} />
-      <Stack.Screen name="debug" options={{ headerShown: false }} />
     </Stack>
   );
 }

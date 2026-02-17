@@ -336,14 +336,24 @@ class GeminiService implements IGeminiService {
 
 /**
  * Factory function for creating Gemini service instances
- * Enables dependency injection and testing
+ * @param useCache - Enable caching (default: true)
+ * Returns either cached proxy or raw service
  */
-export const createGeminiService = (): IGeminiService => {
-  return new GeminiService();
+export const createGeminiService = (useCache: boolean = true): IGeminiService => {
+  const rawService = new GeminiService();
+
+  if (useCache) {
+    // Import here to avoid circular dependencies
+    const { createCachedGeminiProxy } = require('./proxies');
+    return createCachedGeminiProxy(rawService);
+  }
+
+  return rawService;
 };
 
 /**
  * Default singleton instance for convenience
- * Can be replaced with factory in tests: createGeminiService()
+ * Uses caching by default to reduce API costs
+ * Can be replaced with factory in tests: createGeminiService(false)
  */
-export const geminiService = createGeminiService();
+export const geminiService = createGeminiService(true);

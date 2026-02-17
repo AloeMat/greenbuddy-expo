@@ -197,9 +197,9 @@ export default function Page5() {
             size="md"
             onPress={() => setState('camera_open')}
             disabled={isCapturing}
-            label="Prendre une photo"
-            accessibilityLabel="Prendre une photo avec la caméra"
-          />
+          >
+            Prendre une photo
+          </PremiumButton>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1000)}>
@@ -208,9 +208,9 @@ export default function Page5() {
             size="md"
             onPress={() => {}}
             disabled={true}
-            label="Choisir dans la galerie"
-            accessibilityLabel="Choisir une image dans la galerie (non disponible)"
-          />
+          >
+            Choisir dans la galerie
+          </PremiumButton>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(1200)}>
@@ -233,9 +233,9 @@ export default function Page5() {
               markPageComplete('page5');
               router.push('/onboarding/page5_identification');
             }}
-            label="Skip (test)"
-            accessibilityLabel="Ignorer cette étape (mode test)"
-          />
+          >
+            Skip (test)
+          </PremiumButton>
         </Animated.View>
       </View>
     </View>
