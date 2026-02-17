@@ -28,10 +28,9 @@ export const avatarImages = {
 };
 
 // UI Images - All general purpose images
+// Note: React Native auto-selects @2x/@3x variants based on device DPI
 export const uiImages = {
   reactLogo: require('../../../assets/images/react-logo.png'),
-  reactLogo2x: require('../../../assets/images/react-logo@2x.png'),
-  reactLogo3x: require('../../../assets/images/react-logo@3x.png'),
   partialReactLogo: require('../../../assets/images/partial-react-logo.png'),
   splashIcon: require('../../../assets/images/splash-icon.png'),
   favicon: require('../../../assets/images/favicon.png'),
