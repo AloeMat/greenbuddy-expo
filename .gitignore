@@ -26,6 +26,13 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
+# logs
+*.log
+build.log
+eas-build*.log
+expo*.log
+export.log
+
 # macOS
 .DS_Store
 *.pem
