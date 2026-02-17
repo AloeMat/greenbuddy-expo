@@ -104,7 +104,7 @@ export default function RegisterScreen() {
             label="S'inscrire"
             onPress={handleRegister}
             style={styles.registerButton}
-            disabled={!isValid || loading}
+            disabled={loading}
           />
         </View>
 

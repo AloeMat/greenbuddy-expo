@@ -91,7 +91,7 @@ export default function LoginScreen() {
             label="Se connecter"
             onPress={handleLogin}
             style={styles.loginButton}
-            disabled={!isValid || loading}
+            disabled={loading}
           />
         </View>
 
