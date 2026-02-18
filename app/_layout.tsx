@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Stack } from 'expo-router';
 import { useAuthStore } from '@/features/auth/store/authStore';
@@ -6,14 +6,21 @@ import { AppErrorBoundary } from '@/lib/components/AppErrorBoundary';
 
 export default function RootLayout() {
   const { initializeAuth, isLoading } = useAuthStore();
+  const initializedRef = useRef(false);
 
   // Initialize auth on app startup (run only once at mount)
   useEffect(() => {
+    // Prevent re-initialization if already initialized
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
     const init = async () => {
       try {
         await initializeAuth?.();
       } catch (error) {
         // Silent fail - user will see login screen
+        const store = useAuthStore.getState();
+        store.clearAuth();
       }
     };
 
