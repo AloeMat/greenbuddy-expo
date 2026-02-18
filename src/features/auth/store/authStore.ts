@@ -27,13 +27,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
    */
   initializeAuth: async () => {
     try {
-      logger.debug('🔐 Initializing auth...');
       set({ isLoading: true });
 
       const { user, session } = await authRepository.getSession();
 
       if (user && session) {
-        logger.debug('✅ Session found', { user: user.email });
         set({
           user,
           session,
@@ -42,7 +40,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           isAuthenticated: true,
         });
       } else {
-        logger.debug('ℹ️ No active session (guest mode)');
         set({ isAuthenticated: false });
       }
     } catch (error) {

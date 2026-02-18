@@ -5,28 +5,23 @@ import { useAuthStore } from '@/features/auth/store/authStore';
 export default function RootLayout() {
   const { initializeAuth, isLoading } = useAuthStore();
 
-  // Initialize auth on app startup
+  // Initialize auth on app startup (run only once at mount)
   useEffect(() => {
     const init = async () => {
       try {
-        console.log('🔐 RootLayout: Initializing auth...');
         await initializeAuth?.();
-        console.log('✅ RootLayout: Auth initialized');
       } catch (error) {
-        console.log('❌ RootLayout: Auth init failed:', error);
+        // Silent fail - user will see login screen
       }
     };
 
     init();
-  }, [initializeAuth]);
+  }, []); // Empty deps: only run once at mount, never again
 
   // Show nothing while loading
   if (isLoading) {
-    console.log('⏳ RootLayout: Still loading...');
     return null;
   }
-
-  console.log('🎯 RootLayout: Auth ready, rendering Stack');
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
