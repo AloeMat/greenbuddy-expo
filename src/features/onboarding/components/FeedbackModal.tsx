@@ -1,33 +1,25 @@
-/**
- * FeedbackModal.tsx
- * Styled modal for onboarding feedback (replaces Alert.alert)
- * Matches design system with animations
- */
-
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
+import { spacing } from '@/design-system/tokens/spacing';
+import { radius } from '@/design-system/tokens/radius';
 import { onboardingColors } from '@/design-system/onboarding/colors';
 
 interface FeedbackModalProps {
   visible: boolean;
   title: string;
   message: string;
-  buttonText?: string;
+  buttonText: string;
   onConfirm: () => void;
-  icon?: React.ReactNode;
 }
 
 export function FeedbackModal({
   visible,
   title,
   message,
-  buttonText = 'Continuer',
+  buttonText,
   onConfirm,
-  icon,
 }: FeedbackModalProps) {
-  const { width, height } = Dimensions.get('window');
-
   return (
     <Modal
       visible={visible}
@@ -35,73 +27,72 @@ export function FeedbackModal({
       animationType="fade"
       onRequestClose={onConfirm}
     >
-      {/* Backdrop */}
-      <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' }}>
-        {/* Modal Content */}
+      <View style={styles.backdrop}>
         <Animated.View
           entering={ZoomIn.springify()}
-          style={{
-            width: width - 48,
-            backgroundColor: 'white',
-            borderRadius: 16,
-            padding: 24,
-            alignItems: 'center',
-          }}
+          style={styles.container}
         >
-          {/* Icon */}
-          {icon && (
-            <Animated.View entering={FadeIn.delay(100)} style={{ marginBottom: 16 }}>
-              {icon}
-            </Animated.View>
-          )}
+          <View style={styles.content}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.message}>{message}</Text>
 
-          {/* Title */}
-          <Animated.Text
-            entering={FadeIn.delay(200)}
-            style={{
-              fontSize: 20,
-              fontWeight: '600',
-              color: onboardingColors.text.primary,
-              marginBottom: 8,
-              textAlign: 'center',
-            }}
-          >
-            {title}
-          </Animated.Text>
-
-          {/* Message */}
-          <Animated.Text
-            entering={FadeIn.delay(300)}
-            style={{
-              fontSize: 16,
-              color: onboardingColors.text.secondary,
-              textAlign: 'center',
-              lineHeight: 24,
-              marginBottom: 24,
-            }}
-          >
-            {message}
-          </Animated.Text>
-
-          {/* Button */}
-          <Animated.View entering={FadeIn.delay(400)} style={{ width: '100%' }}>
             <TouchableOpacity
+              activeOpacity={0.7}
               onPress={onConfirm}
-              style={{
-                backgroundColor: onboardingColors.green[500],
-                borderRadius: 8,
-                paddingVertical: 12,
-                paddingHorizontal: 24,
-                alignItems: 'center',
-              }}
+              style={styles.button}
             >
-              <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>
-                {buttonText}
-              </Text>
+              <Text style={styles.buttonText}>{buttonText}</Text>
             </TouchableOpacity>
-          </Animated.View>
+          </View>
         </Animated.View>
       </View>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+  },
+  container: {
+    width: '100%',
+    maxWidth: 320,
+  },
+  content: {
+    backgroundColor: 'white',
+    borderRadius: radius.lg,
+    padding: spacing['2xl'],
+    alignItems: 'center',
+    gap: spacing.lg,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: onboardingColors.text.primary,
+    textAlign: 'center',
+  },
+  message: {
+    fontSize: 16,
+    color: onboardingColors.text.secondary,
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  button: {
+    backgroundColor: onboardingColors.green[500],
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: spacing.md,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'white',
+  },
+});

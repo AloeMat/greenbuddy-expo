@@ -9,7 +9,7 @@ import { OptionsPage } from '@/features/onboarding/types/onboardingSchema';
 import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
 import { executeActions } from '@/features/onboarding/utils/actionExecutor';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
-import { FeedbackModal } from './FeedbackModal';
+import { FeedbackModal } from '../FeedbackModal';
 import * as Haptics from 'expo-haptics';
 
 interface OptionsRendererProps {
