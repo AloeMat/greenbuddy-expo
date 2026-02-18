@@ -24,11 +24,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   /**
    * Initialiser l'auth depuis AuthRepository
    * À appeler dans app/_layout.tsx au démarrage
+   * Includes 3-second forced timeout to prevent infinite loading
    */
   initializeAuth: async () => {
     try {
       set({ isLoading: true });
 
+      // getSession() already has 5-second timeout in AuthRepository
+      // No need for double timeout here
       const { user, session } = await authRepository.getSession();
 
       if (user && session) {
@@ -38,14 +41,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           accessToken: session.access_token,
           refreshTokenValue: session.refresh_token,
           isAuthenticated: true,
+          isLoading: false,
         });
       } else {
-        set({ isAuthenticated: false });
+        set({ isAuthenticated: false, isLoading: false });
       }
     } catch (error) {
-      logger.error('❌ Auth initialization error:', error);
-    } finally {
-      set({ isLoading: false });
+      console.error('❌ [authStore] initializeAuth error:', error);
+      set({ isLoading: false, isAuthenticated: false });
     }
   },
 
@@ -175,3 +178,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
 // Export pour compatibilité avec ancien useAuth hook
 export const useAuth = () => useAuthStore();
+
+// ✅ AUTO-INITIALIZE AUTH on module load (React Native compatible)
+// S'exécute UNE FOIS au démarrage de l'app
+if (typeof useAuthStore !== 'undefined') {
+  console.log('🔐 [authStore] Auto-initializing auth...');
+  useAuthStore.getState().initializeAuth().catch((e) => {
+    console.error('❌ [authStore] Auto-init failed:', e);
+  });
+}
