@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, Alert, ActivityIndicator, View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import * as ImagePicker from 'expo-image-picker';
 import { spacing } from '@/design-system/tokens/spacing';
 import { onboardingColors } from '@/design-system/onboarding/colors';
 import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
@@ -9,11 +10,6 @@ import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore'
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
 import { logger } from '@/lib/services/logger';
-
-// TODO: Install expo-image-picker for full camera/gallery support
-// npm install expo-image-picker
-// Then uncomment:
-// import * as ImagePicker from 'expo-image-picker';
 
 interface ActionsRendererProps {
   page: ActionsPage;
@@ -33,19 +29,111 @@ export function ActionsRenderer({ page, onNavigate }: ActionsRendererProps) {
   };
 
   const handleTakePhoto = async () => {
-    Alert.alert(
-      '📸 Caméra',
-      'Pour activer la capture photo, installez d\'abord expo-image-picker:\n\nnpm install expo-image-picker\n\nAlternativement, utilisez l\'option "Sélection manuelle" pour continuer l\'onboarding.',
-      [{ text: 'OK' }]
-    );
+    try {
+      setIsLoading(true);
+      setLoadingMessage('📸 Demande de permission caméra...');
+
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission refusée', 'La caméra est nécessaire pour scanner des plantes.');
+        setIsLoading(false);
+        return;
+      }
+
+      setLoadingMessage('📷 Capture en cours...');
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.8,
+        base64: true,
+        allowsEditing: false,
+      });
+
+      if (result.canceled || !result.assets?.[0]) {
+        setIsLoading(false);
+        return;
+      }
+
+      const base64 = result.assets[0].base64;
+      if (!base64) {
+        Alert.alert('Erreur', 'Impossible de traiter l\'image.');
+        setIsLoading(false);
+        return;
+      }
+
+      setLoadingMessage('🌿 Identification de votre plante...');
+      // For onboarding, use a placeholder plant instead of API call
+      store.setPlantData(base64, {
+        commonNames: ['Plante identifiée'],
+        scientificName: 'Plantae sp.',
+        description: 'Une belle plante trouvée via la caméra.',
+        careGuide: {
+          watering: 'Arrosez régulièrement',
+          lighting: 'Lumière indirecte',
+          humidity: 'Humidité modérée',
+        },
+      });
+
+      setIsLoading(false);
+      onNavigate(page.next);
+    } catch (error) {
+      logger.error('[ActionsRenderer] Camera error:', error);
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la capture.');
+      setIsLoading(false);
+    }
   };
 
   const handleImportGallery = async () => {
-    Alert.alert(
-      '📂 Galerie',
-      'Pour activer l\'import depuis la galerie, installez d\'abord expo-image-picker:\n\nnpm install expo-image-picker\n\nAlternativement, utilisez l\'option "Sélection manuelle" pour continuer l\'onboarding.',
-      [{ text: 'OK' }]
-    );
+    try {
+      setIsLoading(true);
+      setLoadingMessage('📂 Demande de permission galerie...');
+
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission refusée', 'L\'accès à la galerie est nécessaire.');
+        setIsLoading(false);
+        return;
+      }
+
+      setLoadingMessage('📂 Sélection en cours...');
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.8,
+        base64: true,
+        allowsEditing: false,
+      });
+
+      if (result.canceled || !result.assets?.[0]) {
+        setIsLoading(false);
+        return;
+      }
+
+      const base64 = result.assets[0].base64;
+      if (!base64) {
+        Alert.alert('Erreur', 'Impossible de traiter l\'image.');
+        setIsLoading(false);
+        return;
+      }
+
+      setLoadingMessage('🌿 Identification de votre plante...');
+      // For onboarding, use a placeholder plant instead of API call
+      store.setPlantData(base64, {
+        commonNames: ['Plante de galerie'],
+        scientificName: 'Plantae sp.',
+        description: 'Une belle plante de votre galerie.',
+        careGuide: {
+          watering: 'Arrosez régulièrement',
+          lighting: 'Lumière indirecte',
+          humidity: 'Humidité modérée',
+        },
+      });
+
+      setIsLoading(false);
+      onNavigate(page.next);
+    } catch (error) {
+      logger.error('[ActionsRenderer] Gallery error:', error);
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la sélection.');
+      setIsLoading(false);
+    }
   };
 
   const handleManualSelect = async () => {
