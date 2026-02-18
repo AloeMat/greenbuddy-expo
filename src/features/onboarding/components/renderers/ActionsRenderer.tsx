@@ -8,8 +8,12 @@ import { ActionsPage } from '@/features/onboarding/types/onboardingSchema';
 import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
-import { cameraService } from '@/features/plants/services/camera';
-import { plantNetService } from '@/features/plants/services/plantnet';
+import { logger } from '@/lib/services/logger';
+
+// TODO: Install expo-image-picker for full camera/gallery support
+// npm install expo-image-picker
+// Then uncomment:
+// import * as ImagePicker from 'expo-image-picker';
 
 interface ActionsRendererProps {
   page: ActionsPage;
@@ -29,41 +33,51 @@ export function ActionsRenderer({ page, onNavigate }: ActionsRendererProps) {
   };
 
   const handleTakePhoto = async () => {
+    Alert.alert(
+      '📸 Caméra',
+      'Pour activer la capture photo, installez d\'abord expo-image-picker:\n\nnpm install expo-image-picker\n\nAlternativement, utilisez l\'option "Sélection manuelle" pour continuer l\'onboarding.',
+      [{ text: 'OK' }]
+    );
+  };
+
+  const handleImportGallery = async () => {
+    Alert.alert(
+      '📂 Galerie',
+      'Pour activer l\'import depuis la galerie, installez d\'abord expo-image-picker:\n\nnpm install expo-image-picker\n\nAlternativement, utilisez l\'option "Sélection manuelle" pour continuer l\'onboarding.',
+      [{ text: 'OK' }]
+    );
+  };
+
+  const handleManualSelect = async () => {
     try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       setIsLoading(true);
-      setLoadingMessage('📸 Accès à la caméra...');
-      const hasPermission = await cameraService.requestPermissions();
-      if (!hasPermission) {
-        Alert.alert('Permission refusée', 'La caméra est nécessaire.');
+      setLoadingMessage('🌿 Préparation de votre plante...');
+
+      // Simulate plant selection with a placeholder
+      setTimeout(() => {
+        store.setPlantData(
+          '', // No actual image for now
+          {
+            commonNames: ['Monstera Deliciosa'],
+            scientificName: 'Monstera deliciosa',
+            description: 'Une belle plante d\'intérieur avec des feuilles perforées.',
+            careGuide: {
+              watering: 'Arrosez une fois par semaine',
+              lighting: 'Lumière indirecte brillante',
+              humidity: 'Aime l\'humidité élevée',
+            },
+          }
+        );
         setIsLoading(false);
-        return;
-      }
-      setLoadingMessage('📷 Capture en cours...');
-      const photo = await cameraService.takePicture();
-      if (!photo) { setIsLoading(false); return; }
-      setLoadingMessage('🔄 Compression...');
-      const compressed = await cameraService.compressImage(photo, 2048);
-      setLoadingMessage('🔄 Préparation...');
-      const base64 = await cameraService.getBase64(compressed);
-      setLoadingMessage('🔍 Identification en cours...');
-      const identified = await plantNetService.identifyPlant(base64);
-      if (!identified) {
-        Alert.alert('Identification échouée', 'Veuillez réessayer.');
-        setIsLoading(false);
-        return;
-      }
-      store.setPlantData(base64, identified);
-      setIsLoading(false);
-      onNavigate(page.next);
+        onNavigate(page.next);
+      }, 1500);
     } catch (error) {
-      console.error('[ActionsRenderer] Error:', error);
+      logger.error('[ActionsRenderer] Manual select error:', error);
       Alert.alert('Erreur', 'Une erreur est survenue.');
       setIsLoading(false);
     }
   };
-
-  const handleImportGallery = () => Alert.alert('Galerie', 'Disponible prochainement.');
-  const handleManualSelect = () => Alert.alert('Sélection manuelle', 'Disponible prochainement.');
 
   return (
     <OnboardingScreen testID={`onboarding-${page.id}`}>
@@ -85,9 +99,13 @@ export function ActionsRenderer({ page, onNavigate }: ActionsRendererProps) {
         )}
       </ScrollView>
       <OnboardingFooter>
-        <Animated.View entering={FadeInDown.delay(400).springify()} pointerEvents="auto" style={{ width: '100%', gap: spacing.md }}>
+        <Animated.View entering={FadeInDown.delay(400).springify()} pointerEvents={isLoading ? 'none' : 'auto'} style={{ width: '100%', gap: spacing.md, opacity: isLoading ? 0.5 : 1 }}>
           {page.actions.map((action) => (
-            <PrimaryButton key={action.type} testID={`action-${action.type}`} onPress={() => handleAction(action)}>
+            <PrimaryButton
+              key={action.type}
+              testID={`action-${action.type}`}
+              onPress={() => handleAction(action)}
+            >
               {action.children}
             </PrimaryButton>
           ))}
