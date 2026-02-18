@@ -1,9 +1,5 @@
-import { View, Text } from 'react-native';
+import { OnboardingWizard } from '@/features/onboarding/components/OnboardingWizard';
 
 export default function OnboardingScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
-      <Text style={{ fontSize: 18, fontWeight: '600' }}>Onboarding</Text>
-    </View>
-  );
+  return <OnboardingWizard />;
 }
