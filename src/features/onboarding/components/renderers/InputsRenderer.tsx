@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, View, TouchableOpacity, Alert } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { radius } from '@/design-system/tokens/radius';
 import { spacing } from '@/design-system/tokens/spacing';
 import { onboardingColors } from '@/design-system/onboarding/colors';
 import { PremiumInput } from '@/design-system/components/PremiumInput';
@@ -67,38 +68,52 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
         <Animated.View entering={FadeInDown.delay(300).springify()} style={{ gap: spacing.lg, marginTop: spacing.lg }}>
           {page.inputs.map((input, index) => (
             input.type === 'text' ? (
-              <PremiumInput
+              <Animated.View
                 key={input.name}
-                testID={`input-${input.name}`}
-                label={input.placeholder || input.name}
-                placeholder={input.placeholder}
-                value={formData[input.name] || ''}
-                onChangeText={(value) => handleInputChange(input.name, value)}
-                error={errors[input.name]}
-                enterDelay={index * 100}
-              />
+                entering={FadeInDown.delay(300 + index * 100).springify()}
+              >
+                <PremiumInput
+                  testID={`input-${input.name}`}
+                  label={input.placeholder || input.name}
+                  placeholder={input.placeholder}
+                  value={formData[input.name] || ''}
+                  onChangeText={(value) => handleInputChange(input.name, value)}
+                  error={errors[input.name]}
+                />
+              </Animated.View>
             ) : (
-              <View key={input.name}>
+              <Animated.View
+                key={input.name}
+                entering={FadeInDown.delay(300 + index * 100).springify()}
+              >
                 <Subtitle style={{ fontSize: 14, marginBottom: spacing.md }}>{input.placeholder || input.name}</Subtitle>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}>
-                  {input.options?.map(opt => (
-                    <TouchableOpacity
-                      key={opt}
-                      onPress={() => handleInputChange(input.name, opt)}
-                      style={{
-                        paddingHorizontal: spacing.md,
-                        paddingVertical: spacing.sm,
-                        borderRadius: 8,
-                        borderWidth: 2,
-                        borderColor: formData[input.name] === opt ? onboardingColors.green[500] : onboardingColors.gray[200],
-                        backgroundColor: formData[input.name] === opt ? onboardingColors.green[50] : 'white',
-                      }}
-                    >
-                      <Subtitle style={{ fontSize: 14 }}>{opt}</Subtitle>
-                    </TouchableOpacity>
-                  ))}
+                  {input.options && input.options.length > 0 ? (
+                    input.options.map(opt => (
+                      <TouchableOpacity
+                        key={opt}
+                        testID={`option-${input.name}-${opt}`}
+                        activeOpacity={0.7}
+                        onPress={() => handleInputChange(input.name, opt)}
+                        style={{
+                          paddingHorizontal: spacing.md,
+                          paddingVertical: spacing.sm,
+                          borderRadius: radius.sm,
+                          borderWidth: 2,
+                          borderColor: formData[input.name] === opt ? onboardingColors.green[500] : onboardingColors.gray[200],
+                          backgroundColor: formData[input.name] === opt ? onboardingColors.green[50] : 'white',
+                        }}
+                      >
+                        <Subtitle style={{ fontSize: 14 }}>{opt}</Subtitle>
+                      </TouchableOpacity>
+                    ))
+                  ) : (
+                    <Subtitle style={{ fontSize: 14, color: onboardingColors.text.secondary }}>
+                      Aucune option disponible
+                    </Subtitle>
+                  )}
                 </View>
-              </View>
+              </Animated.View>
             )
           ))}
         </Animated.View>
