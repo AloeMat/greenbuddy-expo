@@ -4,7 +4,6 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { radius } from '@/design-system/tokens/radius';
 import { spacing } from '@/design-system/tokens/spacing';
 import { shadows } from '@/design-system/tokens/shadows';
-import { onboardingColors } from '@/design-system/onboarding/colors';
 
 interface PremiumCardProps {
   children: React.ReactNode;

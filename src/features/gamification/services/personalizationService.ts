@@ -14,17 +14,11 @@
 import { supabase } from '@/lib/services/supabase';
 import type {
   CaregiverProfile,
-  LivingPlace,
-  WateringRhythm,
   GuiltSensitivity,
   AvatarPersonalityType,
   HumanDesignSetup,
 } from '@/types/humanDesign';
 import { logger } from '@/lib/services/logger';
-import {
-  calculateCheckFrequency,
-  calculateNotificationStyle,
-} from '@/types/humanDesign';
 
 const log = {
   debug: (msg: string, data?: Record<string, unknown>) => logger.debug(`[PERSONALIZATION] ${msg}`, data),

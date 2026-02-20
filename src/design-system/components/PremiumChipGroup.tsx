@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, ViewStyle, FlatList } from 'react-native';
+import { View, TouchableOpacity, Text, ViewStyle } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { radius } from '@/design-system/tokens/radius';
 import { spacing } from '@/design-system/tokens/spacing';

@@ -6,7 +6,7 @@
 
 import { supabase } from './supabase';
 import { logger } from './logger';
-import { PlantPersonality, PlantAnalysis, ChatMessage, AvatarEmotion, HealthDiagnosisResult } from '@/types';
+import { PlantPersonality, PlantAnalysis, AvatarEmotion, HealthDiagnosisResult } from '@/types';
 import { PERSONALITY_PROMPTS, CHAT_SYSTEM_INSTRUCTION_BASE } from '@/lib/constants/app';
 
 interface GeminiAnalysisRequest {

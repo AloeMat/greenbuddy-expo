@@ -1,11 +1,45 @@
 /**
  * plantsStore Unit Tests
  * Tests Zustand global state management for plants
+ *
+ * Uses getState() directly — no React rendering needed
  */
 
-import { renderHook, act } from '@testing-library/react';
+// Mock supabase to avoid expo-constants ESM import
+jest.mock('@/lib/services/supabase', () => ({
+  supabase: {
+    from: jest.fn(() => ({
+      select: jest.fn().mockReturnThis(),
+      insert: jest.fn().mockReturnThis(),
+      update: jest.fn().mockReturnThis(),
+      delete: jest.fn().mockReturnThis(),
+      eq: jest.fn().mockReturnThis(),
+      order: jest.fn().mockReturnThis(),
+      single: jest.fn().mockReturnThis(),
+      lte: jest.fn().mockReturnThis(),
+      gte: jest.fn().mockReturnThis(),
+    })),
+    auth: {
+      getSession: jest.fn().mockResolvedValue({ data: { session: null }, error: null }),
+    },
+  },
+}));
+
+// Mock logger
+jest.mock('@/lib/services/logger', () => ({
+  logger: {
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  },
+}));
+
 import { usePlantsStore } from '@/features/plants/store/plantsStore';
 import type { Plant } from '@/features/plants/repositories/PlantRepository';
+
+/** Helper: get current store state */
+const getStore = () => usePlantsStore.getState();
 
 describe('plantsStore (Zustand)', () => {
   beforeEach(() => {
@@ -20,23 +54,19 @@ describe('plantsStore (Zustand)', () => {
 
   describe('Initial state', () => {
     it('should have empty plants array', () => {
-      const { result } = renderHook(() => usePlantsStore());
-      expect(result.current.plants).toEqual([]);
+      expect(getStore().plants).toEqual([]);
     });
 
     it('should have loading false', () => {
-      const { result } = renderHook(() => usePlantsStore());
-      expect(result.current.loading).toBe(false);
+      expect(getStore().loading).toBe(false);
     });
 
     it('should have error null', () => {
-      const { result } = renderHook(() => usePlantsStore());
-      expect(result.current.error).toBeNull();
+      expect(getStore().error).toBeNull();
     });
 
     it('should have lastFetchTime null', () => {
-      const { result } = renderHook(() => usePlantsStore());
-      expect(result.current.lastFetchTime).toBeNull();
+      expect(getStore().lastFetchTime).toBeNull();
     });
   });
 
@@ -52,16 +82,12 @@ describe('plantsStore (Zustand)', () => {
         plants: [mockPlant as Plant],
       });
 
-      const { result } = renderHook(() => usePlantsStore());
-      const found = result.current.getPlant('plant-1');
-
+      const found = getStore().getPlant('plant-1');
       expect(found).toEqual(mockPlant);
     });
 
     it('should return undefined for non-existent plant', () => {
-      const { result } = renderHook(() => usePlantsStore());
-      const found = result.current.getPlant('non-existent');
-
+      const found = getStore().getPlant('non-existent');
       expect(found).toBeUndefined();
     });
   });
@@ -91,9 +117,7 @@ describe('plantsStore (Zustand)', () => {
         plants: mockPlants as Plant[],
       });
 
-      const { result } = renderHook(() => usePlantsStore());
-      const urgent = result.current.getUrgentPlants();
-
+      const urgent = getStore().getUrgentPlants();
       expect(urgent).toHaveLength(1);
       expect(urgent[0].id).toBe('plant-1');
     });
@@ -115,9 +139,7 @@ describe('plantsStore (Zustand)', () => {
         plants: mockPlants as Plant[],
       });
 
-      const { result } = renderHook(() => usePlantsStore());
-      const urgent = result.current.getUrgentPlants();
-
+      const urgent = getStore().getUrgentPlants();
       expect(urgent).toHaveLength(0);
     });
   });
@@ -147,9 +169,7 @@ describe('plantsStore (Zustand)', () => {
         plants: mockPlants as Plant[],
       });
 
-      const { result } = renderHook(() => usePlantsStore());
-      const upcoming = result.current.getUpcomingWaterings();
-
+      const upcoming = getStore().getUpcomingWaterings();
       expect(upcoming).toHaveLength(1);
       expect(upcoming[0].id).toBe('plant-1');
     });
@@ -164,15 +184,11 @@ describe('plantsStore (Zustand)', () => {
         lastFetchTime: Date.now(),
       });
 
-      const { result } = renderHook(() => usePlantsStore());
+      getStore().clear();
 
-      act(() => {
-        result.current.clear();
-      });
-
-      expect(result.current.plants).toEqual([]);
-      expect(result.current.error).toBeNull();
-      expect(result.current.lastFetchTime).toBeNull();
+      expect(getStore().plants).toEqual([]);
+      expect(getStore().error).toBeNull();
+      expect(getStore().lastFetchTime).toBeNull();
     });
   });
 
@@ -184,12 +200,10 @@ describe('plantsStore (Zustand)', () => {
         lastFetchTime: oldTime,
       });
 
-      const { result } = renderHook(() => usePlantsStore());
-
       // Cache should be expired (TTL = 5 min = 300000 ms)
       const now = Date.now();
       const ttl = 5 * 60 * 1000;
-      const expired = result.current.lastFetchTime && (now - result.current.lastFetchTime > ttl);
+      const expired = getStore().lastFetchTime && (now - getStore().lastFetchTime! > ttl);
 
       expect(expired).toBe(true);
     });
@@ -201,11 +215,9 @@ describe('plantsStore (Zustand)', () => {
         lastFetchTime: recentTime,
       });
 
-      const { result } = renderHook(() => usePlantsStore());
-
       const now = Date.now();
       const ttl = 5 * 60 * 1000;
-      const expired = result.current.lastFetchTime && (now - result.current.lastFetchTime > ttl);
+      const expired = getStore().lastFetchTime && (now - getStore().lastFetchTime! > ttl);
 
       expect(expired).toBe(false);
     });
@@ -213,28 +225,28 @@ describe('plantsStore (Zustand)', () => {
 
   describe('Store composition', () => {
     it('should have all required methods', () => {
-      const { result } = renderHook(() => usePlantsStore());
+      const state = getStore();
 
-      expect(typeof result.current.getPlant).toBe('function');
-      expect(typeof result.current.getUrgentPlants).toBe('function');
-      expect(typeof result.current.getUpcomingWaterings).toBe('function');
-      expect(typeof result.current.fetchPlants).toBe('function');
-      expect(typeof result.current.addPlant).toBe('function');
-      expect(typeof result.current.updatePlant).toBe('function');
-      expect(typeof result.current.deletePlant).toBe('function');
-      expect(typeof result.current.waterPlant).toBe('function');
-      expect(typeof result.current.fertilizePlant).toBe('function');
-      expect(typeof result.current.refresh).toBe('function');
-      expect(typeof result.current.clear).toBe('function');
+      expect(typeof state.getPlant).toBe('function');
+      expect(typeof state.getUrgentPlants).toBe('function');
+      expect(typeof state.getUpcomingWaterings).toBe('function');
+      expect(typeof state.fetchPlants).toBe('function');
+      expect(typeof state.addPlant).toBe('function');
+      expect(typeof state.updatePlant).toBe('function');
+      expect(typeof state.deletePlant).toBe('function');
+      expect(typeof state.waterPlant).toBe('function');
+      expect(typeof state.fertilizePlant).toBe('function');
+      expect(typeof state.refresh).toBe('function');
+      expect(typeof state.clear).toBe('function');
     });
 
     it('should have all required state properties', () => {
-      const { result } = renderHook(() => usePlantsStore());
+      const state = getStore();
 
-      expect(Array.isArray(result.current.plants)).toBe(true);
-      expect(typeof result.current.loading).toBe('boolean');
-      expect(result.current.error === null || typeof result.current.error === 'string').toBe(true);
-      expect(result.current.lastFetchTime === null || typeof result.current.lastFetchTime === 'number').toBe(true);
+      expect(Array.isArray(state.plants)).toBe(true);
+      expect(typeof state.loading).toBe('boolean');
+      expect(state.error === null || typeof state.error === 'string').toBe(true);
+      expect(state.lastFetchTime === null || typeof state.lastFetchTime === 'number').toBe(true);
     });
   });
 });

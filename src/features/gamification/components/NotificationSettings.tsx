@@ -18,6 +18,7 @@ import {
 import { Bell, Clock } from 'lucide-react-native';
 import { useDailyNotification } from '@/features/gamification/hooks/useDailyNotification';
 import { colors } from '@/design-system/tokens/colors';
+import { logger } from '@/lib/services/logger';
 
 interface NotificationSettingsProps {
   onClose?: () => void;
@@ -45,6 +46,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onCl
       await changeNotificationTime(hour);
       Alert.alert('✅ Horaire mis à jour', `Rappel défini pour ${hour}h`);
     } catch (error) {
+      logger.warn('Failed to change notification time', { error: String(error) });
       Alert.alert('❌ Erreur', 'Impossible de changer l\'horaire');
     }
   };
@@ -58,6 +60,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onCl
         Alert.alert('✅ Notifications activées', `Rappel défini pour ${selectedHour}h`);
       }
     } catch (error) {
+      logger.warn('Failed to toggle notifications', { error: String(error) });
       Alert.alert('❌ Erreur', 'Impossible de modifier les notifications');
     }
   };

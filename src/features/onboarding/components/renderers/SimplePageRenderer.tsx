@@ -5,7 +5,7 @@ import { Leaf } from 'lucide-react-native';
 import { radius } from '@/design-system/tokens/radius';
 import { spacing } from '@/design-system/tokens/spacing';
 import { onboardingColors } from '@/design-system/onboarding/colors';
-import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton, SecondaryButton } from '@/design-system/onboarding/components';
+import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle, PrimaryButton, SecondaryButton } from '@/design-system/onboarding/components';
 import { SimplePage } from '@/features/onboarding/types/onboardingSchema';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import { GlassCard } from '../GlassCard';

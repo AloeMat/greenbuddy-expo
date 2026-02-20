@@ -7,11 +7,9 @@ import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   performDailyCheckIn,
-  checkAndResetStreakIfNeeded,
   getDaysUntilNextMilestone,
   formatStreakLabel,
   initializeStreakCheck,
-  STREAK_MILESTONES,
 } from '@/features/gamification/services/streakService';
 import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
 import { logger } from '@/lib/services/logger';

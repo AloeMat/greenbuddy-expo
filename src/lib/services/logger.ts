@@ -24,15 +24,12 @@ interface SentryLike {
 // Conditional Sentry import (optimization: -300KB dev bundle)
 // Only load Sentry in production to reduce dev bundle size
 let Sentry: SentryLike | null = null;
-// @ts-ignore - __DEV__ is a global variable in React Native
 if (typeof __DEV__ !== 'undefined' && !__DEV__) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   Sentry = require('@sentry/react-native') as SentryLike;
 }
 
-// @ts-ignore - __DEV__ is a global variable in React Native
 const isDev = typeof __DEV__ === 'undefined' ? true : __DEV__;
-// @ts-ignore - __DEV__ is a global variable in React Native
 const isProd = typeof __DEV__ === 'undefined' ? false : !__DEV__;
 
 /**

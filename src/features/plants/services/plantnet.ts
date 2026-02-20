@@ -75,7 +75,7 @@ class PlantNetService implements IPlantNetService {
           source: 'gemini'
         };
       } catch (parseError) {
-        logger.warn('⚠️ Failed to parse Gemini response, using plant name as fallback');
+        logger.warn('⚠️ Failed to parse Gemini response, using plant name as fallback', { error: String(parseError) });
         return this.createResultFromName(plantName);
       }
 
@@ -260,7 +260,7 @@ class PlantNetService implements IPlantNetService {
       return remaining;
 
     } catch (error) {
-      logger.debug('ℹ️ Quota check failed, assuming available');
+      logger.debug('ℹ️ Quota check failed, assuming available', { error: String(error) });
       return this.FREE_QUOTA;
     }
   }

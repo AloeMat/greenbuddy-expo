@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { GradientOverlay } from '@/design-system/components/GradientOverlay';
 import { PlantAvatar } from './PlantAvatar';
-import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@/types';
+import { PlantPersonality, AvatarEmotion } from '@/types';
 import { logger } from '@/lib/services/logger';
 
 export interface PlantCardProps {

@@ -9,7 +9,6 @@ import {
   Text,
   StyleSheet,
   Animated,
-  Dimensions,
   ViewStyle,
 } from 'react-native';
 import Svg, { Circle, SvgProps } from 'react-native-svg';

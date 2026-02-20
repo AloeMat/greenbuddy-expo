@@ -4,7 +4,7 @@ import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
 import { spacing } from '@/design-system/tokens/spacing';
 import { radius } from '@/design-system/tokens/radius';
 import { onboardingColors } from '@/design-system/onboarding/colors';
-import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
+import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
 import { VariantPage } from '@/features/onboarding/types/onboardingSchema';
 import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';

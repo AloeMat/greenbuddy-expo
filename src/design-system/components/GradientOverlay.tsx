@@ -4,7 +4,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 import { logger } from '@/lib/services/logger';
 
 interface GradientOverlayProps {

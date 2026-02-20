@@ -23,13 +23,9 @@ import {
   AlertCircle,
   Leaf,
   Heart,
-  TrendingUp,
   AlertTriangle,
-  Zap,
   Bug,
   Droplets,
-  Wind,
-  Activity,
 } from 'lucide-react-native';
 
 // Helper functions - declare before component

@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
-import { Flame, Zap, Trophy } from 'lucide-react-native';
+import { Flame } from 'lucide-react-native';
 import { COLORS } from '@/design-system/tokens/colors';
 import { radius } from '@/design-system/tokens/radius';
 

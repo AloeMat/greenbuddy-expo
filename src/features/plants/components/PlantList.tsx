@@ -9,15 +9,13 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ListRenderItemInfo,
   ViewStyle,
   ActivityIndicator,
-  RefreshControl,
   RefreshControlProps
 } from 'react-native';
 import { PlantCard } from './PlantCard';
-import { PlantAnalysis, PlantPersonality, AvatarEmotion } from '@/types';
+import { PlantPersonality, AvatarEmotion } from '@/types';
 import { logger } from '@/lib/services/logger';
 
 export interface PlantListItem {

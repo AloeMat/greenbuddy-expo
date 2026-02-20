@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { spacing } from '@/design-system/tokens/spacing';
 import { radius } from '@/design-system/tokens/radius';
 import { onboardingColors } from '@/design-system/onboarding/colors';
-import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
+import { OnboardingScreen, OnboardingHeader, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
 import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import { OnboardingPageBase } from '@/features/onboarding/types/onboardingSchema';

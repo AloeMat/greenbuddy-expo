@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { BadgeCard } from '@/design-system/components';
 import {
-  ALL_ACHIEVEMENTS,
   getAchievementsByCategory,
   CATEGORY_METADATA,
   AchievementCategory,
