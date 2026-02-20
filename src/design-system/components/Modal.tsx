@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal as RNModal, View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
 
 interface ModalProps {
   visible: boolean;
@@ -27,7 +28,12 @@ export const Modal = ({ visible, onClose, title, children, footer }: ModalProps)
             {/* Header */}
             <View style={styles.header}>
               {title && <Text style={styles.title}>{title}</Text>}
-              <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <TouchableOpacity
+                onPress={onClose}
+                style={styles.closeButton}
+                accessibilityRole="button"
+                accessibilityLabel="Fermer"
+              >
                 <Ionicons name="close" size={24} color="#1A1A1A" />
               </TouchableOpacity>
             </View>
@@ -72,8 +78,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
   },
@@ -83,20 +89,20 @@ const styles = StyleSheet.create({
     color: '#1A1A1A',
   },
   closeButton: {
-    padding: 4,
+    padding: spacing.xs,
   },
   content: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     maxHeight: height * 0.6,
   },
   footer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
     justifyContent: 'flex-end',
   },
 });

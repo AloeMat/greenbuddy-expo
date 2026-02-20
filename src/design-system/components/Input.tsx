@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextInput, View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
 
 interface InputProps {
   placeholder?: string;
@@ -44,6 +45,7 @@ export const Input = ({
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         editable={editable}
+        accessibilityLabel={label || placeholder}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
@@ -52,7 +54,7 @@ export const Input = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 8,
+    marginVertical: spacing.sm,
   },
   label: {
     fontSize: 14,
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: radius.sm, // Phase 5.5: 8 → 12 (+50%)
-    paddingHorizontal: 12,
+    paddingHorizontal: spacing.md,
     paddingVertical: 10,
     color: '#1A1A1A',
     backgroundColor: '#FFFFFF',
@@ -80,6 +82,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 12,
     color: '#D32F2F',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
 import { COLORS } from '@/design-system/tokens/colors';
 
 type CardVariant = 'default' | 'elevated' | 'outlined';
@@ -45,7 +46,7 @@ function getVariantStyle(variant: CardVariant) {
 const styles = StyleSheet.create({
   card: {
     borderRadius: radius.md, // Phase 5.5: 12 → 16 (+33%)
-    padding: 16,
-    marginVertical: 8,
+    padding: spacing.lg,
+    marginVertical: spacing.sm,
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { spacing } from '@/design-system/tokens/spacing';
 
 interface ErrorMessageProps {
   message: string;
@@ -25,10 +26,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFEBEE',
     borderLeftWidth: 4,
     borderLeftColor: '#D32F2F',
-    padding: 12,
+    padding: spacing.md,
     borderRadius: 4,
-    marginVertical: 8,
-    gap: 12,
+    marginVertical: spacing.sm,
+    gap: spacing.md,
   },
   content: {
     flex: 1,
@@ -41,6 +42,6 @@ const styles = StyleSheet.create({
   details: {
     fontSize: 12,
     color: '#B71C1C',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
 });

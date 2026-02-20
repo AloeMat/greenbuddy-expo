@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
 import { COLORS } from '@/design-system/tokens/colors';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'danger';
@@ -33,6 +34,9 @@ export const Button = ({
       disabled={disabled}
       style={[styles.button, style]}
       activeOpacity={disabled ? 1 : 0.7}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled }}
     >
       <Text style={[styles.text, textStyle]}>{label}</Text>
     </TouchableOpacity>
@@ -52,9 +56,9 @@ function getStyles(variant: ButtonVariant, size: ButtonSize, disabled: boolean) 
   };
 
   const sizeStyles: Record<ButtonSize, { padding: number; fontSize: number }> = {
-    small: { padding: 8, fontSize: 12 },
-    medium: { padding: 12, fontSize: 14 },
-    large: { padding: 16, fontSize: 16 },
+    small: { padding: spacing.sm, fontSize: 12 },
+    medium: { padding: spacing.md, fontSize: 14 },
+    large: { padding: spacing.lg, fontSize: 16 },
   };
 
   const variantStyles: Record<ButtonVariant, { bg: string; text: string }> = {

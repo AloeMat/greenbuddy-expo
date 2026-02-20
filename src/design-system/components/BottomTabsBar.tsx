@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
 import { Home, Leaf, TrendingUp, User, Camera } from 'lucide-react-native';
 import { COLORS } from '@/design-system/tokens/colors';
+import { radius } from '@/design-system/tokens/radius';
 
 interface Tab {
   name: string;
@@ -64,6 +65,9 @@ export const BottomTabsBar: React.FC = () => {
               style={[styles.tab, active && styles.tabActive]}
               onPress={() => router.push(tab.route)}
               activeOpacity={0.7}
+              accessibilityRole="tab"
+              accessibilityLabel={tab.label}
+              accessibilityState={{ selected: active }}
             >
               <View style={[styles.iconContainer, active && styles.iconActive]}>
                 <tab.Icon size={24} color={active ? COLORS.brand : '#666'} />
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 48,
     height: 48,
-    borderRadius: 12,
+    borderRadius: radius.xs,
   },
   iconActive: {
     backgroundColor: 'rgba(45, 90, 39, 0.1)',

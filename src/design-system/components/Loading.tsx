@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { COLORS } from '@/design-system/tokens/colors';
 import { typography } from '@/design-system/tokens/typography';
+import { spacing } from '@/design-system/tokens/spacing';
 
 interface LoadingProps {
   message?: string;
@@ -22,12 +23,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
+    gap: spacing.md,
   },
   text: {
     fontSize: typography.body.md.fontSize,
     lineHeight: typography.body.md.lineHeight,
     color: '#666666',
-    marginTop: 12,
+    marginTop: spacing.md,
   },
 });
