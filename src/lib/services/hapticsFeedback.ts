@@ -5,6 +5,7 @@
  */
 
 import * as Haptics from 'expo-haptics';
+import { logger } from '@/lib/services/logger';
 
 /**
  * Haptic feedback patterns
@@ -225,7 +226,7 @@ export const triggerHaptic = async (
   } catch (error) {
     if (fallbackError) {
       // Silently fail - haptics may not be available on all devices
-      console.debug('[Haptics] Not available or failed', error);
+      logger.debug('[Haptics] Not available or failed', { error: String(error) });
     }
   }
 };

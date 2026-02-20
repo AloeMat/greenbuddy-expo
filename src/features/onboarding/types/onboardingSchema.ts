@@ -177,12 +177,6 @@ export function isVariantPage(page: OnboardingPage): page is VariantPage {
   return 'variants' in page;
 }
 
-/**
- * Context passed to action executors
- * Contains data needed to resolve variables in action scripts
- */
-export interface ActionContext {
-  option?: any;                  // Selected option (for page3, page4)
-  inputs?: Record<string, any>;  // Form inputs (for page8)
-  store: any;                    // Zustand store state
-}
+// ActionContext is defined in @/features/onboarding/utils/actionExecutor.ts
+// Re-export for backward compatibility
+export type { ActionContext } from '@/features/onboarding/utils/actionExecutor';

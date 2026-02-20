@@ -2,22 +2,44 @@
  * Mock Garden Service for Testing
  */
 
-import type { IGardenService } from './GardenService';
+import type { IGardenService, PlantFormInput } from './GardenService';
+import type { Plant } from '@/features/plants/repositories/PlantRepository';
 
 /**
  * Create a mock garden service with custom implementations
  */
 export const createMockGardenService = (overrides?: Partial<IGardenService>): IGardenService => {
   const defaults: IGardenService = {
-    calculateAddPlantRewards: (plantsCount: number) => ({
-      xpAmount: 50 + (plantsCount === 0 ? 25 : 0),
-      achievementsToUnlock: plantsCount === 0 ? ['first_plant'] : [],
-    }),
+    calculateAddPlantRewards: (plantsCount: number) => {
+      const achievementsToUnlock: string[] = [];
+      let totalXp = 50; // Base ADD_PLANT reward
 
-    filterPlants: (plants: any[], filterBy: string) => {
+      // First plant achievement
+      if (plantsCount === 0) {
+        achievementsToUnlock.push('first_plant');
+        totalXp += 25; // FIRST_PLANT reward
+      }
+
+      // Collection milestone at 10 plants
+      const newCount = plantsCount + 1;
+      if (newCount === 10) {
+        achievementsToUnlock.push('collection_10');
+        totalXp += 75; // COLLECTION_10 reward
+      }
+
+      return { xpAmount: totalXp, achievementsToUnlock };
+    },
+
+    filterPlants: (plants: Plant[], filterBy: string) => {
       switch (filterBy) {
-        case 'urgent':
-          return plants.filter((p) => p.sante_score < 70);
+        case 'urgent': {
+          const now = Date.now();
+          return plants.filter((p) => {
+            if (!p.next_watering_at) return false;
+            const nextWaterTime = new Date(p.next_watering_at).getTime();
+            return nextWaterTime - now <= 24 * 60 * 60 * 1000;
+          });
+        }
         case 'health':
           return plants.filter((p) => p.sante_score < 50);
         case 'personality':
@@ -28,7 +50,7 @@ export const createMockGardenService = (overrides?: Partial<IGardenService>): IG
       }
     },
 
-    mapPlantFormToDb: (formData: any) => ({
+    mapPlantFormToDb: (formData: PlantFormInput) => ({
       nom_commun: formData.commonName,
       nom_scientifique: formData.scientificName,
       personnalite: formData.personality,
@@ -48,12 +70,19 @@ export const createMockGardenService = (overrides?: Partial<IGardenService>): IG
       return 'sad';
     },
 
-    calculateFilterStats: (plants: any[]) => ({
-      all: plants.length,
-      urgent: plants.filter((p) => p.sante_score < 70).length,
-      unhealthy: plants.filter((p) => p.sante_score < 50).length,
-      uniquePersonalities: new Set(plants.map((p) => p.personnalite)).size,
-    }),
+    calculateFilterStats: (plants: Plant[]) => {
+      const now = Date.now();
+      return {
+        all: plants.length,
+        urgent: plants.filter((p) => {
+          if (!p.next_watering_at) return false;
+          const nextWaterTime = new Date(p.next_watering_at).getTime();
+          return nextWaterTime - now <= 24 * 60 * 60 * 1000;
+        }).length,
+        unhealthy: plants.filter((p) => p.sante_score < 50).length,
+        uniquePersonalities: new Set(plants.map((p) => p.personnalite)).size,
+      };
+    },
   };
 
   return { ...defaults, ...overrides };

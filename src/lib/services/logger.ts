@@ -14,18 +14,37 @@
  * - Production: Imported and active
  */
 
+/** Minimal Sentry interface for conditional import */
+interface SentryLike {
+  addBreadcrumb(breadcrumb: { message: string; level: string; data?: Record<string, unknown>; timestamp?: number }): void;
+  captureMessage(message: string, options: { level: string; contexts?: Record<string, unknown>; tags?: Record<string, string> }): void;
+  captureException(error: Error, options?: { contexts?: Record<string, unknown>; tags?: Record<string, string> }): void;
+}
+
 // Conditional Sentry import (optimization: -300KB dev bundle)
 // Only load Sentry in production to reduce dev bundle size
-let Sentry: any = null;
+let Sentry: SentryLike | null = null;
 // @ts-ignore - __DEV__ is a global variable in React Native
 if (typeof __DEV__ !== 'undefined' && !__DEV__) {
-  Sentry = require('@sentry/react-native');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Sentry = require('@sentry/react-native') as SentryLike;
 }
 
 // @ts-ignore - __DEV__ is a global variable in React Native
-const isDev = typeof __DEV__ !== 'undefined' ? __DEV__ : true;
+const isDev = typeof __DEV__ === 'undefined' ? true : __DEV__;
 // @ts-ignore - __DEV__ is a global variable in React Native
-const isProd = typeof __DEV__ !== 'undefined' ? !__DEV__ : false;
+const isProd = typeof __DEV__ === 'undefined' ? false : !__DEV__;
+
+/**
+ * Converts an unknown error to a proper Error instance, or undefined if not provided
+ */
+function formatUnknownError(err: unknown): Error | undefined {
+  if (err === undefined || err === null) return undefined;
+  if (err instanceof Error) return err;
+  if (typeof err === 'string') return new Error(err);
+  if (typeof err === 'object') return new Error(JSON.stringify(err));
+  return new Error(`Unknown error: ${typeof err}`);
+}
 
 /**
  * Service de logging sécurisé pour la production
@@ -37,7 +56,7 @@ export const logger = {
    * Messages de debug (développement uniquement)
    * Ne sont PAS envoyés à Sentry en production
    */
-  debug: (message: string, context?: Record<string, any>) => {
+  debug: (message: string, context?: Record<string, unknown>) => {
     if (isDev) {
       console.debug(`[DEBUG] ${message}`, context);
     }
@@ -48,7 +67,7 @@ export const logger = {
    * Messages informatifs
    * Envoyés comme breadcrumb à Sentry
    */
-  info: (message: string, context?: Record<string, any>) => {
+  info: (message: string, context?: Record<string, unknown>) => {
     if (isDev) {
       console.log(`ℹ️ [INFO] ${message}`, context ? JSON.stringify(context).substring(0, 100) : '');
     }
@@ -67,7 +86,7 @@ export const logger = {
    * Avertissements
    * Envoyés à Sentry avec niveau warning
    */
-  warn: (message: string, context?: Record<string, any>) => {
+  warn: (message: string, context?: Record<string, unknown>) => {
     if (isDev) {
       console.warn(`⚠️ [WARN] ${message}`, context ? JSON.stringify(context).substring(0, 100) : '');
     }
@@ -101,9 +120,9 @@ export const logger = {
    * Envoyées à Sentry avec niveau error
    * Accepts Error or unknown types (from catch blocks)
    */
-  error: (message: string, error?: Error | unknown, context?: Record<string, any>) => {
+  error: (message: string, error?: unknown, context?: Record<string, unknown>) => {
     // Format error to proper Error type
-    const formattedError = error ? (error instanceof Error ? error : new Error(String(error))) : undefined;
+    const formattedError = formatUnknownError(error);
 
     if (isDev) {
       console.error(`❌ [ERROR] ${message}`, formattedError, context ? JSON.stringify(context).substring(0, 100) : '');
@@ -138,7 +157,7 @@ export const logger = {
    * Logger spécifique pour les opérations critiques
    * (authentification, paiements, etc.)
    */
-  critical: (message: string, context?: Record<string, any>) => {
+  critical: (message: string, context?: Record<string, unknown>) => {
     if (isDev) {
       console.error(`🔴 [CRITICAL] ${message}`, context ? JSON.stringify(context).substring(0, 100) : '');
     }

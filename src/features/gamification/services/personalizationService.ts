@@ -27,8 +27,8 @@ import {
 } from '@/types/humanDesign';
 
 const log = {
-  debug: (msg: string, data?: any) => logger.debug(`[PERSONALIZATION] ${msg}`, data),
-  error: (msg: string, error?: any) => logger.error(`[PERSONALIZATION] ${msg}`, error),
+  debug: (msg: string, data?: Record<string, unknown>) => logger.debug(`[PERSONALIZATION] ${msg}`, data),
+  error: (msg: string, error?: unknown) => logger.error(`[PERSONALIZATION] ${msg}`, error),
 };
 
 /**

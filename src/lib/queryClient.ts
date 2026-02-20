@@ -40,7 +40,7 @@ export function useQueryClientHook() {
       queryClient.invalidateQueries({ queryKey }),
     resetQueries: (queryKey: string[]) =>
       queryClient.resetQueries({ queryKey }),
-    prefetchQuery: (queryKey: string[], queryFn: () => Promise<any>) =>
+    prefetchQuery: (queryKey: string[], queryFn: () => Promise<unknown>) =>
       queryClient.prefetchQuery({
         queryKey,
         queryFn,

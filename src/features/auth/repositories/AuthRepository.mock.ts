@@ -5,6 +5,7 @@
 
 import type { IAuthRepository } from './AuthRepository';
 import type { AuthUser } from '@/types';
+import type { Session } from '@supabase/supabase-js';
 
 const mockUser: AuthUser = {
   id: 'mock-user-id-12345',
@@ -13,12 +14,18 @@ const mockUser: AuthUser = {
   isFirstLogin: false,
 };
 
-const mockSession = {
+const mockSession: Session = {
   access_token: 'mock-access-token-xyz',
   refresh_token: 'mock-refresh-token-abc',
+  expires_in: 3600,
+  token_type: 'bearer',
   user: {
     id: mockUser.id,
     email: mockUser.email,
+    aud: 'authenticated',
+    app_metadata: {},
+    user_metadata: {},
+    created_at: new Date().toISOString(),
   },
 };
 

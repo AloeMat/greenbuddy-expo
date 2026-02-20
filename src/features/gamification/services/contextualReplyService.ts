@@ -13,19 +13,18 @@
 
 import { PlantPersonality, AvatarEmotion, MicroActionType } from '@/types';
 import { AvatarService } from './avatarService';
-import { PersonalizationService } from './personalizationService';
 import {
   getPersonalityProfile,
   getGeminiPrompt,
-  ALL_PERSONALITIES,
 } from '@/features/gamification/constants/personalities';
 import type { AvatarPersonalityType } from '@/types/humanDesign';
 import { logger } from '@/lib/services/logger';
+import { supabase } from '@/lib/services/supabase';
 // Logger (conditional in production)
 const log = {
-  debug: (msg: string, data?: any) => logger.debug(`[DEBUG] ${msg}`, data),
-  info: (msg: string, data?: any) => logger.debug(`[INFO] ${msg}`, data),
-  error: (msg: string, error?: any) => logger.error(`[ERROR] ${msg}`, error),
+  debug: (msg: string, data?: Record<string, unknown>) => logger.debug(`[DEBUG] ${msg}`, data),
+  info: (msg: string, data?: Record<string, unknown>) => logger.debug(`[INFO] ${msg}`, data),
+  error: (msg: string, error?: unknown) => logger.error(`[ERROR] ${msg}`, error),
 };
 
 /**
@@ -124,7 +123,6 @@ export class ContextualReplyService {
     context: ReplyContext,
     avatarPersonality?: AvatarPersonalityType
   ): string {
-    const profile = getPersonalityProfile(personality);
     let basePrompt = getGeminiPrompt(personality, attachmentPhase);
 
     // Apply avatar personality tone if provided
@@ -215,7 +213,7 @@ Example: "L'eau serait bienvenue, merci d'y penser."
     context: ReplyContext,
     recentAction?: string
   ): AvatarEmotion {
-    const { plant, weather } = context;
+    const { plant } = context;
 
     // Micro-action based emotions
     if (recentAction === 'badge_unlock') return 'excited';
@@ -305,7 +303,7 @@ Example: "L'eau serait bienvenue, merci d'y penser."
       const result: ContextualReply = {
         text: reply,
         emotion: emotion2,
-        action: action !== 'none' ? action : undefined,
+        action: action === 'none' ? undefined : action,
         confidence: 0.85,
         isFromCache: false,
         generatedAt: new Date(),
@@ -324,33 +322,72 @@ Example: "L'eau serait bienvenue, merci d'y penser."
   }
 
   /**
-   * Call Gemini API (mocked for now, use actual API in production)
+   * Call Gemini API via Supabase Edge Function proxy
+   * Falls back to personality-based replies if the API call fails
    */
   private static async callGeminiAPI(
     systemPrompt: string,
     context: ReplyContext
   ): Promise<string> {
-    // TODO: Replace with actual Gemini API call
-    // For now, return a contextual fallback
+    try {
+      const userMessage = this.buildUserMessage(context);
 
-    const profile = getPersonalityProfile(context.plant.personality);
-    const attachmentPhase = getAttachmentPhase(context.plant.dayWithUser);
+      const { data, error } = await supabase.functions.invoke('gemini-proxy', {
+        body: {
+          action: 'chat',
+          model: 'gemini-2.0-flash',
+          systemPrompt,
+          message: userMessage,
+          maxTokens: 200,
+        },
+      });
 
-    // Simulate API latency
-    await new Promise(resolve => setTimeout(resolve, 300));
+      if (error) {
+        throw error;
+      }
 
-    // Return personality-based reply
-    if (context.plant.plantHealth < 30 && context.plant.daysSinceWatered > 7) {
-      return profile.exampleReplies.thirsty[0];
+      const reply = typeof data === 'string' ? data : data?.text;
+      if (reply && reply.trim().length > 0) {
+        return reply.trim();
+      }
+
+      throw new Error('Empty response from Gemini');
+    } catch (error) {
+      log.error('Gemini API call failed, using personality fallback', error);
+
+      // Fallback to personality-based reply
+      const profile = getPersonalityProfile(context.plant.personality);
+      const attachmentPhase = getAttachmentPhase(context.plant.dayWithUser);
+
+      if (context.plant.plantHealth < 30 && context.plant.daysSinceWatered > 7) {
+        return profile.exampleReplies.thirsty[0];
+      }
+      if (context.plant.plantHealth >= 80) {
+        return profile.exampleReplies.happy[0];
+      }
+      if (context.recentAction === 'water') {
+        return profile.exampleReplies.happy[0];
+      }
+
+      return profile.greetings[attachmentPhase];
     }
-    if (context.plant.plantHealth >= 80) {
-      return profile.exampleReplies.happy[0];
-    }
-    if (context.recentAction === 'water') {
-      return profile.exampleReplies.happy[0];
-    }
+  }
 
-    return profile.greetings[attachmentPhase];
+  /**
+   * Build a concise user message from context for the Gemini prompt
+   */
+  private static buildUserMessage(context: ReplyContext): string {
+    const parts: string[] = [
+      `Plant: ${context.plant.plantName} (health: ${context.plant.plantHealth}%)`,
+    ];
+    if (context.recentAction) {
+      parts.push(`Action: ${context.recentAction}`);
+    }
+    if (context.plant.daysSinceWatered > 3) {
+      parts.push(`Last watered: ${context.plant.daysSinceWatered} days ago`);
+    }
+    parts.push('Reply naturally in French, 1-3 sentences.');
+    return parts.join('. ');
   }
 
   /**
@@ -365,7 +402,7 @@ Example: "L'eau serait bienvenue, merci d'y penser."
     return {
       text: profile.greetings[attachmentPhase],
       emotion,
-      action: action !== 'none' ? action : undefined,
+      action: action === 'none' ? undefined : action,
       confidence: 0.5,
       isFromCache: false,
       generatedAt: new Date(),
@@ -376,27 +413,27 @@ Example: "L'eau serait bienvenue, merci d'y penser."
    * Build context from plant data (convenience method)
    * Usually called from components/screens
    */
-  static buildPlantContext(
-    plantId: string,
-    plantName: string,
-    personality: PlantPersonality,
-    plantHealth: number,
-    daysSinceWatered: number,
-    daysSinceFertilized: number,
-    dayWithUser: number,
-    temperature?: number,
-    humidity?: number
-  ): PlantContext {
+  static buildPlantContext(params: {
+    plantId: string;
+    plantName: string;
+    personality: PlantPersonality;
+    plantHealth: number;
+    daysSinceWatered: number;
+    daysSinceFertilized: number;
+    dayWithUser: number;
+    temperature?: number;
+    humidity?: number;
+  }): PlantContext {
     return {
-      plantId,
-      plantName,
-      personality,
-      plantHealth,
-      daysSinceWatered,
-      daysSinceFertilized,
-      temperature,
-      humidity,
-      dayWithUser,
+      plantId: params.plantId,
+      plantName: params.plantName,
+      personality: params.personality,
+      plantHealth: params.plantHealth,
+      daysSinceWatered: params.daysSinceWatered,
+      daysSinceFertilized: params.daysSinceFertilized,
+      temperature: params.temperature,
+      humidity: params.humidity,
+      dayWithUser: params.dayWithUser,
     };
   }
 

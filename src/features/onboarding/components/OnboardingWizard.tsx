@@ -23,7 +23,32 @@ import { router } from 'expo-router';
 import onboardingConfigJson from '@/features/onboarding/constants/onboardingConfig.json';
 import { OnboardingConfig, OnboardingPage } from '@/features/onboarding/types/onboardingSchema';
 import { executeActions } from '@/features/onboarding/utils/actionExecutor';
+import { logger } from '@/lib/services/logger';
 import { onboardingColors } from '@/design-system/onboarding/colors';
+
+/**
+ * Resolve the initial page to display based on environment and saved state
+ */
+function resolveInitialPage(
+  config: OnboardingConfig,
+  savedPageId: string | null,
+): OnboardingPage | null {
+  const firstPage = config.onboarding[0] ?? null;
+
+  // In dev mode, always start fresh
+  if (__DEV__) return firstPage;
+
+  // No saved state → start from page1
+  if (!savedPageId) return firstPage;
+
+  // Try to resume from saved page
+  const savedPage = config.onboarding.find(p => p.id === savedPageId);
+  if (savedPage) return savedPage;
+
+  // Saved page not found in config → fall back to page1
+  logger.warn(`[OnboardingWizard] Page not found: ${savedPageId}, resetting to page1`);
+  return firstPage;
+}
 
 /**
  * OnboardingWizard Component
@@ -49,45 +74,20 @@ export function OnboardingWizard() {
 
   /**
    * Initialize wizard and load first page
-   * In development: always start from page1
-   * In production: resume from currentPage if exists
    */
   useEffect(() => {
     try {
-      // In development mode, always reset and start from page1
       if (__DEV__) {
         onboardingStore.resetOnboarding();
-        const firstPage = config.onboarding[0];
-        if (firstPage) {
-          onboardingStore.setCurrentPage(firstPage.id);
-          setActivePage(firstPage);
-        }
-      } else {
-        // Production: resume or start from page1
-        const { currentPage } = onboardingStore;
+      }
 
-        if (!currentPage) {
-          const firstPage = config.onboarding[0];
-          if (firstPage) {
-            onboardingStore.setCurrentPage(firstPage.id);
-            setActivePage(firstPage);
-          }
-        } else {
-          const page = config.onboarding.find(p => p.id === currentPage);
-          if (page) {
-            setActivePage(page);
-          } else {
-            console.warn(`[OnboardingWizard] Page not found: ${currentPage}, resetting to page1`);
-            const firstPage = config.onboarding[0];
-            if (firstPage) {
-              onboardingStore.setCurrentPage(firstPage.id);
-              setActivePage(firstPage);
-            }
-          }
-        }
+      const initialPage = resolveInitialPage(config, onboardingStore.currentPage);
+      if (initialPage) {
+        onboardingStore.setCurrentPage(initialPage.id);
+        setActivePage(initialPage);
       }
     } catch (error) {
-      console.error('[OnboardingWizard] Initialization error:', error);
+      logger.error('[OnboardingWizard] Initialization error:', error);
     } finally {
       setIsInitializing(false);
     }
@@ -107,7 +107,7 @@ export function OnboardingWizard() {
         });
       }
     } catch (error) {
-      console.error(`[OnboardingWizard] Error executing on_enter for ${activePage.id}:`, error);
+      logger.error(`[OnboardingWizard] Error executing on_enter for ${activePage.id}:`, error);
     }
   }, [activePage?.id]);
 
@@ -145,10 +145,10 @@ export function OnboardingWizard() {
         onboardingStore.setCurrentPage(nextPageId);
         setActivePage(nextPage);
       } else {
-        console.error(`[OnboardingWizard] Next page not found: ${nextPageId}`);
+        logger.error(`[OnboardingWizard] Next page not found: ${nextPageId}`);
       }
     } catch (error) {
-      console.error('[OnboardingWizard] Navigation error:', error);
+      logger.error('[OnboardingWizard] Navigation error:', error);
     }
   };
 
@@ -167,13 +167,13 @@ export function OnboardingWizard() {
 
       if (__DEV__) {
         const finalXP = onboardingStore.earnedXP;
-        console.log(`[OnboardingWizard] Onboarding complete! Total XP: ${finalXP}`);
+        logger.info(`[OnboardingWizard] Onboarding complete! Total XP: ${finalXP}`);
       }
 
       // Redirect to dashboard
       router.replace('/(tabs)');
     } catch (error) {
-      console.error('[OnboardingWizard] Completion error:', error);
+      logger.error('[OnboardingWizard] Completion error:', error);
       // Still redirect even if error
       router.replace('/(tabs)');
     }

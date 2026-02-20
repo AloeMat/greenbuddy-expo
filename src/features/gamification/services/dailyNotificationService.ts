@@ -62,11 +62,11 @@ export async function scheduleDailyCheckInNotification(
         color: '#10B981', // Green
       },
       trigger: {
-        type: 'calendar',
+        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
         hour,
         minute: 0,
         repeats: true,
-      } as any, // Cast to any to handle v0.32 compatibility
+      },
     });
 
     // Store notification ID and time for future reference
@@ -122,8 +122,8 @@ export async function isDailyNotificationScheduled(): Promise<boolean> {
 export async function getPendingNotifications(): Promise<Notifications.NotificationRequest[]> {
   try {
     // v0.32 API: getPresentedNotificationsAsync returns currently visible notifications
-    const notifications = await Notifications.getPresentedNotificationsAsync() as any;
-    return notifications || [];
+    const notifications = await Notifications.getPresentedNotificationsAsync();
+    return (notifications as unknown as Notifications.NotificationRequest[]) || [];
   } catch (error) {
     if (error instanceof Error) {
       logger.error('❌ Failed to get pending notifications', { message: error.message });
@@ -140,13 +140,13 @@ export async function getPendingNotifications(): Promise<Notifications.Notificat
 export function initializeNotificationHandler() {
   // Handle notification when app is in foreground
   Notifications.setNotificationHandler({
-    handleNotification: async () => ({
+    handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
       shouldShowAlert: true,
       shouldPlaySound: true,
       shouldSetBadge: true,
       shouldShowBanner: true,
       shouldShowList: true,
-    } as any), // Cast to handle v0.32 compatibility
+    }),
   });
 
   logger.info('✅ Notification handler initialized');
@@ -240,11 +240,11 @@ export async function rescheduleDailyNotification(
         color: '#10B981',
       },
       trigger: {
-        type: 'calendar',
+        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
         hour,
         minute: 0,
         repeats: true,
-      } as any, // Cast to any to handle v0.32 compatibility
+      },
     });
 
     await AsyncStorage.setItem(NOTIFICATION_KEY, notificationId);

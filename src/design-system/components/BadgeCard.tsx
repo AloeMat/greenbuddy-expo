@@ -100,17 +100,17 @@ export const BadgeCard: React.FC<BadgeCardProps> = ({
             size: badgeSize * 0.5,
             color: unlocked ? COLORS.primary[600] : COLORS.neutral[500],
             strokeWidth: 2,
-          } as any)}
+          } as React.Attributes & { size?: number; color?: string; strokeWidth?: number })}
         </View>
 
         {/* Lock or Check overlay */}
-        {!unlocked ? (
-          <View style={styles.lockOverlay}>
-            <Lock size={16} color={COLORS.neutral[600]} strokeWidth={2.5} />
-          </View>
-        ) : (
+        {unlocked ? (
           <View style={styles.checkOverlay}>
             <Check size={16} color={COLORS.primary[600]} strokeWidth={3} />
+          </View>
+        ) : (
+          <View style={styles.lockOverlay}>
+            <Lock size={16} color={COLORS.neutral[600]} strokeWidth={2.5} />
           </View>
         )}
       </Animated.View>
@@ -127,7 +127,7 @@ export const BadgeCard: React.FC<BadgeCardProps> = ({
       </Text>
 
       {/* Description */}
-      {description && (
+      {Boolean(description) && (
         <Text
           style={[
             styles.description,

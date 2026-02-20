@@ -4,26 +4,27 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { spacing } from '@/design-system/tokens/spacing';
 import { radius } from '@/design-system/tokens/radius';
 import { onboardingColors } from '@/design-system/onboarding/colors';
-import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle, PrimaryButton } from '@/design-system/onboarding/components';
+import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle } from '@/design-system/onboarding/components';
 import { OptionsPage } from '@/features/onboarding/types/onboardingSchema';
 import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
 import { executeActions } from '@/features/onboarding/utils/actionExecutor';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
-import { FeedbackModal } from '../FeedbackModal';
+import { InlineFeedbackCard } from '../InlineFeedbackCard';
 import * as Haptics from 'expo-haptics';
+import { logger } from '@/lib/services/logger';
 
 interface OptionsRendererProps {
   page: OptionsPage;
   onNavigate: (nextPageId: string) => void;
 }
 
-export function OptionsRenderer({ page, onNavigate }: OptionsRendererProps) {
+export function OptionsRenderer({ page, onNavigate }: Readonly<OptionsRendererProps>) {
   const store = useOnboardingStore();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [feedbackVisible, setFeedbackVisible] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
 
-  const handleOptionSelect = async (option: any, index: number) => {
+  const handleOptionSelect = async (option: OptionsPage['options'][number], index: number) => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setSelectedOption(option.value || option.profile || '');
 
@@ -48,18 +49,20 @@ export function OptionsRenderer({ page, onNavigate }: OptionsRendererProps) {
         onNavigate(page.next);
       }
     } catch (error) {
-      console.error('[OptionsRenderer] Error:', error);
+      logger.error('[OptionsRenderer] Error:', error);
       Alert.alert('Erreur', 'Une erreur est survenue. Veuillez réessayer.');
     }
   };
 
-  const handleFeedbackConfirm = () => {
+  const handleInlineFeedbackDismiss = () => {
     setFeedbackVisible(false);
-    onNavigate(page.next);
+    // Auto-advance after feedback dismissal
+    setTimeout(() => {
+      onNavigate(page.next);
+    }, 100);
   };
 
   return (
-    <>
       <OnboardingScreen testID={`onboarding-${page.id}`}>
         <OnboardingHeader progress={page.progress} step={getStepNumber(page.id)} />
         <ScrollView
@@ -76,6 +79,15 @@ export function OptionsRenderer({ page, onNavigate }: OptionsRendererProps) {
             </Animated.View>
           )}
 
+          {/* Inline Feedback Card */}
+          <InlineFeedbackCard
+            visible={feedbackVisible}
+            text={feedbackText}
+            type="success"
+            autoDismissDelay={2500}
+            onDismiss={handleInlineFeedbackDismiss}
+          />
+
           {/* Options List */}
           <View style={{ gap: spacing.md, marginTop: spacing['2xl'], paddingBottom: spacing['3xl'] }}>
             {page.options.map((option, index) => (
@@ -85,7 +97,7 @@ export function OptionsRenderer({ page, onNavigate }: OptionsRendererProps) {
                 pointerEvents="auto"
               >
                 <TouchableOpacity
-                  testID={`option-${page.id}-${option.value || option.profile || index}`}
+                  testID={`option-${page.id}-${option.value || option.profile}`}
                   activeOpacity={0.7}
                   onPress={() => handleOptionSelect(option, index)}
                   style={{
@@ -103,7 +115,7 @@ export function OptionsRenderer({ page, onNavigate }: OptionsRendererProps) {
                         : 'white',
                   }}
                 >
-                  <Subtitle style={{ fontSize: 16, fontWeight: '600' }}>
+                  <Subtitle style={{ fontSize: 16, fontWeight: '600', marginBottom: 0 }}>
                     {option.children}
                   </Subtitle>
                 </TouchableOpacity>
@@ -112,18 +124,8 @@ export function OptionsRenderer({ page, onNavigate }: OptionsRendererProps) {
           </View>
         </ScrollView>
         <OnboardingFooter>
-          {/* No button needed - options auto-navigate */}
+          <View />
         </OnboardingFooter>
       </OnboardingScreen>
-
-      {/* Feedback Modal */}
-      <FeedbackModal
-        visible={feedbackVisible}
-        title="Personnalisation activée"
-        message={feedbackText}
-        buttonText="Continuer"
-        onConfirm={handleFeedbackConfirm}
-      />
-    </>
   );
 }

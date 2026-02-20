@@ -11,7 +11,7 @@ import { logger } from '@/lib/services/logger';
 
 const authRepository = createAuthRepository();
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>()((set, get) => ({
   // Initial state
   user: null,
   session: null,
@@ -47,7 +47,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ isAuthenticated: false, isLoading: false });
       }
     } catch (error) {
-      console.error('❌ [authStore] initializeAuth error:', error);
+      logger.error('[authStore] initializeAuth error:', error);
       set({ isLoading: false, isAuthenticated: false });
     }
   },
@@ -178,12 +178,3 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
 // Export pour compatibilité avec ancien useAuth hook
 export const useAuth = () => useAuthStore();
-
-// ✅ AUTO-INITIALIZE AUTH on module load (React Native compatible)
-// S'exécute UNE FOIS au démarrage de l'app
-if (typeof useAuthStore !== 'undefined') {
-  console.log('🔐 [authStore] Auto-initializing auth...');
-  useAuthStore.getState().initializeAuth().catch((e) => {
-    console.error('❌ [authStore] Auto-init failed:', e);
-  });
-}

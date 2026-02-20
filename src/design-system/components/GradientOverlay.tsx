@@ -11,12 +11,13 @@ interface GradientOverlayProps {
   colors: [string, string];
   start?: { x: number; y: number };
   end?: { x: number; y: number };
-  style?: any;
+  style?: import('react-native').ViewStyle;
   children?: ReactNode;
 }
 
 // Load LinearGradient only on native platforms (Expo official package)
-let LinearGradient: any = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let LinearGradient: React.ComponentType<Record<string, unknown>> | null = null;
 if (Platform.OS !== 'web') {
   try {
     // Using expo-linear-gradient (official Expo package)

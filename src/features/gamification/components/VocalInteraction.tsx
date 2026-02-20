@@ -16,10 +16,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import Animated, {
   FadeIn,
-  FadeOut,
-  Layout,
-  BounceIn,
   SlideInDown,
+  LinearTransition,
 } from 'react-native-reanimated';
 
 import {
@@ -27,10 +25,7 @@ import {
   type ReplyContext,
   type ContextualReply,
 } from '@/features/gamification/services/contextualReplyService';
-import {
-  MicroInteractionService,
-  type MicroActionType,
-} from '@/features/gamification/services/microInteractionService';
+import { type MicroActionType } from '@/features/gamification/services/microInteractionService';
 import { AvatarService, type AvatarEmotion } from '@/features/gamification/services/avatarService';
 import { AttachmentService, type AttachmentPhase } from '@/features/gamification/services/attachmentService';
 import { getPersonalityProfile, type PlantPersonality } from '@/features/gamification/constants/personalities';
@@ -96,7 +91,7 @@ export const VocalInteraction: React.FC<VocalInteractionProps> = ({
       setError(null);
 
       const replyContext: ReplyContext = {
-        plant: ContextualReplyService.buildPlantContext(
+        plant: ContextualReplyService.buildPlantContext({
           plantId,
           plantName,
           personality,
@@ -105,8 +100,8 @@ export const VocalInteraction: React.FC<VocalInteractionProps> = ({
           daysSinceFertilized,
           dayWithUser,
           temperature,
-          humidity
-        ),
+          humidity,
+        }),
         user: {
           userId: '', // Will be set in real implementation
           totalPlantsOwned: 1,
@@ -170,8 +165,8 @@ export const VocalInteraction: React.FC<VocalInteractionProps> = ({
   const playTTS = useCallback(async (text: string) => {
     try {
       setIsSpeaking(true);
-      // TODO: Integrate with useGoogleTTS hook
-      // For now, simulate 2-3 second speech duration
+      // TTS placeholder — speech synthesis will be added when useGoogleTTS is available
+      // Currently simulates speech duration for UI animation timing
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
       setIsSpeaking(false);
       onReplyComplete?.();
@@ -194,7 +189,7 @@ export const VocalInteraction: React.FC<VocalInteractionProps> = ({
   return (
     <Animated.View
       entering={FadeIn.duration(300)}
-      layout={Layout.springify()}
+      layout={LinearTransition.springify()}
       style={styles.container}
     >
       {/* Avatar Section */}
@@ -287,7 +282,7 @@ export const VocalInteraction: React.FC<VocalInteractionProps> = ({
       )}
 
       {/* Error State */}
-      {error && (
+      {!!error && (
         <View style={styles.errorSection}>
           <Text style={styles.errorText}>⚠️ {error}</Text>
         </View>
@@ -296,15 +291,7 @@ export const VocalInteraction: React.FC<VocalInteractionProps> = ({
       {/* Action Buttons */}
       {!isLoading && (
         <View style={styles.actionButtons}>
-          {!reply ? (
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: profile.colors.primary }]}
-              onPress={generateReply}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.buttonText}>Écoutez {plantName}</Text>
-            </TouchableOpacity>
-          ) : (
+          {reply ? (
             <>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: profile.colors.secondary }]}
@@ -323,6 +310,14 @@ export const VocalInteraction: React.FC<VocalInteractionProps> = ({
                 </TouchableOpacity>
               )}
             </>
+          ) : (
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: profile.colors.primary }]}
+              onPress={generateReply}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.buttonText}>Écoutez {plantName}</Text>
+            </TouchableOpacity>
           )}
         </View>
       )}

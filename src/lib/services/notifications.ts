@@ -3,16 +3,19 @@ import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logger } from './logger';
 
+/**
+ * expo-notifications types - using standard SDK types
+ */
+
 // Configuration par défaut : afficher l'alerte même si l'app est au premier plan
-// v0.32 compatible: includes shouldShowBanner and shouldShowList
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
+  handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
     shouldShowBanner: true,
     shouldShowList: true,
-  } as any),
+  }),
 });
 
 /**
@@ -105,10 +108,10 @@ export const notificationService = {
           data: { plantId },
         },
         trigger: {
-          type: 'time',
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
           seconds: secondsFromNow,
           repeats: false,
-        } as any, // Cast to handle v0.32 compatibility
+        },
       });
 
       // Track notification ID for this plant
@@ -194,9 +197,9 @@ export const notificationService = {
     try {
       const data = await AsyncStorage.getItem('plantNotificationMap');
       if (data) {
-        const parsed = JSON.parse(data);
+        const parsed = JSON.parse(data) as Record<string, string[]>;
         plantNotificationMap.clear();
-        Object.entries(parsed).forEach(([plantId, notificationIds]: [string, any]) => {
+        Object.entries(parsed).forEach(([plantId, notificationIds]) => {
           plantNotificationMap.set(plantId, notificationIds);
         });
         logger.info(`✅ Restored ${plantNotificationMap.size} plant notification mappings`);

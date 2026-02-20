@@ -136,7 +136,7 @@ export const PlantResult: React.FC<PlantResultProps> = ({
             <Text style={styles.sectionTitle}>💬 Message</Text>
             <View style={styles.dialogueBox}>
               <Text style={styles.dialogueText}>
-                "{analysis.dialogue.presentation}"
+                {`"${analysis.dialogue.presentation}"`}
               </Text>
             </View>
           </View>

@@ -5,8 +5,9 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { radius } from '@/design-system/tokens/radius';
+import { spacing } from '@/design-system/tokens/spacing';
 import { onboardingColors } from './colors';
 
 // ============================================================================
@@ -18,23 +19,30 @@ interface ButtonProps {
   children: string;
   testID?: string;
   variant?: 'primary' | 'secondary';
+  disabled?: boolean;
+  style?: import('react-native').ViewStyle;
 }
 
 export const PrimaryButton: React.FC<ButtonProps> = ({
   onPress,
   children,
   testID,
+  disabled,
+  style: styleProp,
 }) => (
   <TouchableOpacity
     testID={testID}
     activeOpacity={0.7}
     onPress={onPress}
+    disabled={disabled}
     style={{
       backgroundColor: onboardingColors.green[500],
       borderRadius: radius.sm, // Phase 5.5: 8 → 12 (+50%)
       paddingVertical: 16,
       alignItems: 'center',
       marginBottom: 12,
+      opacity: disabled ? 0.5 : 1,
+      ...styleProp,
     }}
   >
     <Text
@@ -83,8 +91,8 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
 // ============================================================================
 
 interface HeadingProps {
-  children: string;
-  style?: any;
+  children: React.ReactNode;
+  style?: import('react-native').TextStyle;
 }
 
 export const Title: React.FC<HeadingProps> = ({ children, style }) => (
@@ -199,13 +207,13 @@ export const OnboardingHeader: React.FC<HeaderProps> = ({
 }) => (
   <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
     <ProgressBar progress={progress} testID="progress-bar" />
-    <Label>{`Étape ${step}/${totalSteps}`}</Label>
+    <Label>{`${step}/${totalSteps}`}</Label>
   </View>
 );
 
 interface ContentProps {
   children: React.ReactNode;
-  entering?: any;
+  entering?: typeof FadeInDown;
 }
 
 export const OnboardingContent: React.FC<ContentProps> = ({
@@ -229,7 +237,7 @@ interface FooterProps {
 }
 
 export const OnboardingFooter: React.FC<FooterProps> = ({ children }) => (
-  <View style={{ paddingHorizontal: 24, paddingBottom: 32, gap: 12 }}>
+  <View style={{ paddingHorizontal: spacing['2xl'], paddingBottom: spacing['3xl'], gap: spacing.md }}>
     {children}
   </View>
 );
@@ -240,7 +248,7 @@ export const OnboardingFooter: React.FC<FooterProps> = ({ children }) => (
 
 interface IconContainerProps {
   children: React.ReactNode;
-  entering?: any;
+  entering?: typeof FadeInDown;
 }
 
 export const IconContainer: React.FC<IconContainerProps> = ({

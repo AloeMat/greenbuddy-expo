@@ -17,8 +17,12 @@ import {
   getXpNeededForNextTier,
 } from '@/features/gamification/constants/lifetree';
 
-// Mock achievements (à remplacer par vraies données)
-const MOCK_ACHIEVEMENTS: Achievement[] = [
+/**
+ * Default achievement definitions
+ * These serve as fallback when the user has no achievements loaded from the backend.
+ * Achievements are persisted via Zustand + AsyncStorage and synced with Supabase `user_achievements` when online.
+ */
+const DEFAULT_ACHIEVEMENTS: Achievement[] = [
   {
     id: 'first_plant',
     title: 'Main Verte',
@@ -56,7 +60,7 @@ export const useGamificationStore = create<GamificationState>()(
       currentTier: 1,
       tierProgress: 0,
       isLevelUp: false,
-      achievements: MOCK_ACHIEVEMENTS,
+      achievements: DEFAULT_ACHIEVEMENTS,
       unlockedAchievements: [],
       currentStreak: 0,
       longestStreak: 0,
@@ -234,7 +238,7 @@ export const useGamificationStore = create<GamificationState>()(
           currentTier: 1,
           tierProgress: 0,
           isLevelUp: false,
-          achievements: MOCK_ACHIEVEMENTS,
+          achievements: DEFAULT_ACHIEVEMENTS,
           unlockedAchievements: [],
           currentStreak: 0,
           longestStreak: 0,
@@ -279,7 +283,7 @@ export const useGamificationStore = create<GamificationState>()(
           currentTier: 1,
           tierProgress: 0,
           isLevelUp: false,
-          achievements: MOCK_ACHIEVEMENTS,
+          achievements: DEFAULT_ACHIEVEMENTS,
           unlockedAchievements: [],
           currentStreak: 0,
           longestStreak: 0,

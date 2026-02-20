@@ -26,6 +26,8 @@ import { logger } from '@/lib/services/logger';
 import { geminiService } from '@/lib/services/gemini';
 import { PlantActionHaptics, triggerHaptic } from '@/lib/services/hapticsFeedback';
 import type { PlantFormData } from '@/features/plants/components/PlantForm';
+import type { Plant as PlantRecord } from '@/features/plants/repositories/PlantRepository';
+import type { PlantPersonality, CareRequirements } from '@/types';
 
 export default function PlantDetailScreen() {
   const router = useRouter();
@@ -34,7 +36,7 @@ export default function PlantDetailScreen() {
   const { getPlant, updatePlant, deletePlant, waterPlant, fertilizePlant } = usePlants();
   const { addXp, unlockAchievement } = useGamificationStore();
 
-  const [plant, setPlant] = useState<any>(null);
+  const [plant, setPlant] = useState<PlantRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -154,6 +156,7 @@ export default function PlantDetailScreen() {
 
   // Handle edit
   const handleEditPlant = async (formData: PlantFormData) => {
+    if (!plant) return;
     try {
       setActingLoading(true);
       const result = await updatePlant(plant.id, {
@@ -219,7 +222,7 @@ export default function PlantDetailScreen() {
         {/* Avatar */}
         <View style={styles.avatarSection}>
           <PlantAvatar
-            personality={plant.personnalite}
+            personality={plant.personnalite as PlantPersonality}
             emotionState={plant.sante_score >= 80 ? 'happy' : plant.sante_score >= 60 ? 'idle' : 'sad'}
             size="large"
             showGlow
@@ -230,7 +233,7 @@ export default function PlantDetailScreen() {
         {/* Plant Info */}
         <View style={styles.infoSection}>
           <Text style={styles.commonName}>{plant.nom_commun}</Text>
-          {plant.surnom && <Text style={styles.nickname}>"{plant.surnom}"</Text>}
+          {plant.surnom && <Text style={styles.nickname}>{`"${plant.surnom}"`}</Text>}
           <Text style={styles.scientificName}>{plant.nom_scientifique}</Text>
           {plant.famille && <Text style={styles.family}>{plant.famille}</Text>}
         </View>
@@ -357,14 +360,14 @@ export default function PlantDetailScreen() {
               prefilledData={{
                 commonName: plant.nom_commun,
                 scientificName: plant.nom_scientifique,
-                personality: plant.personnalite,
+                personality: plant.personnalite as PlantPersonality,
                 healthScore: plant.sante_score,
                 soins: {
                   wateringFrequencyDays: plant.arrosage_frequence_jours,
-                  lightRequirements: plant.lumiere || 'indirect',
+                  lightRequirements: (plant.lumiere || 'indirect') as CareRequirements['lightRequirements'],
                   temperatureMin: plant.temperature_min || 15,
                   temperatureMax: plant.temperature_max || 25,
-                  humidity: plant.humidite || 'medium',
+                  humidity: (plant.humidite || 'medium') as CareRequirements['humidity'],
                   fertilizerFrequencyDays: plant.engrais_frequence_jours || 30
                 }
               }}

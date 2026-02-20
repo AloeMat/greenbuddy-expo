@@ -20,22 +20,40 @@
  */
 
 export const radius = {
-  /** Extra Small - Progress bars, badges (8 → 14) */
+  /**
+   * Extra Small - Progress bars, badges
+   * Initial: 8px → Current: 14px (+75% for visual comfort)
+   */
   xs: 14,
 
-  /** Small - Buttons, inputs (12 → 18) */
+  /**
+   * Small - Buttons, inputs, option tags
+   * Initial: 12px → Current: 18px (+50% increase)
+   */
   sm: 18,
 
-  /** Medium - Cards, modals (16 → 28) */
+  /**
+   * Medium - Cards, modals, main content containers
+   * Initial: 16px → Current: 28px (+75% increase)
+   */
   md: 28,
 
-  /** Large - Large sections (24 → 36) */
+  /**
+   * Large - Large sections, major container boundaries
+   * Initial: 24px → Current: 36px (+50% increase)
+   */
   lg: 36,
 
-  /** Extra Large - Hero elements (32 → 48) */
+  /**
+   * Extra Large - Hero elements, prominent components
+   * Initial: 32px → Current: 48px (+50% increase)
+   */
   xl: 48,
 
-  /** Full - Cercles parfaits (9999, inchangé) */
+  /**
+   * Full - Perfect circles for avatars and icon containers
+   * Value: 9999 (creates circular shape with any size)
+   */
   full: 9999,
 } as const;
 

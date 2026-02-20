@@ -13,10 +13,13 @@
  * - Variable resolution: option.xp, inputs.plantName
  */
 
+import { logger } from '@/lib/services/logger';
+
 export interface ActionContext {
-  option?: any;                  // Selected option (page3, page4)
-  inputs?: Record<string, any>;  // Form inputs (page8)
-  store: any;                    // Zustand store (useOnboardingStore.getState())
+  option?: Record<string, unknown>;  // Selected option (page3, page4)
+  inputs?: Record<string, unknown>;  // Form inputs (page8)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Store is accessed dynamically via action scripts
+  store: Record<string, any>;       // Zustand store (useOnboardingStore.getState())
 }
 
 /**
@@ -32,7 +35,7 @@ export interface ActionContext {
  * @param context - Action execution context
  * @returns Array of parsed argument values
  */
-function parseArguments(argsString: string, context: ActionContext): any[] {
+function parseArguments(argsString: string, context: ActionContext): unknown[] {
   if (!argsString.trim()) {
     return [];
   }
@@ -50,7 +53,7 @@ function parseArguments(argsString: string, context: ActionContext): any[] {
 
     // Number literal: 5, 2000, etc.
     if (/^\d+$/.test(trimmed)) {
-      return parseInt(trimmed, 10);
+      return Number.parseInt(trimmed, 10);
     }
 
     // Context variable: option.xp, inputs.plantName
@@ -75,6 +78,70 @@ function parseArguments(argsString: string, context: ActionContext): any[] {
   });
 }
 
+/** Handler type for action execution */
+type ActionHandler = (args: unknown[], context: ActionContext) => void;
+
+/** Validate first arg is a string and call store method */
+function expectString(
+  methodName: string,
+  actionName: string,
+  args: unknown[],
+  context: ActionContext,
+): void {
+  const value = args[0];
+  if (typeof value === 'string') {
+    (context.store[methodName] as (v: string) => void)(value);
+  } else {
+    logger.warn(`[ActionExecutor] ${actionName}: Expected string, got ${typeof value}`);
+  }
+}
+
+/** Debug-only placeholder for actions handled by renderers */
+function debugPlaceholder(label: string, args: unknown[]): void {
+  if (__DEV__) {
+    logger.debug(`[ActionExecutor] ${label}: ${args.map(String).join(', ')}`);
+  }
+}
+
+/**
+ * Registry of all supported action handlers.
+ * Add new actions here instead of expanding a switch.
+ */
+const ACTION_HANDLERS: Record<string, ActionHandler> = {
+  addXP: (args, context) => {
+    const xpAmount = args[0];
+    if (typeof xpAmount === 'number') {
+      (context.store.addXP as (n: number) => void)(xpAmount);
+    } else {
+      logger.warn(`[ActionExecutor] addXP: Expected number, got ${typeof xpAmount}`);
+    }
+  },
+
+  storeProfile: (args, context) => expectString('setUserProfile', 'storeProfile', args, context),
+  storePainPoint: (args, context) => expectString('setPainPoint', 'storePainPoint', args, context),
+  setPlantName: (args, context) => expectString('setPlantName', 'setPlantName', args, context),
+  setPlantPersonality: (args, context) => expectString('setPlantPersonality', 'setPlantPersonality', args, context),
+
+  showFeedback: (args) => debugPlaceholder('showFeedback', args),
+  animatePlant: (args) => debugPlaceholder('animatePlant', args),
+  animateSuccess: (args) => debugPlaceholder('animateSuccess', args),
+  animateAvatar: (args) => debugPlaceholder('animateAvatar', args),
+  selectVariant: (args) => debugPlaceholder('selectVariant', args),
+  startPlantIdentification: () => debugPlaceholder('startPlantIdentification (image-based)', []),
+
+  identifyPlantByName: (args, context) => {
+    const plantName = args[0];
+    if (typeof plantName === 'string') {
+      (context.store.setPlantName as (v: string) => void)(plantName);
+      if (__DEV__) {
+        logger.debug(`[ActionExecutor] identifyPlantByName: "${plantName}"`);
+      }
+    } else {
+      logger.warn(`[ActionExecutor] identifyPlantByName: Expected string, got ${typeof plantName}`);
+    }
+  },
+};
+
 /**
  * Execute a single action script
  *
@@ -92,15 +159,15 @@ export function executeAction(
   actionScript: string,
   context: ActionContext
 ): void {
-  if (!actionScript || !actionScript.trim()) {
+  if (!actionScript?.trim()) {
     return;
   }
 
   // Parse function call: functionName(args)
-  const match = actionScript.match(/^(\w+)\(([^)]*)\)$/);
+  const match = /^(\w+)\(([^)]*)\)$/.exec(actionScript);
 
   if (!match) {
-    console.warn(`[ActionExecutor] Invalid action script: ${actionScript}`);
+    logger.warn(`[ActionExecutor] Invalid action script: ${actionScript}`);
     return;
   }
 
@@ -109,103 +176,14 @@ export function executeAction(
 
   // Log action execution in development
   if (__DEV__) {
-    console.log(`[ActionExecutor] Executing: ${functionName}(${args.join(', ')})`);
+    logger.debug(`[ActionExecutor] Executing: ${functionName}(${args.map(String).join(', ')})`);
   }
 
-  // Execute action based on function name
-  switch (functionName) {
-    case 'addXP': {
-      const xpAmount = args[0];
-      if (typeof xpAmount === 'number') {
-        context.store.addXP(xpAmount);
-      } else {
-        console.warn(`[ActionExecutor] addXP: Expected number, got ${typeof xpAmount}`);
-      }
-      break;
-    }
-
-    case 'storeProfile': {
-      const profile = args[0];
-      if (typeof profile === 'string') {
-        context.store.setUserProfile(profile);
-      } else {
-        console.warn(`[ActionExecutor] storeProfile: Expected string, got ${typeof profile}`);
-      }
-      break;
-    }
-
-    case 'storePainPoint': {
-      const painPoint = args[0];
-      if (typeof painPoint === 'string') {
-        context.store.setPainPoint(painPoint);
-      } else {
-        console.warn(`[ActionExecutor] storePainPoint: Expected string, got ${typeof painPoint}`);
-      }
-      break;
-    }
-
-    case 'setPlantName': {
-      const plantName = args[0];
-      if (typeof plantName === 'string') {
-        context.store.setPlantName(plantName);
-      } else {
-        console.warn(`[ActionExecutor] setPlantName: Expected string, got ${typeof plantName}`);
-      }
-      break;
-    }
-
-    case 'setPlantPersonality': {
-      const personality = args[0];
-      if (typeof personality === 'string') {
-        context.store.setPlantPersonality(personality);
-      } else {
-        console.warn(`[ActionExecutor] setPlantPersonality: Expected string, got ${typeof personality}`);
-      }
-      break;
-    }
-
-    case 'showFeedback': {
-      // Placeholder for now - actual implementation handled by renderer
-      const feedback = args[0];
-      const delay = args[1];
-      if (__DEV__) {
-        console.log(`[ActionExecutor] showFeedback: "${feedback}" (delay: ${delay}ms)`);
-      }
-      break;
-    }
-
-    case 'animatePlant':
-    case 'animateSuccess':
-    case 'animateAvatar': {
-      // Placeholder for animation triggers
-      // Actual animation handled by renderer/component
-      const animationType = args[0];
-      if (__DEV__) {
-        console.log(`[ActionExecutor] ${functionName}: ${animationType}`);
-      }
-      break;
-    }
-
-    case 'selectVariant': {
-      // Placeholder - handled by VariantRenderer
-      const profile = args[0];
-      if (__DEV__) {
-        console.log(`[ActionExecutor] selectVariant: ${profile}`);
-      }
-      break;
-    }
-
-    case 'startPlantIdentification': {
-      // Placeholder - handled by ActionsRenderer
-      if (__DEV__) {
-        console.log(`[ActionExecutor] startPlantIdentification`);
-      }
-      break;
-    }
-
-    default: {
-      console.warn(`[ActionExecutor] Unknown action: ${functionName}`);
-    }
+  const handler = ACTION_HANDLERS[functionName];
+  if (handler) {
+    handler(args, context);
+  } else {
+    logger.warn(`[ActionExecutor] Unknown action: ${functionName}`);
   }
 }
 
@@ -236,7 +214,7 @@ export function executeActions(
     try {
       executeAction(script, context);
     } catch (error) {
-      console.error(`[ActionExecutor] Error executing action at index ${index}:`, error);
+      logger.error(`[ActionExecutor] Error executing action at index ${index}:`, error);
     }
   });
 }
@@ -250,7 +228,7 @@ export function executeActions(
  * @returns true if valid, false otherwise
  */
 export function validateActionScript(actionScript: string): boolean {
-  if (!actionScript || !actionScript.trim()) {
+  if (!actionScript?.trim()) {
     return false;
   }
 

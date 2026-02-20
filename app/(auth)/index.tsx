@@ -1,9 +1,20 @@
-import { View, Text } from 'react-native';
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
 
+/**
+ * Auth Index - Redirect to Login
+ * This is the default route when user navigates to /(auth)
+ * Redirects immediately to the login screen
+ */
 export default function AuthScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
-      <Text style={{ fontSize: 18, fontWeight: '600' }}>Login / Signup</Text>
-    </View>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to login screen on mount (only once)
+    router.replace('/(auth)/login');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Return null since we're immediately redirecting
+  return null;
 }

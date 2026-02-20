@@ -36,7 +36,7 @@ interface CheckInResult {
  * Provides streak data and check-in functionality
  */
 export function useStreak(): StreakHookData & {
-  performCheckIn: () => Promise<any>;
+  performCheckIn: () => Promise<CheckInResult | null>;
   resetStreak: () => Promise<void>;
 } {
   const store = useGamificationStore();
@@ -122,11 +122,11 @@ export function useDailyCheckIn() {
       setResult(checkInResult);
 
       // Show success message
-      if (checkInResult.milestonReached) {
+      if (checkInResult?.milestonReached) {
         logger.info(
           `🎉 Milestone reached: ${checkInResult.milestonReached.days} days!`
         );
-      } else {
+      } else if (checkInResult) {
         logger.info(`✅ Check-in completed! +${checkInResult.xpEarned} XP`);
       }
 

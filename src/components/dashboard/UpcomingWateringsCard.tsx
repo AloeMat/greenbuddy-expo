@@ -76,11 +76,11 @@ export const UpcomingWateringsCard: React.FC = () => {
               <Text style={styles.plantName}>{item.plantName}</Text>
               <View style={styles.daysContainer}>
                 {item.daysUntilWatering === 0 ? (
-                  <Text style={styles.daysToday}>🔴 Aujourd\'hui</Text>
+                  <Text style={styles.daysToday}>{"🔴 Aujourd'hui"}</Text>
                 ) : item.daysUntilWatering === 1 ? (
                   <Text style={styles.daysSoon}>🟡 Demain</Text>
                 ) : (
-                  <Text style={styles.daysLater}>⚪ Dans {item.daysUntilWatering} jours</Text>
+                  <Text style={styles.daysLater}>{`⚪ Dans ${item.daysUntilWatering} jours`}</Text>
                 )}
               </View>
             </View>

@@ -3,6 +3,7 @@
  */
 
 import type { IPlantCareService, PlantWithRewards } from './PlantCareService';
+import type { Plant } from '@/features/plants/repositories/PlantRepository';
 
 /**
  * Create a mock plant care service with custom implementations
@@ -17,7 +18,7 @@ export const createMockPlantCareService = (overrides?: Partial<IPlantCareService
           sante_score: 85,
           arrosage_frequence_jours: 3,
           level: 1,
-        } as any,
+        } as unknown as Plant,
         xpEarned: 15,
         healthBonus: 5,
       };
@@ -31,7 +32,7 @@ export const createMockPlantCareService = (overrides?: Partial<IPlantCareService
           sante_score: 95,
           arrosage_frequence_jours: 3,
           level: 1,
-        } as any,
+        } as unknown as Plant,
         xpEarned: 35,
         healthBonus: 15,
       };

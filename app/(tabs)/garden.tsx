@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { usePlants } from '@/features/plants/hooks/usePlants';
@@ -7,6 +8,7 @@ import { FilterTabs, FilterOption, FilterTab } from '@/features/dashboard/compon
 import { PlantList, PlantListItem } from '@/features/plants/components/PlantList';
 import { radius } from '@/design-system/tokens/radius';
 import type { Plant } from '@/features/plants/repositories/PlantRepository';
+import type { PlantPersonality } from '@/types';
 
 /**
  * Garden Screen
@@ -23,7 +25,7 @@ export default function GardenScreen() {
     return plants.map((plant: Plant): PlantListItem => ({
       id: plant.id,
       commonName: plant.surnom || plant.nom_commun,
-      personality: (plant.personnalite as any) || 'succulente',
+      personality: (plant.personnalite as PlantPersonality) || 'succulente',
       healthScore: plant.sante_score,
       level: plant.level || 1,
       lastWatered: plant.last_watered_at ? new Date(plant.last_watered_at) : undefined,

@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Trophy, Zap } from 'lucide-react-native';
@@ -168,7 +167,7 @@ export default function ProgressScreen() {
           ) : (
             <View style={styles.emptyState}>
               <Text style={styles.emptyText}>
-                Aucun succès débloqué pour l'instant.
+                {"Aucun succès débloqué pour l'instant."}
               </Text>
               <Text style={styles.emptySubText}>
                 Continuez à vous occuper de vos plantes !

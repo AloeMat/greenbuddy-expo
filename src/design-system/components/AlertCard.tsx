@@ -117,7 +117,7 @@ export const AlertCard: React.FC<AlertCardProps> = ({
         >
           {React.cloneElement(getIcon() as React.ReactElement, {
             color: colors.icon,
-          } as any)}
+          } as React.Attributes & { color?: string })}
         </View>
 
         {/* Text Content */}

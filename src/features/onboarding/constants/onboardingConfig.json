@@ -37,7 +37,7 @@
     {
       "id": "page2",
       "title": "Projection émotionnelle",
-      "text": "Elles ressentent plus que vous ne le pensez… 💧☀️🌡️🌿",
+      "text": "Elles ressentent plus que vous ne le pensez.",
       "progress": 10,
       "animation": "plante_fremit",
       "cta_primary": {
@@ -57,25 +57,25 @@
       "text": "Quand vous prenez soin de vos plantes… vous êtes plutôt :",
       "options": [
         {
-          "children": "🌿 J'agis immédiatement",
+          "children": "J'agis immédiatement",
           "profile": "actif",
           "xp": 5,
           "feedback": "Parfait ! On adapte les alertes à votre style réactif : notifications immédiates quand vos plantes ont besoin de vous."
         },
         {
-          "children": "🌱 J'aime comprendre avant d'agir",
+          "children": "J'aime comprendre avant d'agir",
           "profile": "comprehension",
           "xp": 5,
           "feedback": "Super ! On vous donnera des explications détaillées pour chaque action recommandée."
         },
         {
-          "children": "🌸 J'observe et je ressens",
+          "children": "J'observe et je ressens",
           "profile": "sensible",
           "xp": 5,
           "feedback": "Génial ! On utilisera un ton doux et bienveillant pour vous accompagner."
         },
         {
-          "children": "🌳 J'aime décider du moment",
+          "children": "J'aime décider du moment",
           "profile": "libre",
           "xp": 5,
           "feedback": "Entendu ! On vous suggèrera des actions, mais vous gardez le contrôle du timing."
@@ -107,13 +107,13 @@
       "text": "Soyons honnêtes… avez-vous déjà perdu une plante ?",
       "options": [
         {
-          "children": "Oui 😔",
+          "children": "Oui",
           "value": "oui_une",
           "xp": 5,
           "feedback": "On comprend cette douleur. Cette fois, on va faire en sorte que ça ne se reproduise plus."
         },
         {
-          "children": "Plusieurs…",
+          "children": "Plusieurs fois",
           "value": "plusieurs",
           "xp": 5,
           "feedback": "On va vous aider à briser ce cycle. Cette fois, vous aurez un guide pour chaque étape."
@@ -177,6 +177,42 @@
       "next": "page5_identification"
     },
     {
+      "id": "page5_manual_input",
+      "title": "Quel est le nom de votre plante ?",
+      "text": "Entrez le nom de l'espèce ou le surnom que vous lui donnez.",
+      "progress": 52,
+      "xp": 5,
+      "inputs": [
+        {
+          "type": "text",
+          "name": "commonName",
+          "placeholder": "Ex: Monstera, Pothos, Cactus...",
+          "required": true
+        }
+      ],
+      "on_complete": [
+        "setPlantName(inputs.commonName)",
+        "addXP(5)"
+      ],
+      "cta_primary": {
+        "children": "Continuer",
+        "action": "go_next"
+      },
+      "next": "page5_manual_identifying"
+    },
+    {
+      "id": "page5_manual_identifying",
+      "title": "Identification en cours...",
+      "text": "On configure le profil unique de votre plante...",
+      "progress": 54,
+      "animation": "loading_scan",
+      "auto_advance": 3000,
+      "on_enter": [
+        "identifyPlantByName()"
+      ],
+      "next": "page5_identification"
+    },
+    {
       "id": "page5_identification",
       "title": "Identification en cours...",
       "text": "On configure le profil unique de votre plante...",
@@ -223,13 +259,13 @@
         "children": "Continuer",
         "action": "go_next"
       },
-      "next": "page8"
+      "next": "page7"
     },
     {
       "id": "page8",
       "title": "Donnez-moi un nom",
       "text": "Comment voulez-vous m'appeler ? Et quelle personnalité souhaitez-vous que j'aie ?",
-      "progress": 70,
+      "progress": 75,
       "xp": 5,
       "inputs": [
         {
@@ -265,7 +301,7 @@
       "text": "Moi c'est [nom plante], et je suis [personnalité]. On va bien s'entendre ! 🌿",
       "progress": 75,
       "auto_advance": 2500,
-      "next": "page7"
+      "next": "page9"
     },
     {
       "id": "page7",
@@ -273,7 +309,7 @@
       "text": "Aujourd'hui, [nom plante] a besoin de...",
       "mode": "preview",
       "note": "Actions non cliquables en onboarding, uniquement en preview",
-      "progress": 85,
+      "progress": 70,
       "fallback_data": {
         "plantName": "Votre plante"
       },
@@ -281,13 +317,13 @@
         "children": "Suivant",
         "action": "go_next"
       },
-      "next": "page9"
+      "next": "page8"
     },
     {
       "id": "page9",
       "title": "Sauvegardez [nom plante]",
       "text": "Créez un compte pour sauvegarder vos plantes et recevoir des alertes",
-      "progress": 90,
+      "progress": 85,
       "xp": 10,
       "on_complete": [
         "addXP(10)"

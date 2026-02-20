@@ -32,7 +32,7 @@ export function initializeSentry(): void {
     // ],
 
     // Tracing
-    tracesSampleRate: __DEV__ ? 1.0 : 0.1,
+    tracesSampleRate: __DEV__ ? 1 : 0.1,
 
     // Ignore certain errors
     ignoreErrors: [
@@ -59,7 +59,7 @@ export function initializeSentry(): void {
  * @param error - The error to capture
  * @param context - Additional context information
  */
-export function captureException(error: Error, context?: Record<string, any>): void {
+export function captureException(error: Error, context?: Record<string, unknown>): void {
   if (context) {
     Sentry.captureException(error, {
       contexts: {
@@ -104,7 +104,7 @@ export function setUserContext(userId?: string | null, email?: string, username?
  * @param category - Category (e.g., 'user-action', 'api-call')
  * @param data - Additional data to attach
  */
-export function addBreadcrumb(message: string, category: string = 'custom', data?: Record<string, any>): void {
+export function addBreadcrumb(message: string, category: string = 'custom', data?: Record<string, unknown>): void {
   Sentry.addBreadcrumb({
     message,
     category,

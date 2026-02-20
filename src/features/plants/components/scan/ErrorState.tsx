@@ -14,7 +14,7 @@ interface ErrorStateProps {
 export const ErrorState: React.FC<ErrorStateProps> = ({ error, onRetry }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.errorTitle}>❌ Erreur d'identification</Text>
+      <Text style={styles.errorTitle}>{"❌ Erreur d'identification"}</Text>
       <Text style={styles.errorMessage}>{error}</Text>
       <TouchableOpacity
         style={[styles.button, styles.buttonPrimary]}

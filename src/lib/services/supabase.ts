@@ -2,27 +2,40 @@ import { createClient } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
 import { logger } from '@/lib/services/logger';
 
-// Get Supabase credentials from expo-constants (reads from .env EXPO_PUBLIC_* vars)
-const supabaseUrl = Constants.expoConfig?.extra?.supabaseUrl || process.env.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = Constants.expoConfig?.extra?.supabaseKey || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+// Get Supabase credentials from environment variables
+// Expo automatically exposes EXPO_PUBLIC_* variables to process.env
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || Constants.expoConfig?.extra?.supabaseUrl;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || Constants.expoConfig?.extra?.supabaseKey;
 
 const trimmedUrl = supabaseUrl?.trim();
 const trimmedKey = supabaseAnonKey?.trim();
 
-logger.debug('🔐 Supabase URL:', { url: trimmedUrl });
-logger.debug('🔐 Supabase Key present:', { isValid: !!trimmedKey && trimmedKey !== 'YOUR_SUPABASE_ANON_KEY_HERE' });
+// Only log config presence (never partial credentials)
+logger.debug('🔐 Supabase init', { hasUrl: !!trimmedUrl, hasKey: !!trimmedKey });
 
-// Allow app to start even with missing keys (prevents blank page)
-// Will fail gracefully on actual Supabase calls with meaningful error
+// Validate Supabase credentials at startup
 const createSupabaseClient = () => {
-  if (!trimmedUrl || !trimmedKey || trimmedKey === 'YOUR_SUPABASE_ANON_KEY_HERE') {
-    logger.warn('⚠️ SUPABASE CONFIG MISSING:');
-    logger.warn('   URL:', trimmedUrl);
-    logger.warn('   Key valid:', trimmedKey && trimmedKey !== 'YOUR_SUPABASE_ANON_KEY_HERE');
-    logger.warn('   Update greenbuddy-expo/.env with real credentials!');
+  const isMissingConfig = !trimmedUrl || !trimmedKey || trimmedKey === 'YOUR_SUPABASE_ANON_KEY_HERE';
 
-    // Create with dummy credentials to allow app to load
-    return createClient(trimmedUrl || 'https://dummy.supabase.co', trimmedKey || 'dummy_key');
+  if (isMissingConfig) {
+    logger.error('❌ SUPABASE CONFIG MISSING — app will not function correctly.');
+    logger.error('   URL present:', !!trimmedUrl);
+    logger.error('   Key valid:', !!trimmedKey && trimmedKey !== 'YOUR_SUPABASE_ANON_KEY_HERE');
+    logger.error('   → Update greenbuddy-expo/.env with real credentials!');
+
+    if (__DEV__) {
+      // In dev, use placeholder to allow UI rendering (all Supabase calls will fail gracefully)
+      return createClient(
+        trimmedUrl || 'https://placeholder.supabase.co',
+        trimmedKey || 'placeholder_anon_key_dev_only'
+      );
+    }
+    // In production, still create client but log prominently
+    // Supabase calls will fail with auth errors — which is the correct behavior
+    return createClient(
+      trimmedUrl || 'https://invalid.supabase.co',
+      trimmedKey || 'invalid'
+    );
   }
   return createClient(trimmedUrl, trimmedKey);
 };

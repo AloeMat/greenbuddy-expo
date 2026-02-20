@@ -18,6 +18,18 @@ export const createMockPlantNetService = (overrides?: Partial<IPlantNetService>)
       };
     },
 
+    async identifyPlantByName(plantName: string): Promise<PlantIdentificationResult> {
+      return {
+        commonName: plantName,
+        scientificName: `${plantName} sp.`,
+        genus: plantName.split(/\s+/)[0],
+        family: 'Mockaceae',
+        confidence: 75,
+        description: `Mock identification for: ${plantName}`,
+        source: 'gemini',
+      };
+    },
+
     ...overrides,
   };
 };

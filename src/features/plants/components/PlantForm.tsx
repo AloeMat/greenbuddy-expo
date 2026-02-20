@@ -125,7 +125,7 @@ export const PlantForm: React.FC<PlantFormProps> = ({
   };
 
   const handleDateChange = (
-    event: any,
+    _event: unknown,
     selectedDate: Date | undefined,
     setter: (date: Date) => void
   ) => {

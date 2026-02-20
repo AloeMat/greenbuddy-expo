@@ -56,3 +56,6 @@ app-example
 
 .vercel
 .env*.local
+
+# Supabase temp files (contains project IDs)
+supabase/.temp/

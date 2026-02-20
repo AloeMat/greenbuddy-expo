@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { View, SafeAreaView, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { usePlants } from '@/features/plants/hooks/usePlants';
@@ -98,14 +99,14 @@ export default function ScanScreen() {
       // Merge identification with analysis
       const analysisData: Partial<PlantAnalysis> = {
         commonName: geminiAnalysis.commonName || identification.commonName,
-        personality: geminiAnalysis.personality as any || 'mysterieuse',
+        personality: geminiAnalysis.personality || 'monstera',
         healthScore: geminiAnalysis.healthScore || 75,
         soins: {
           wateringFrequencyDays: geminiAnalysis.soins?.wateringFrequencyDays || 7,
-          lightRequirements: (geminiAnalysis.soins?.lightRequirements as any) || 'indirect',
+          lightRequirements: geminiAnalysis.soins?.lightRequirements || 'indirect',
           temperatureMin: geminiAnalysis.soins?.temperatureMin || 15,
           temperatureMax: geminiAnalysis.soins?.temperatureMax || 25,
-          humidity: (geminiAnalysis.soins?.humidity as any) || 'medium',
+          humidity: geminiAnalysis.soins?.humidity || 'medium',
           fertilizerFrequencyDays: geminiAnalysis.soins?.fertilizerFrequencyDays || 30,
         },
         dialogue: {
@@ -159,7 +160,7 @@ export default function ScanScreen() {
         nom_scientifique: plantData.identification.scientificName,
         famille: plantData.identification.family,
         surnom: plantData.identification.commonName, // Use common name as default nickname
-        personnalite: plantData.analysis.personality as any,
+        personnalite: plantData.analysis.personality || 'succulente',
         sante_score: plantData.analysis.healthScore,
         arrosage_frequence_jours: plantData.analysis.soins.wateringFrequencyDays,
         lumiere: plantData.analysis.soins.lightRequirements,

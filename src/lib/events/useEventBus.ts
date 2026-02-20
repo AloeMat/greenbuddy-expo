@@ -45,15 +45,15 @@ export const useEventBus = <T extends AppEvent['type']>(
  * @param handler - Function called when any event emitted
  * @param enabled - Enable/disable listener (default: true)
  */
-export const useEventBusMultiple = (
-  eventTypes: AppEvent['type'][],
-  handler: EventHandler,
+export const useEventBusMultiple = <T extends AppEvent['type']>(
+  eventTypes: T[],
+  handler: EventHandler<Extract<AppEvent, { type: T }>>,
   enabled: boolean = true
 ): void => {
   useEffect(() => {
     if (!enabled) return;
 
-    const unsubscribe = eventBus.onMultiple(eventTypes as any, handler);
+    const unsubscribe = eventBus.onMultiple(eventTypes, handler);
     return unsubscribe;
   }, [eventTypes, handler, enabled]);
 };
@@ -97,15 +97,23 @@ export const useEventBusOnce = <T extends AppEvent['type']>(
  */
 export const useEventBusEmit = () => {
   const emit = useCallback(
-    async (eventType: AppEvent['type'], payload: any) => {
-      await eventBus.emit(eventType as any, payload);
+    async <T extends AppEvent['type']>(
+      eventType: T,
+      payload: Extract<AppEvent, { type: T }>['payload']
+    ) => {
+      // Type assertion needed: TS can't narrow generic T in callback context
+      await eventBus.emit(eventType, payload as never);
     },
     []
   );
 
   const emitSync = useCallback(
-    (eventType: AppEvent['type'], payload: any) => {
-      eventBus.emitSync(eventType as any, payload);
+    <T extends AppEvent['type']>(
+      eventType: T,
+      payload: Extract<AppEvent, { type: T }>['payload']
+    ) => {
+      // Type assertion needed: TS can't narrow generic T in callback context
+      eventBus.emitSync(eventType, payload as never);
     },
     []
   );

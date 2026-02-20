@@ -12,10 +12,10 @@
  * Phase 4.2: Avatar Vocal Enrichi
  */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import Animated, { FadeIn, Layout } from 'react-native-reanimated';
-import { Heart, Zap, Lock, Unlock } from 'lucide-react-native';
+import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
+import { Zap, Unlock } from 'lucide-react-native';
 
 import {
   AttachmentService,
@@ -76,7 +76,8 @@ export const AttachmentIndicator: React.FC<AttachmentIndicatorProps> = ({
   showFeatures = true,
   showMilestone = true,
 }) => {
-  const profile = getPersonalityProfile(personality);
+  // Profile used for future personality-based rendering
+  getPersonalityProfile(personality);
   const phaseConfig = PHASE_CONFIG[attachmentState.attachmentPhase];
   const nextMilestone = AttachmentService.getNextMilestone(
     attachmentState.attachmentPhase,
@@ -136,7 +137,7 @@ export const AttachmentIndicator: React.FC<AttachmentIndicatorProps> = ({
   return (
     <Animated.View
       entering={FadeIn.duration(300)}
-      layout={Layout.springify()}
+      layout={LinearTransition.springify()}
       style={styles.container}
     >
       {/* Phase Header */}
@@ -268,8 +269,8 @@ export const AttachmentIndicator: React.FC<AttachmentIndicatorProps> = ({
       <View style={styles.emotionalSection}>
         <Text style={styles.emotionalLabel}>Profondeur émotionnelle</Text>
         <View style={styles.emotionalBar}>
-          {['surface', 'developing', 'strong', 'deep'].map((level, index) => {
-            const isReached = isEmotionalLevelReached(attachmentState.attachmentPhase, level as any);
+          {(['surface', 'developing', 'strong', 'deep'] as const).map((level, index) => {
+            const isReached = isEmotionalLevelReached(attachmentState.attachmentPhase, level);
             return (
               <View
                 key={level}

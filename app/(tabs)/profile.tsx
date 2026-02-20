@@ -1,21 +1,33 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   StyleSheet,
   Alert,
   Switch,
+  ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 import { useAuthStore } from '@/features/auth/store/authStore';
+import { logger } from '@/lib/services/logger';
 import { useRouter } from 'expo-router';
 import { Trophy, LogOut, Bell, Globe } from 'lucide-react-native';
 import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
 import { usePlants } from '@/features/plants/hooks/usePlants';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
+import { useDailyNotification } from '@/features/gamification/hooks/useDailyNotification';
 import { radius } from '@/design-system/tokens/radius';
+
+/** Returns the color for a health percentage bar */
+function getHealthColor(percentage: number): string {
+  if (percentage >= 80) return '#10B981';
+  if (percentage >= 50) return '#F59E0B';
+  return '#EF4444';
+}
 
 /**
  * Profile Screen
@@ -28,9 +40,27 @@ export default function ProfileScreen() {
   const { plants = [] } = usePlants();
   const { currentStreak = 0 } = useStreak();
 
-  // Settings state
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  // Notifications - from useDailyNotification hook
+  const { isScheduled: notificationsEnabled, toggleNotifications, isLoading: notificationsLoading } = useDailyNotification();
+
+  // Location - persisted in AsyncStorage
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
+
+  // Load location preference from AsyncStorage on mount
+  useEffect(() => {
+    const loadLocationPreference = async () => {
+      try {
+        const saved = await AsyncStorage.getItem('locationEnabled');
+        if (saved !== null) {
+          setLocationEnabled(saved === 'true');
+        }
+      } catch (error) {
+        logger.error('Error loading location preference:', error);
+      }
+    };
+    loadLocationPreference();
+  }, []);
 
   // Calculate current level and XP
   const XP_PER_LEVEL = 500;
@@ -56,18 +86,65 @@ export default function ProfileScreen() {
         { text: 'Annuler', onPress: () => {} },
         {
           text: 'Déconnecter',
-          onPress: async () => {
-            try {
-              await logout();
-              router.replace('/(auth)');
-            } catch (err) {
-              Alert.alert('Erreur', 'Impossible de se déconnecter');
-            }
+          onPress: () => {
+            void (async () => {
+              try {
+                await logout();
+                router.replace('/(auth)');
+              } catch (err) {
+                logger.error('[Profile] Logout failed:', err);
+                Alert.alert('Erreur', 'Impossible de se déconnecter');
+              }
+            })();
           },
           style: 'destructive',
         },
       ]
     );
+  };
+
+  // Handle notifications toggle
+  const handleNotificationsToggle = async () => {
+    try {
+      await toggleNotifications();
+      Alert.alert(
+        notificationsEnabled ? '✅ Notifications désactivées' : '✅ Notifications activées',
+        notificationsEnabled ? 'Vous ne recevrez plus de rappels quotidiens' : 'Vous recevrez des rappels quotidiens'
+      );
+    } catch (error) {
+      logger.error('[Profile] Notifications toggle failed:', error);
+      Alert.alert('❌ Erreur', 'Impossible de modifier les notifications');
+    }
+  };
+
+  // Handle location toggle
+  const enableLocation = async () => {
+    setLocationLoading(true);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission refusée',
+          'Veuillez autoriser l\'accès à la localisation dans les paramètres de l\'app pour recevoir des conseils météo.'
+        );
+        setLocationLoading(false);
+        return;
+      }
+      setLocationEnabled(true);
+      await AsyncStorage.setItem('locationEnabled', 'true');
+      Alert.alert('✅ Localisation activée', 'Vous recevrez des conseils météo basés sur votre position');
+    } catch (error) {
+      logger.error('[Profile] Location access failed:', error);
+      Alert.alert('❌ Erreur', 'Impossible d\'accéder à la localisation');
+    } finally {
+      setLocationLoading(false);
+    }
+  };
+
+  const disableLocation = async () => {
+    setLocationEnabled(false);
+    await AsyncStorage.setItem('locationEnabled', 'false');
+    Alert.alert('✅ Localisation désactivée', 'Vous ne recevrez plus de conseils météo');
   };
 
   return (
@@ -141,7 +218,7 @@ export default function ProfileScreen() {
                   styles.healthFill,
                   {
                     width: `${healthPercentage}%`,
-                    backgroundColor: healthPercentage >= 80 ? '#10B981' : healthPercentage >= 50 ? '#F59E0B' : '#EF4444',
+                    backgroundColor: getHealthColor(healthPercentage),
                   },
                 ]}
               />
@@ -156,22 +233,29 @@ export default function ProfileScreen() {
         <View style={styles.settingsSection}>
           <Text style={styles.sectionTitle}>⚙️ Paramètres</Text>
 
+          {/* Notifications */}
           <View style={styles.settingItem}>
             <View style={styles.settingContent}>
               <Bell size={20} color="#F59E0B" />
               <View style={styles.settingTextContainer}>
                 <Text style={styles.settingLabel}>Notifications</Text>
-                <Text style={styles.settingDescription}>Rappels d'arrosage</Text>
+                <Text style={styles.settingDescription}>{"Rappels d'arrosage"}</Text>
               </View>
             </View>
-            <Switch
-              value={notificationsEnabled}
-              onValueChange={setNotificationsEnabled}
-              trackColor={{ false: '#D1D5DB', true: '#10B98150' }}
-              thumbColor={notificationsEnabled ? '#10B981' : '#f4f3f4'}
-            />
+            {notificationsLoading ? (
+              <ActivityIndicator size="small" color="#10B981" />
+            ) : (
+              <Switch
+                value={notificationsEnabled}
+                onValueChange={handleNotificationsToggle}
+                trackColor={{ false: '#D1D5DB', true: '#10B98150' }}
+                thumbColor={notificationsEnabled ? '#10B981' : '#f4f3f4'}
+                disabled={notificationsLoading}
+              />
+            )}
           </View>
 
+          {/* Location */}
           <View style={styles.settingItem}>
             <View style={styles.settingContent}>
               <Globe size={20} color="#0891B2" />
@@ -180,14 +264,20 @@ export default function ProfileScreen() {
                 <Text style={styles.settingDescription}>Pour les conseils météo</Text>
               </View>
             </View>
-            <Switch
-              value={locationEnabled}
-              onValueChange={setLocationEnabled}
-              trackColor={{ false: '#D1D5DB', true: '#0891B250' }}
-              thumbColor={locationEnabled ? '#0891B2' : '#f4f3f4'}
-            />
+            {locationLoading ? (
+              <ActivityIndicator size="small" color="#0891B2" />
+            ) : (
+              <Switch
+                value={locationEnabled}
+                onValueChange={(value) => { void (value ? enableLocation() : disableLocation()); }}
+                trackColor={{ false: '#D1D5DB', true: '#0891B250' }}
+                thumbColor={locationEnabled ? '#0891B2' : '#f4f3f4'}
+                disabled={locationLoading}
+              />
+            )}
           </View>
 
+          {/* Language */}
           <View style={styles.settingItem}>
             <View style={styles.settingContent}>
               <Text style={styles.settingLabelText}>🌍 Langue</Text>

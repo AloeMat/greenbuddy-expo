@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { View, Text, ViewStyle, TouchableOpacity } from 'react-native';
-import Animated, { FadeInDown, SlideInRight } from 'react-native-reanimated';
+import Animated, { SlideInRight } from 'react-native-reanimated';
 import { radius } from '@/design-system/tokens/radius';
 import { spacing } from '@/design-system/tokens/spacing';
 import { shadows } from '@/design-system/tokens/shadows';
@@ -24,7 +24,7 @@ export interface AlertBoxProps {
 
 const alertConfig: Record<
   AlertType,
-  { bg: string; border: string; icon: string; color: string }
+  { bg: string; border: string; icon: ComponentProps<typeof Feather>['name']; color: string }
 > = {
   success: {
     bg: onboardingColors.green[50],
@@ -84,11 +84,11 @@ export const AlertBox: React.FC<AlertBoxProps> = ({
         }}
       >
         <View style={{ marginRight: spacing.md, marginTop: 2 }}>
-          {icon || <Feather name={config.icon as any} size={20} color={config.color} />}
+          {icon || <Feather name={config.icon} size={20} color={config.color} />}
         </View>
 
         <View style={{ flex: 1 }}>
-          {title && (
+          {Boolean(title) && (
             <Text
               style={{
                 fontSize: 14,
@@ -112,7 +112,7 @@ export const AlertBox: React.FC<AlertBoxProps> = ({
             {message}
           </Text>
 
-          {actionLabel && (
+          {Boolean(actionLabel) && (
             <TouchableOpacity
               onPress={onAction}
               style={{

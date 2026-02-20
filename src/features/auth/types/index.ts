@@ -1,3 +1,5 @@
+import type { Session } from '@supabase/supabase-js';
+
 /**
  * Auth Feature Types - GreenBuddy v2.2
  */
@@ -26,7 +28,7 @@ export interface AuthUser {
 export interface AuthState {
   // State
   user: AuthUser | null;
-  session: any; // Supabase session
+  session: Session | null; // Supabase session
   isLoading: boolean;
   isAuthenticated: boolean;
   accessToken: string | null;

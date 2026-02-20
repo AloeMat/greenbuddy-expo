@@ -7,10 +7,11 @@
 import { supabase } from '@/lib/services/supabase';
 import { logger } from '@/lib/services/logger';
 import type { AuthUser } from '@/types';
+import type { Session } from '@supabase/supabase-js';
 
 export interface IAuthRepository {
-  getSession(): Promise<{ user: AuthUser | null; session: any }>;
-  signIn(email: string, password: string): Promise<{ user: AuthUser; session: any }>;
+  getSession(): Promise<{ user: AuthUser | null; session: Session | null }>;
+  signIn(email: string, password: string): Promise<{ user: AuthUser; session: Session }>;
   signUp(email: string, password: string): Promise<void>;
   signOut(): Promise<void>;
   refreshSession(): Promise<{ accessToken: string; refreshToken: string }>;
@@ -20,10 +21,21 @@ export interface IAuthRepository {
 export class SupabaseAuthRepository implements IAuthRepository {
   /**
    * Get current session from Supabase
+   * Includes 5-second timeout to prevent infinite hang
    */
   async getSession() {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession();
+      // Create a timeout promise that rejects after 5 seconds
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('getSession timeout after 5s')), 5000)
+      );
+
+      // Race the Supabase call against the timeout
+      const sessionPromise = supabase.auth.getSession();
+      const { data: { session }, error } = await Promise.race([
+        sessionPromise,
+        timeoutPromise
+      ]);
 
       if (error) throw error;
 
@@ -40,7 +52,8 @@ export class SupabaseAuthRepository implements IAuthRepository {
       return { user: null, session: null };
     } catch (err) {
       logger.error('getSession failed:', err);
-      throw err;
+      // Don't throw - return empty session to allow graceful fallback to login
+      return { user: null, session: null };
     }
   }
 

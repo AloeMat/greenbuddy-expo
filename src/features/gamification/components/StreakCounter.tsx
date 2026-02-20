@@ -204,7 +204,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
       {currentStreak < 90 && (
         <View style={styles.progressSection}>
           <Text style={styles.progressLabel}>
-            {nextMilestone - currentStreak} jour(s) jusqu'à {nextMilestone}
+            {`${nextMilestone - currentStreak} jour(s) jusqu'à ${nextMilestone}`}
           </Text>
           <View style={styles.progressBar}>
             <View

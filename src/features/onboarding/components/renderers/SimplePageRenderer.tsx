@@ -1,12 +1,14 @@
 import React from 'react';
 import { ScrollView, View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Leaf } from 'lucide-react-native';
 import { radius } from '@/design-system/tokens/radius';
 import { spacing } from '@/design-system/tokens/spacing';
 import { onboardingColors } from '@/design-system/onboarding/colors';
 import { OnboardingScreen, OnboardingHeader, OnboardingContent, OnboardingFooter, Title, Subtitle, PrimaryButton, SecondaryButton } from '@/design-system/onboarding/components';
 import { SimplePage } from '@/features/onboarding/types/onboardingSchema';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
+import { GlassCard } from '../GlassCard';
 import * as Haptics from 'expo-haptics';
 
 interface SimplePageRendererProps {
@@ -45,20 +47,23 @@ export function SimplePageRenderer({ page, onNavigate }: SimplePageRendererProps
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingHorizontal: spacing['2xl'], paddingTop: spacing.lg }}
+        contentContainerStyle={{ paddingHorizontal: spacing['2xl'], paddingVertical: spacing.lg }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Title */}
-        <Animated.View entering={FadeInDown.delay(100).springify()}>
-          <Title>{page.title}</Title>
-        </Animated.View>
-
-        {/* Subtitle */}
-        {page.text && (
-          <Animated.View entering={FadeInDown.delay(200).springify()}>
-            <Subtitle>{page.text}</Subtitle>
+        {/* Premium Glass Card Container */}
+        <GlassCard variant="primary" padding="lg" blurIntensity="medium">
+          {/* Title */}
+          <Animated.View entering={FadeInDown.delay(100).springify()}>
+            <Title>{page.title}</Title>
           </Animated.View>
-        )}
+
+          {/* Subtitle */}
+          {page.text && (
+            <Animated.View entering={FadeInDown.delay(200).springify()}>
+              <Subtitle>{page.text}</Subtitle>
+            </Animated.View>
+          )}
+        </GlassCard>
 
         {/* Animation placeholder - enhance later with Lottie */}
         {page.animation && (
@@ -77,33 +82,37 @@ export function SimplePageRenderer({ page, onNavigate }: SimplePageRendererProps
                 backgroundColor: onboardingColors.green[50],
                 justifyContent: 'center',
                 alignItems: 'center',
+                borderWidth: 2,
+                borderColor: onboardingColors.green[200],
               }}
             >
-              <Text style={{ fontSize: 60 }}>🌿</Text>
+              <Leaf size={60} color={onboardingColors.green[500]} strokeWidth={1.5} />
             </View>
           </Animated.View>
         )}
 
         {/* Note if provided */}
         {page.note && (
-          <Animated.View entering={FadeInDown.delay(400)}>
-            <Text
-              style={{
-                fontSize: 12,
-                color: onboardingColors.text.muted,
-                fontStyle: 'italic',
-                marginTop: spacing.lg,
-              }}
-            >
-              {page.note}
-            </Text>
-          </Animated.View>
+          <GlassCard variant="info" padding="md" blurIntensity="light">
+            <Animated.View entering={FadeInDown.delay(400)}>
+              <Text
+                style={{
+                  fontSize: 13,
+                  color: onboardingColors.text.secondary,
+                  fontStyle: 'italic',
+                  lineHeight: 18,
+                }}
+              >
+                ℹ️ {page.note}
+              </Text>
+            </Animated.View>
+          </GlassCard>
         )}
       </ScrollView>
 
       <OnboardingFooter>
         <Animated.View
-          entering={FadeInDown.delay(500).springify()}
+          entering={FadeInDown.delay(400).springify()}
           pointerEvents="auto"
           style={{ width: '100%', gap: spacing.md }}
         >

@@ -40,7 +40,7 @@ export type AppEvent =
  * Event handler function signature
  * Called when event is emitted
  */
-export type EventHandler<T extends AppEvent = any> = (
+export type EventHandler<T extends AppEvent = AppEvent> = (
   payload: T extends { payload: infer P } ? P : never
 ) => void | Promise<void>;
 
@@ -56,7 +56,7 @@ export type UnsubscribeFn = () => void;
  */
 export class EventBus {
   private static instance: EventBus;
-  private listeners: Map<string, Set<EventHandler>> = new Map();
+  private readonly listeners: Map<string, Set<EventHandler>> = new Map();
   private eventHistory: Array<{ event: AppEvent; timestamp: number }> = [];
   private readonly MAX_HISTORY = 100;
   private isDebugMode = false;
@@ -90,7 +90,8 @@ export class EventBus {
       this.listeners.set(eventType, new Set());
     }
 
-    const handlers = this.listeners.get(eventType)!;
+    const handlers = this.listeners.get(eventType);
+    if (!handlers) return () => {};
     handlers.add(handler as EventHandler);
 
     if (this.isDebugMode) {
@@ -131,7 +132,7 @@ export class EventBus {
     eventType: T,
     handler: EventHandler<Extract<AppEvent, { type: T }>>
   ): UnsubscribeFn {
-    const wrappedHandler = async (payload: any) => {
+    const wrappedHandler: EventHandler<Extract<AppEvent, { type: T }>> = async (payload) => {
       await handler(payload);
       unsubscribe(); // Auto-unsubscribe
     };
@@ -148,7 +149,7 @@ export class EventBus {
     eventType: T,
     payload: Extract<AppEvent, { type: T }>['payload']
   ): Promise<void> {
-    const event: AppEvent = { type: eventType, payload } as any;
+    const event = { type: eventType, payload } as Extract<AppEvent, { type: T }>;
 
     // Add to history for debugging
     this.addToHistory(event);
@@ -190,7 +191,7 @@ export class EventBus {
     eventType: T,
     payload: Extract<AppEvent, { type: T }>['payload']
   ): void {
-    const event: AppEvent = { type: eventType, payload } as any;
+    const event = { type: eventType, payload } as Extract<AppEvent, { type: T }>;
     this.addToHistory(event);
 
     const handlers = this.listeners.get(eventType);

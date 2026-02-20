@@ -26,8 +26,14 @@ import { colors } from '@/design-system/tokens/colors';
 import { radius } from '@/design-system/tokens/radius';
 import { logger } from '@/lib/services/logger';
 
+interface CheckInResult {
+  xpEarned: number;
+  streakAfter: number;
+  milestonReached?: { days: number };
+}
+
 interface DailyCheckInButtonProps {
-  onCheckInComplete?: (result?: any) => void;
+  onCheckInComplete?: (result?: CheckInResult) => void;
   compact?: boolean;
 }
 
@@ -169,7 +175,7 @@ export const DailyCheckInButton: React.FC<DailyCheckInButtonProps> = ({
           ) : (
             <>
               <CheckCircle size={24} color="#FFF" strokeWidth={2} />
-              <Text style={styles.checkInButtonText}>Complété pour aujourd'hui!</Text>
+              <Text style={styles.checkInButtonText}>{"Complété pour aujourd'hui!"}</Text>
               <Text style={styles.checkInButtonSubtext}>Revenez demain</Text>
             </>
           )}

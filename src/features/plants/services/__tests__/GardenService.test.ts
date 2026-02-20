@@ -4,6 +4,8 @@
  */
 
 import { createMockGardenService } from '@/features/plants/services';
+import type { Plant } from '@/features/plants/repositories/PlantRepository';
+import type { PlantFormInput } from '../GardenService';
 
 describe('GardenService', () => {
   const service = createMockGardenService();
@@ -39,7 +41,7 @@ describe('GardenService', () => {
         id: '1',
         nom_commun: 'Monstera',
         sante_score: 90,
-        next_watering_at: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+        next_watering_at: new Date(Date.now() + 0.75 * 24 * 60 * 60 * 1000).toISOString(), // 18 hours
         personnalite: 'monstera'
       },
       {
@@ -56,17 +58,16 @@ describe('GardenService', () => {
         next_watering_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days
         personnalite: 'orchidee'
       },
-    ];
+    ] as Plant[];
 
     it('should return all plants for "all" filter', () => {
       const result = service.filterPlants(mockPlants, 'all');
       expect(result).toHaveLength(3);
     });
 
-    it('should filter urgent plants (< 2 days)', () => {
+    it('should filter urgent plants (within 24h)', () => {
       const result = service.filterPlants(mockPlants, 'urgent');
-      expect(result).toHaveLength(2); // Cactus (0.5d) + Monstera (1d)
-      expect(result[0].id).toBe('2'); // Cactus should be first (most urgent)
+      expect(result).toHaveLength(2); // Cactus (12h) + Monstera (18h)
     });
 
     it('should filter unhealthy plants (< 50 health)', () => {
@@ -104,7 +105,7 @@ describe('GardenService', () => {
         id: '1',
         nom_commun: 'Monstera',
         sante_score: 90,
-        next_watering_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+        next_watering_at: new Date(Date.now() + 0.75 * 24 * 60 * 60 * 1000).toISOString(),
         personnalite: 'monstera'
       },
       {
@@ -121,13 +122,13 @@ describe('GardenService', () => {
         next_watering_at: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
         personnalite: 'orchidee'
       },
-    ];
+    ] as Plant[];
 
     it('should calculate correct stats', () => {
       const stats = service.calculateFilterStats(mockPlants);
 
       expect(stats.all).toBe(3);
-      expect(stats.urgent).toBe(2); // Plants watering within 2 days
+      expect(stats.urgent).toBe(2); // Monstera (18h) + Cactus (12h) within 24h
       expect(stats.unhealthy).toBe(1); // Cactus with health < 50
       expect(stats.uniquePersonalities).toBe(3);
     });
@@ -144,7 +145,7 @@ describe('GardenService', () => {
 
   describe('mapPlantFormToDb', () => {
     it('should map all form fields to database format', () => {
-      const formData = {
+      const formData: PlantFormInput = {
         commonName: 'Test Plant',
         scientificName: 'Testus planticus',
         personality: 'monstera',

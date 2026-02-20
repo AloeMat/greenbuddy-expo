@@ -148,7 +148,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ onCl
         </View>
         <View style={styles.infoBullet}>
           <Text style={styles.infoBulletPoint}>⏰</Text>
-          <Text style={styles.infoText}>Les rappels fonctionnent même si l\'app est fermée</Text>
+          <Text style={styles.infoText}>{"Les rappels fonctionnent même si l'app est fermée"}</Text>
         </View>
       </View>
 

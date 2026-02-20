@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/features/auth/store/authStore';
 import { StatsGrid } from '@/features/gamification/components/StatsGrid';
 import { DailyCheckInButton } from '@/features/gamification/components/DailyCheckInButton';

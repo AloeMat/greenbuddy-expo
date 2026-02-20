@@ -29,9 +29,9 @@ interface CacheStats {
 }
 
 export class CachedPlantNetProxy implements IPlantNetService {
-  private realService: IPlantNetService;
+  private readonly realService: IPlantNetService;
   private cache: Map<string, CacheEntry<PlantIdentificationResult>> = new Map();
-  private storageKey = 'plantnet_cache';
+  private readonly storageKey = 'plantnet_cache';
 
   // Cache duration: 30 days (plant identification doesn't change)
   private readonly CACHE_DURATION = 30 * 24 * 60 * 60 * 1000;
@@ -44,7 +44,8 @@ export class CachedPlantNetProxy implements IPlantNetService {
 
   constructor(realService: IPlantNetService) {
     this.realService = realService;
-    this.loadCacheFromStorage();
+    // Fire-and-forget: cache loads asynchronously, API calls work without it
+    void this.loadCacheFromStorage();
   }
 
   /**
@@ -82,6 +83,15 @@ export class CachedPlantNetProxy implements IPlantNetService {
     this.setInCache(cacheKey, result);
 
     return result;
+  }
+
+  /**
+   * Identify plant by name (no caching needed for text-based lookups)
+   * Directly proxies to real service
+   */
+  async identifyPlantByName(plantName: string): Promise<PlantIdentificationResult> {
+    logger.info('🌿 Identifying plant by name', { plantName });
+    return await this.realService.identifyPlantByName(plantName);
   }
 
   /**
@@ -165,8 +175,8 @@ export class CachedPlantNetProxy implements IPlantNetService {
           entries: this.cache.size
         });
       }
-    } catch (error: any) {
-      logger.warn('⚠️ Failed to load PlantNet cache from storage', error);
+    } catch (error: unknown) {
+      logger.warn('⚠️ Failed to load PlantNet cache from storage', { error: String(error) });
       // Continue anyway - cache just won't be available
     }
   }
@@ -180,8 +190,8 @@ export class CachedPlantNetProxy implements IPlantNetService {
       // Convert Map to array for JSON serialization
       const cacheArray = Array.from(this.cache.entries());
       await AsyncStorage.setItem(this.storageKey, JSON.stringify(cacheArray));
-    } catch (error: any) {
-      logger.warn('⚠️ Failed to save PlantNet cache to storage', error);
+    } catch (error: unknown) {
+      logger.warn('⚠️ Failed to save PlantNet cache to storage', { error: String(error) });
       // Non-critical error - continue anyway
     }
   }
@@ -217,7 +227,7 @@ export class CachedPlantNetProxy implements IPlantNetService {
     return {
       hits: this.stats.hits,
       misses: this.stats.misses,
-      hitRate: parseFloat(hitRate as string),
+      hitRate: Number.parseFloat(hitRate),
       entriesCount: this.cache.size,
       totalSize: (totalSize / 1024).toFixed(2) + ' KB',
       quotaSavedDaily

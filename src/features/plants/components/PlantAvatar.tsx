@@ -33,7 +33,7 @@ export interface PlantAvatarProps {
 
 // Avatar images mapping (PNG sprites)
 // Imported from @lib/assets via alias (no more relative paths!)
-const AVATAR_IMAGES: Record<PlantPersonality, any> = {
+const AVATAR_IMAGES: Record<PlantPersonality, import('react-native').ImageSourcePropType> = {
   cactus: avatarImages.cactus,
   orchidee: avatarImages.orchidee,
   monstera: avatarImages.monstera,
@@ -258,14 +258,14 @@ const PlantAvatarComponent: React.FC<PlantAvatarProps> = ({
           colors={[emotionColor.secondary, emotionColor.primary]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={[
+          style={StyleSheet.flatten([
             styles.gradientOverlay,
             {
               width: sizeConfig.avatar,
               height: sizeConfig.avatar,
               borderRadius: sizeConfig.avatar / 2
             }
-          ]}
+          ])}
         />
 
         {/* Avatar image */}

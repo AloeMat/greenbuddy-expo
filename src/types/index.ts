@@ -7,6 +7,8 @@
 // ============================================
 // 🔐 AUTH TYPES
 
+import type { Session } from '@supabase/supabase-js';
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -20,7 +22,7 @@ export interface AuthUser {
 
 export interface AuthState {
   user: AuthUser | null;
-  session: any | null;
+  session: Session | null;
   loading?: boolean;
   isLoading?: boolean;
   isAuthenticated?: boolean;
@@ -380,7 +382,7 @@ export interface UpdatePlantRequest {
   notes?: string;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -417,3 +419,11 @@ export type DeepPartial<T> = {
 };
 
 export type PlantListItem = Plant;
+
+/** Result from Gemini health diagnosis */
+export interface HealthDiagnosisResult {
+  issue: string;
+  treatment: string;
+  urgency: 'low' | 'medium' | 'high';
+  analysis?: Partial<PlantAnalysis>;
+}

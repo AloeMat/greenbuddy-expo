@@ -3,15 +3,15 @@
  * Opens links in browser instead of in-app
  */
 
-import { Linking, Platform } from 'react-native';
-import { Text, TextProps } from 'react-native';
+import { Linking, Text, TextProps } from 'react-native';
+import { logger } from '@/lib/services/logger';
 
 interface ExternalLinkProps extends TextProps {
   href: string;
   children: React.ReactNode;
 }
 
-export function ExternalLink({ href, children, ...rest }: ExternalLinkProps) {
+export function ExternalLink({ href, children, ...rest }: Readonly<ExternalLinkProps>) {
   const handlePress = async () => {
     try {
       const supported = await Linking.canOpenURL(href);
@@ -19,7 +19,7 @@ export function ExternalLink({ href, children, ...rest }: ExternalLinkProps) {
         await Linking.openURL(href);
       }
     } catch (error) {
-      console.error('Error opening URL:', error);
+      logger.error('Error opening URL:', error);
     }
   };
 

@@ -17,13 +17,14 @@ import React, { ReactNode } from 'react';
 import {
   View,
   ScrollView,
-  SafeAreaView,
   ActivityIndicator,
   RefreshControl,
   ViewStyle,
+  TextStyle,
   ScrollViewProps,
   Text
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Button } from './Button';
 import { radius } from '@/design-system/tokens/radius';
@@ -182,7 +183,7 @@ export const BaseScreen: React.FC<BaseScreenProps> = ({
         )}
 
         {/* Center: Title */}
-        {title && <Text style={styles.title}>{title}</Text>}
+        {Boolean(title) && <Text style={styles.title}>{title}</Text>}
 
         {/* Right: Custom actions */}
         <View style={styles.headerActions}>{headerActions}</View>
@@ -305,7 +306,7 @@ const styles = {
     fontSize: 18,
     fontWeight: '600',
     color: colors.neutral['900']
-  } as any,
+  } as TextStyle,
 
   headerActions: {
     flexDirection: 'row',
@@ -337,7 +338,7 @@ const styles = {
     marginTop: spacing.md,
     color: colors.neutral['600'],
     fontSize: 14
-  } as any,
+  } as TextStyle,
 
   errorContainer: {
     backgroundColor: colors.error['50'],
@@ -352,7 +353,7 @@ const styles = {
     color: colors.error['700'],
     fontSize: 14,
     fontWeight: '500'
-  } as any,
+  } as TextStyle,
 
   footer: {
     paddingHorizontal: spacing.lg,

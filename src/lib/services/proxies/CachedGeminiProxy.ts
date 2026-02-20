@@ -14,7 +14,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IGeminiService } from '@/lib/services/gemini';
 import { logger } from '@/lib/services/logger';
-import { PlantAnalysis, AvatarEmotion, PlantPersonality } from '@/types';
+import { PlantAnalysis, AvatarEmotion, PlantPersonality, HealthDiagnosisResult } from '@/types';
 
 interface CacheEntry<T> {
   data: T;
@@ -31,9 +31,9 @@ interface CacheStats {
 }
 
 export class CachedGeminiProxy implements IGeminiService {
-  private realService: IGeminiService;
-  private cache: Map<string, CacheEntry<any>> = new Map();
-  private storageKey = 'gemini_cache';
+  private readonly realService: IGeminiService;
+  private cache: Map<string, CacheEntry<unknown>> = new Map();
+  private readonly storageKey = 'gemini_cache';
 
   // Cache durations (ms)
   private readonly CACHE_DURATIONS = {
@@ -53,7 +53,8 @@ export class CachedGeminiProxy implements IGeminiService {
 
   constructor(realService: IGeminiService) {
     this.realService = realService;
-    this.loadCacheFromStorage();
+    // Fire-and-forget: cache loads asynchronously, API calls work without it
+    void this.loadCacheFromStorage();
   }
 
   /**
@@ -167,12 +168,12 @@ export class CachedGeminiProxy implements IGeminiService {
   /**
    * Diagnose health issue with cache
    */
-  async diagnoseHealthIssue(analysis: Partial<PlantAnalysis>): Promise<any> {
+  async diagnoseHealthIssue(analysis: Partial<PlantAnalysis>): Promise<HealthDiagnosisResult> {
     const cacheKey = this.generateKey('diagnoseHealthIssue',
       `${analysis.commonName}_${analysis.healthScore}`
     );
 
-    const cached = this.getFromCache<any>(cacheKey);
+    const cached = this.getFromCache<HealthDiagnosisResult>(cacheKey);
     if (cached) {
       logger.info('🎯 Gemini diagnoseHealthIssue cache HIT', {
         plant: analysis.commonName,
@@ -194,7 +195,7 @@ export class CachedGeminiProxy implements IGeminiService {
    */
   private generateKey(method: string, param: string): string {
     // Simple hash: first 50 chars of param + method name
-    const paramHash = param.substring(0, 50).replace(/[^a-zA-Z0-9]/g, '');
+    const paramHash = param.substring(0, 50).replaceAll(/[^a-zA-Z0-9]/g, '');
     return `${method}_${paramHash}`;
   }
 
@@ -253,14 +254,14 @@ export class CachedGeminiProxy implements IGeminiService {
     try {
       const stored = await AsyncStorage.getItem(this.storageKey);
       if (stored) {
-        const parsed: Array<[string, CacheEntry<any>]> = JSON.parse(stored);
+        const parsed: Array<[string, CacheEntry<unknown>]> = JSON.parse(stored);
         this.cache = new Map(parsed);
         logger.info('📦 Gemini cache loaded from storage', {
           entries: this.cache.size
         });
       }
-    } catch (error: any) {
-      logger.warn('⚠️ Failed to load Gemini cache from storage', error);
+    } catch (error: unknown) {
+      logger.warn('⚠️ Failed to load Gemini cache from storage', { error: String(error) });
     }
   }
 
@@ -271,8 +272,8 @@ export class CachedGeminiProxy implements IGeminiService {
     try {
       const cacheArray = Array.from(this.cache.entries());
       await AsyncStorage.setItem(this.storageKey, JSON.stringify(cacheArray));
-    } catch (error: any) {
-      logger.warn('⚠️ Failed to save Gemini cache to storage', error);
+    } catch (error: unknown) {
+      logger.warn('⚠️ Failed to save Gemini cache to storage', { error: String(error) });
     }
   }
 
@@ -303,7 +304,7 @@ export class CachedGeminiProxy implements IGeminiService {
     return {
       hits: this.stats.hits,
       misses: this.stats.misses,
-      hitRate: parseFloat(hitRate as string),
+      hitRate: Number.parseFloat(hitRate),
       entriesCount: this.cache.size,
       totalSize: (totalSize / 1024).toFixed(2) + ' KB'
     };

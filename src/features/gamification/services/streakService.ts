@@ -246,7 +246,7 @@ export function formatStreakLabel(days: number): string {
  */
 export function getStreakColor(
   days: number,
-  theme: any
+  theme: { colors: Record<string, Record<number, string>> }
 ): string {
   if (days >= 90) return theme.colors.error[600];
   if (days >= 30) return theme.colors.warning[600];

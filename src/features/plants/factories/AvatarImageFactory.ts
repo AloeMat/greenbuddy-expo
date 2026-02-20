@@ -58,9 +58,9 @@ export interface AvatarFactoryStats {
  */
 export class AvatarImageFactory {
   private static instance: AvatarImageFactory;
-  private avatarPool: Map<PlantPersonality, AvatarImage> = new Map();
-  private preloadedImages: Map<PlantPersonality, boolean> = new Map();
-  private stats = {
+  private readonly avatarPool: Map<PlantPersonality, AvatarImage> = new Map();
+  private readonly preloadedImages: Map<PlantPersonality, boolean> = new Map();
+  private readonly stats = {
     totalRequests: 0,
     cacheHits: 0,
     cacheMisses: 0,
@@ -160,7 +160,11 @@ export class AvatarImageFactory {
       logger.warn('⚠️ Avatar not found, returning default', { personality });
 
       // Fallback to succulente (always exists)
-      return this.avatarPool.get('succulente')!;
+      const fallback = this.avatarPool.get('succulente');
+      if (!fallback) {
+        throw new Error('Default avatar (succulente) not found in pool');
+      }
+      return fallback;
     }
 
     this.stats.cacheHits++;
@@ -196,15 +200,16 @@ export class AvatarImageFactory {
 
     const preloadPromises = personalities.map(async (personality) => {
       try {
-        const avatar = this.avatarPool.get(personality)!;
+        const avatar = this.avatarPool.get(personality);
+        if (!avatar) return;
         await Image.prefetch(this.resolveImageUri(avatar.source));
         this.preloadedImages.set(personality, true);
         this.stats.preloadedCount++;
 
         logger.debug(`✅ Preloaded ${personality} avatar`);
-      } catch (error: any) {
+      } catch (error: unknown) {
         this.stats.failedPreloads++;
-        logger.warn(`⚠️ Failed to preload ${personality} avatar`, error);
+        logger.warn(`⚠️ Failed to preload ${personality} avatar`, { error: String(error) });
       }
     });
 
@@ -226,7 +231,7 @@ export class AvatarImageFactory {
     }
     // Remote image or array
     const src = Array.isArray(source) ? source[0] : source;
-    return (src as any).uri || '';
+    return src.uri || '';
   }
 
   /**
@@ -243,7 +248,7 @@ export class AvatarImageFactory {
       totalRequests: this.stats.totalRequests,
       cacheHits: this.stats.cacheHits,
       cacheMisses: this.stats.cacheMisses,
-      hitRate: parseFloat(hitRate as string),
+      hitRate: Number.parseFloat(hitRate),
       poolSize: this.avatarPool.size,
       preloadedCount: this.stats.preloadedCount,
       failedPreloads: this.stats.failedPreloads

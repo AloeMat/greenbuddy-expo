@@ -6,7 +6,7 @@
 
 import { supabase } from './supabase';
 import { logger } from './logger';
-import { PlantPersonality, PlantAnalysis, ChatMessage, AvatarEmotion } from '@/types';
+import { PlantPersonality, PlantAnalysis, ChatMessage, AvatarEmotion, HealthDiagnosisResult } from '@/types';
 import { PERSONALITY_PROMPTS, CHAT_SYSTEM_INSTRUCTION_BASE } from '@/lib/constants/app';
 
 interface GeminiAnalysisRequest {
@@ -18,7 +18,7 @@ interface GeminiAnalysisRequest {
 
 interface GeminiResponse {
   success: boolean;
-  data?: any;
+  data?: Record<string, unknown>;
   error?: string;
 }
 
@@ -38,7 +38,7 @@ export interface IGeminiService {
     onChunk?: (chunk: string) => void
   ): Promise<string>;
   generateCareAdvice(analysis: Partial<PlantAnalysis>): Promise<string>;
-  diagnoseHealthIssue(analysis: Partial<PlantAnalysis>): Promise<any>;
+  diagnoseHealthIssue(analysis: Partial<PlantAnalysis>): Promise<HealthDiagnosisResult>;
 }
 
 class GeminiService implements IGeminiService {
@@ -286,7 +286,7 @@ class GeminiService implements IGeminiService {
   /**
    * Diagnose health issues from plant analysis
    */
-  async diagnoseHealthIssue(analysis: Partial<PlantAnalysis>): Promise<any> {
+  async diagnoseHealthIssue(analysis: Partial<PlantAnalysis>): Promise<HealthDiagnosisResult> {
     try {
       logger.info('🔍 Diagnosing plant health issue...');
 

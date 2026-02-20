@@ -40,7 +40,7 @@ export function useDailyNotification() {
 
     // Add listener for notification responses (when user taps notification)
     const unsubscribe = addNotificationResponseListener((response) => {
-      logger.debug('📲 Notification response:', response);
+      logger.debug('📲 Notification response:', { actionIdentifier: response.actionIdentifier });
       // User tapped notification - navigate to check-in
       if (response.notification.request.content.data?.type === 'daily_checkin') {
         logger.debug('🔥 User tapped daily check-in notification');

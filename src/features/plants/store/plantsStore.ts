@@ -41,7 +41,7 @@ export interface PlantsState {
 
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
 
-export const usePlantsStore = create<PlantsState>((set, get) => ({
+export const usePlantsStore = create<PlantsState>()((set, get) => ({
   // Initial state
   plants: [],
   loading: false,

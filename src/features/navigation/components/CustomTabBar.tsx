@@ -27,11 +27,9 @@ import {
 } from 'lucide-react-native';
 import { colors as COLORS } from '@/design-system/tokens/colors';
 
-interface TabBarProps {
-  state: any;
-  descriptors: any;
-  navigation: any;
-}
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+
+type TabBarProps = BottomTabBarProps;
 
 interface TabConfig {
   name: string;
@@ -124,7 +122,7 @@ export default function CustomTabBar({
     const event = navigation.emit({
       type: 'tabPress',
       target: routeName,
-      preventDefault: false,
+      canPreventDefault: true,
     });
 
     if (!event.defaultPrevented) {

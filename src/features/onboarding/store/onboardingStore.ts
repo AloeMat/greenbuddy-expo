@@ -1,12 +1,14 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { PlantPersonality } from '@/types';
 
 export interface IdentifiedPlant {
   commonName: string;
   scientificName: string;
   family: string;
   confidence: number;
+  description?: string; // Optional - from PlantNet result for display
 }
 
 export interface OnboardingState {
@@ -23,7 +25,7 @@ export interface OnboardingState {
   plantPhoto: string | null; // base64 or URI
   identifiedPlant: IdentifiedPlant | null;
   plantName: string;
-  plantPersonality: 'funny' | 'gentle' | 'expert' | null;
+  plantPersonality: PlantPersonality | 'funny' | 'gentle' | 'expert' | null;
 
   // XP tracking
   earnedXP: number;
@@ -35,7 +37,7 @@ export interface OnboardingState {
   setPainPoint: (point: 'oui_une' | 'plusieurs' | 'jamais') => void;
   setPlantData: (photo: string, identified: IdentifiedPlant) => void;
   setPlantName: (name: string) => void;
-  setPlantPersonality: (personality: 'funny' | 'gentle' | 'expert') => void;
+  setPlantPersonality: (personality: PlantPersonality | 'funny' | 'gentle' | 'expert') => void;
   addXP: (amount: number) => void;
   completeOnboarding: () => void;
   resetOnboarding: () => void;

@@ -8,6 +8,37 @@
 
 import { xpRewardService, RewardType } from '@/features/gamification/services/xpRewardService';
 import { logger } from '@/lib/services/logger';
+import type { Plant } from '@/features/plants/repositories/PlantRepository';
+
+/** Form data for creating/editing a plant */
+export interface PlantFormInput {
+  commonName: string;
+  scientificName?: string;
+  personality?: string;
+  nickname?: string;
+  healthScore?: number;
+  location?: string;
+  notes?: string;
+  wateringFrequency?: number;
+  lightRequirements?: string;
+  temperatureMin?: number;
+  temperatureMax?: number;
+}
+
+/** Database-ready plant object */
+export interface PlantDbRecord {
+  nom_commun: string;
+  nom_scientifique?: string;
+  personnalite?: string;
+  surnom?: string;
+  sante_score?: number;
+  localisation?: string;
+  notes?: string;
+  arrosage_frequence_jours?: number;
+  lumiere?: string;
+  temperature_min?: number;
+  temperature_max?: number;
+}
 
 export interface IGardenService {
   /**
@@ -26,14 +57,14 @@ export interface IGardenService {
    * @param filterBy - Filter type: 'all' | 'urgent' | 'health' | 'personality'
    * @returns Filtered plants array
    */
-  filterPlants(plants: any[], filterBy: 'all' | 'urgent' | 'health' | 'personality'): any[];
+  filterPlants(plants: Plant[], filterBy: 'all' | 'urgent' | 'health' | 'personality'): Plant[];
 
   /**
    * Map plant form data to database format
    * @param formData - Form submission data
    * @returns Database-ready plant object
    */
-  mapPlantFormToDb(formData: any): any;
+  mapPlantFormToDb(formData: PlantFormInput): PlantDbRecord;
 
   /**
    * Get emotion state based on health score
@@ -47,7 +78,7 @@ export interface IGardenService {
    * @param plants - Array of all plants
    * @returns Object with counts for each filter
    */
-  calculateFilterStats(plants: any[]): {
+  calculateFilterStats(plants: Plant[]): {
     all: number;
     urgent: number;
     unhealthy: number;
@@ -100,9 +131,9 @@ export class GardenServiceImpl implements IGardenService {
   /**
    * Filter plants based on criteria
    */
-  filterPlants(plants: any[], filterBy: 'all' | 'urgent' | 'health' | 'personality'): any[] {
+  filterPlants(plants: Plant[], filterBy: 'all' | 'urgent' | 'health' | 'personality'): Plant[] {
     switch (filterBy) {
-      case 'urgent':
+      case 'urgent': {
         // Plants needing water soon (next watering within 1 day)
         const now = Date.now();
         return plants.filter((p) => {
@@ -110,6 +141,7 @@ export class GardenServiceImpl implements IGardenService {
           const nextWaterTime = new Date(p.next_watering_at).getTime();
           return nextWaterTime - now <= 24 * 60 * 60 * 1000;
         });
+      }
 
       case 'health':
         // Unhealthy plants (health score < 50)
@@ -129,7 +161,7 @@ export class GardenServiceImpl implements IGardenService {
   /**
    * Map plant form data to database format
    */
-  mapPlantFormToDb(formData: any): any {
+  mapPlantFormToDb(formData: PlantFormInput): PlantDbRecord {
     return {
       nom_commun: formData.commonName,
       nom_scientifique: formData.scientificName,
@@ -161,7 +193,7 @@ export class GardenServiceImpl implements IGardenService {
   /**
    * Calculate filter tab statistics
    */
-  calculateFilterStats(plants: any[]): {
+  calculateFilterStats(plants: Plant[]): {
     all: number;
     urgent: number;
     unhealthy: number;

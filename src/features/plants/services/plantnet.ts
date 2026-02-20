@@ -24,12 +24,70 @@ export interface PlantIdentificationResult {
  */
 export interface IPlantNetService {
   identifyPlant(base64Image: string): Promise<PlantIdentificationResult>;
+  identifyPlantByName(plantName: string): Promise<PlantIdentificationResult>;
 }
 
 class PlantNetService implements IPlantNetService {
   private readonly PLANTNET_API = 'https://my-api.plantnet.org/v2/identify/all';
   private readonly FREE_QUOTA = 500;
   private readonly CACHE_KEY_PREFIX = 'plantnet_cache_';
+
+  /**
+   * Identify plant by name using Gemini (for manual "Je connais le nom" flow)
+   * Looks up plant information based on common or scientific name
+   */
+  async identifyPlantByName(plantName: string): Promise<PlantIdentificationResult> {
+    try {
+      logger.info('🌿 Identifying plant by name...', { plantName });
+
+      const { data, error } = await supabase.functions.invoke('gemini-proxy', {
+        body: {
+          prompt: `Find information about a plant with this name: "${plantName}".
+          Return accurate plant data in JSON format with EXACTLY these fields:
+          {
+            "commonName": "common name in English",
+            "scientificName": "Scientific name (Genus species)",
+            "genus": "Genus",
+            "family": "Plant family",
+            "confidence": 85,
+            "description": "Brief description of this plant"
+          }
+          Make sure the JSON is valid and parseable.`,
+          type: 'text_analysis'
+        }
+      });
+
+      if (error || !data) {
+        logger.warn('⚠️ Plant name lookup failed:', error);
+        return this.createResultFromName(plantName);
+      }
+
+      try {
+        const result = typeof data === 'string' ? JSON.parse(data) : data;
+
+        return {
+          commonName: result.commonName || plantName,
+          scientificName: result.scientificName || 'Unknown sp.',
+          genus: result.genus || 'Unknown',
+          family: result.family || 'Unknown',
+          confidence: result.confidence || 75,
+          description: result.description || `A plant species: ${plantName}`,
+          source: 'gemini'
+        };
+      } catch (parseError) {
+        logger.warn('⚠️ Failed to parse Gemini response, using plant name as fallback');
+        return this.createResultFromName(plantName);
+      }
+
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.error('❌ Plant name identification failed', { message: error.message });
+      } else {
+        logger.error('❌ Plant name identification failed', { error: String(error) });
+      }
+      return this.createResultFromName(plantName);
+    }
+  }
 
   /**
    * Identify plant from image using PlantNet API
@@ -227,6 +285,22 @@ class PlantNetService implements IPlantNetService {
       logger.warn('⚠️ Failed to cache result:', { message: err.message });
       // Non-critical, continue anyway
     }
+  }
+
+  /**
+   * Create a result from plant name when identification fails
+   * Used as fallback for identifyPlantByName
+   */
+  private createResultFromName(plantName: string): PlantIdentificationResult {
+    return {
+      commonName: plantName,
+      scientificName: `${plantName} sp.`,
+      genus: plantName.split(/\s+/)[0], // Use first word as genus guess
+      family: 'Unknown',
+      confidence: 50,
+      description: `Plant: ${plantName}. Please provide more details for accurate identification.`,
+      source: 'cache'
+    };
   }
 
   /**

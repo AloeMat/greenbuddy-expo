@@ -11,18 +11,19 @@ import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore'
 import { executeActions } from '@/features/onboarding/utils/actionExecutor';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import * as Haptics from 'expo-haptics';
+import { logger } from '@/lib/services/logger';
 
 interface InputsRendererProps {
   page: InputsPage;
   onNavigate: (nextPageId: string) => void;
 }
 
-export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
+export function InputsRenderer({ page, onNavigate }: Readonly<InputsRendererProps>) {
   const store = useOnboardingStore();
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleInputChange = (name: string, value: any) => {
+  const handleInputChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
@@ -30,7 +31,7 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     page.inputs.forEach(input => {
-      if (input.required && (!formData[input.name] || formData[input.name].toString().trim() === '')) {
+      if (input.required && (!formData[input.name] || String(formData[input.name]).trim() === '')) {
         newErrors[input.name] = 'Ce champ est requis';
       }
     });
@@ -40,7 +41,7 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       return;
     }
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -48,7 +49,7 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
       executeActions(page.on_complete, { inputs: formData, store });
       onNavigate(page.next);
     } catch (error) {
-      console.error('[InputsRenderer] Error:', error);
+      logger.error('[InputsRenderer] Error:', error);
       Alert.alert('Erreur', 'Une erreur est survenue. Veuillez réessayer.');
     }
   };
@@ -65,7 +66,7 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
             <Subtitle>{page.text}</Subtitle>
           </Animated.View>
         )}
-        <Animated.View entering={FadeInDown.delay(300).springify()} style={{ gap: spacing.lg, marginTop: spacing.lg }}>
+        <View style={{ gap: spacing.lg, marginTop: spacing.lg }}>
           {page.inputs.map((input, index) => (
             input.type === 'text' ? (
               <Animated.View
@@ -86,7 +87,7 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
                 key={input.name}
                 entering={FadeInDown.delay(300 + index * 100).springify()}
               >
-                <Subtitle style={{ fontSize: 14, marginBottom: spacing.md }}>{input.placeholder || input.name}</Subtitle>
+                <Subtitle style={{ fontSize: 14, fontWeight: '600', marginBottom: spacing.md }}>{input.placeholder || input.name}</Subtitle>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}>
                   {input.options && input.options.length > 0 ? (
                     input.options.map(opt => (
@@ -97,14 +98,14 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
                         onPress={() => handleInputChange(input.name, opt)}
                         style={{
                           paddingHorizontal: spacing.md,
-                          paddingVertical: spacing.sm,
-                          borderRadius: radius.sm,
+                          paddingVertical: spacing.md,
+                          borderRadius: radius.md,
                           borderWidth: 2,
                           borderColor: formData[input.name] === opt ? onboardingColors.green[500] : onboardingColors.gray[200],
                           backgroundColor: formData[input.name] === opt ? onboardingColors.green[50] : 'white',
                         }}
                       >
-                        <Subtitle style={{ fontSize: 14 }}>{opt}</Subtitle>
+                        <Subtitle style={{ fontSize: 14, fontWeight: '600' }}>{opt}</Subtitle>
                       </TouchableOpacity>
                     ))
                   ) : (
@@ -116,10 +117,10 @@ export function InputsRenderer({ page, onNavigate }: InputsRendererProps) {
               </Animated.View>
             )
           ))}
-        </Animated.View>
+        </View>
       </ScrollView>
       <OnboardingFooter>
-        <Animated.View entering={FadeInDown.delay(400).springify()} pointerEvents="auto" style={{ width: '100%' }}>
+        <Animated.View entering={FadeInDown.delay(400).springify()} pointerEvents="auto" style={{ width: '100%', gap: spacing.md }}>
           <PrimaryButton testID={`button-${page.cta_primary.action}`} onPress={handleSubmit}>
             {page.cta_primary.children}
           </PrimaryButton>
