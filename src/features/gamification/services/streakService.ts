@@ -6,6 +6,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
 import { logger } from '@/lib/services/logger';
+import { STORAGE_KEYS } from '@/lib/constants/storageKeys';
 
 export const STREAK_MILESTONES = {
   STREAK_7: { days: 7, xp: 50, achievementId: 'streak_7' },
@@ -141,9 +142,9 @@ async function getStreakData(): Promise<StreakState> {
   const store = useGamificationStore.getState();
 
   try {
-    const lastCheckInDate = await AsyncStorage.getItem('lastCheckInDate');
-    const checkInHistoryStr = await AsyncStorage.getItem('checkInHistory');
-    const unlockedMilestonesStr = await AsyncStorage.getItem('unlockedMilestones');
+    const lastCheckInDate = await AsyncStorage.getItem(STORAGE_KEYS.LAST_CHECK_IN_DATE);
+    const checkInHistoryStr = await AsyncStorage.getItem(STORAGE_KEYS.CHECK_IN_HISTORY);
+    const unlockedMilestonesStr = await AsyncStorage.getItem(STORAGE_KEYS.UNLOCKED_MILESTONES);
 
     return {
       currentStreak: store.currentStreak || 0,
@@ -169,9 +170,9 @@ async function getStreakData(): Promise<StreakState> {
  */
 async function saveStreakData(data: StreakState): Promise<void> {
   try {
-    await AsyncStorage.setItem('lastCheckInDate', data.lastCheckInDate || '');
-    await AsyncStorage.setItem('checkInHistory', JSON.stringify(data.checkInHistory));
-    await AsyncStorage.setItem('unlockedMilestones', JSON.stringify(data.unlockedMilestones));
+    await AsyncStorage.setItem(STORAGE_KEYS.LAST_CHECK_IN_DATE, data.lastCheckInDate || '');
+    await AsyncStorage.setItem(STORAGE_KEYS.CHECK_IN_HISTORY, JSON.stringify(data.checkInHistory));
+    await AsyncStorage.setItem(STORAGE_KEYS.UNLOCKED_MILESTONES, JSON.stringify(data.unlockedMilestones));
   } catch (error) {
     logger.error('Error saving streak data to AsyncStorage:', error);
   }

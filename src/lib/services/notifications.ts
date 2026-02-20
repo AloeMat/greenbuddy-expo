@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logger } from './logger';
+import { STORAGE_KEYS } from '@/lib/constants/storageKeys';
 
 /**
  * expo-notifications types - using standard SDK types
@@ -184,7 +185,7 @@ export const notificationService = {
   async _saveNotificationMap() {
     try {
       const data = Object.fromEntries(plantNotificationMap);
-      await AsyncStorage.setItem('plantNotificationMap', JSON.stringify(data));
+      await AsyncStorage.setItem(STORAGE_KEYS.PLANT_NOTIFICATION_MAP, JSON.stringify(data));
     } catch (error) {
       logger.error('Error saving notification map', error);
     }
@@ -195,7 +196,7 @@ export const notificationService = {
    */
   async _restoreNotificationMap() {
     try {
-      const data = await AsyncStorage.getItem('plantNotificationMap');
+      const data = await AsyncStorage.getItem(STORAGE_KEYS.PLANT_NOTIFICATION_MAP);
       if (data) {
         const parsed = JSON.parse(data) as Record<string, string[]>;
         plantNotificationMap.clear();

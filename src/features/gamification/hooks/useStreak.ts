@@ -13,6 +13,7 @@ import {
 } from '@/features/gamification/services/streakService';
 import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
 import { logger } from '@/lib/services/logger';
+import { STORAGE_KEYS } from '@/lib/constants/storageKeys';
 
 interface StreakHookData {
   currentStreak: number;
@@ -60,7 +61,7 @@ export function useStreak(): StreakHookData & {
   // Check if check-in is available today
   const checkCheckInStatus = async () => {
     try {
-      const lastCheckIn = await AsyncStorage.getItem('lastCheckInDate');
+      const lastCheckIn = await AsyncStorage.getItem(STORAGE_KEYS.LAST_CHECK_IN_DATE);
       const today = new Date().toISOString().split('T')[0];
       setIsCheckInAvailable(!lastCheckIn || lastCheckIn !== today);
     } catch (error) {
@@ -80,8 +81,8 @@ export function useStreak(): StreakHookData & {
   // Reset streak (for testing or special cases)
   const resetStreak = async () => {
     try {
-      await AsyncStorage.removeItem('lastCheckInDate');
-      await AsyncStorage.setItem('unlockedMilestones', '[]');
+      await AsyncStorage.removeItem(STORAGE_KEYS.LAST_CHECK_IN_DATE);
+      await AsyncStorage.setItem(STORAGE_KEYS.UNLOCKED_MILESTONES, '[]');
       store.resetStreak?.();
       await updateMilestoneInfo();
       await checkCheckInStatus();

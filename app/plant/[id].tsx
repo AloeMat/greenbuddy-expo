@@ -97,6 +97,7 @@ export default function PlantDetailScreen() {
         logger.info('✅ Plant watered', { id: plant.id, xpAwarded: xpAmount });
       }
     } catch (err) {
+      logger.error('[PlantDetail] Water failed:', err);
       Alert.alert('❌ Erreur', 'Impossible d\'arroser la plante');
     } finally {
       setActingLoading(false);
@@ -133,6 +134,7 @@ export default function PlantDetailScreen() {
         logger.info('✅ Plant fertilized', { id: plant.id, xpAwarded: xpAmount });
       }
     } catch (err) {
+      logger.error('[PlantDetail] Fertilize failed:', err);
       Alert.alert('❌ Erreur', 'Impossible de fertiliser la plante');
     } finally {
       setActingLoading(false);
@@ -155,6 +157,7 @@ export default function PlantDetailScreen() {
         router.back();
       }
     } catch (err) {
+      logger.error('[PlantDetail] Delete failed:', err);
       Alert.alert('❌ Erreur', 'Impossible de supprimer la plante');
     } finally {
       setActingLoading(false);
@@ -186,6 +189,7 @@ export default function PlantDetailScreen() {
         Alert.alert('✅ Succès', 'Plante mise à jour');
       }
     } catch (err) {
+      logger.error('[PlantDetail] Edit failed:', err);
       Alert.alert('❌ Erreur', 'Impossible de mettre à jour la plante');
     } finally {
       setActingLoading(false);
@@ -415,7 +419,7 @@ interface ActionButtonProps {
   label: string;
   onPress: () => void;
   loading?: boolean;
-  style?: any;
+  style?: import('react-native').ViewStyle;
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({ icon, label, onPress, loading, style }) => (

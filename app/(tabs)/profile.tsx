@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { useAuthStore } from '@/features/auth/store/authStore';
 import { logger } from '@/lib/services/logger';
+import { STORAGE_KEYS } from '@/lib/constants/storageKeys';
 import { useRouter } from 'expo-router';
 import { Trophy, LogOut, Bell, Globe } from 'lucide-react-native';
 import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
@@ -51,7 +52,7 @@ export default function ProfileScreen() {
   useEffect(() => {
     const loadLocationPreference = async () => {
       try {
-        const saved = await AsyncStorage.getItem('locationEnabled');
+        const saved = await AsyncStorage.getItem(STORAGE_KEYS.LOCATION_ENABLED);
         if (saved !== null) {
           setLocationEnabled(saved === 'true');
         }
@@ -131,7 +132,7 @@ export default function ProfileScreen() {
         return;
       }
       setLocationEnabled(true);
-      await AsyncStorage.setItem('locationEnabled', 'true');
+      await AsyncStorage.setItem(STORAGE_KEYS.LOCATION_ENABLED, 'true');
       Alert.alert('✅ Localisation activée', 'Vous recevrez des conseils météo basés sur votre position');
     } catch (error) {
       logger.error('[Profile] Location access failed:', error);
@@ -143,7 +144,7 @@ export default function ProfileScreen() {
 
   const disableLocation = async () => {
     setLocationEnabled(false);
-    await AsyncStorage.setItem('locationEnabled', 'false');
+    await AsyncStorage.setItem(STORAGE_KEYS.LOCATION_ENABLED, 'false');
     Alert.alert('✅ Localisation désactivée', 'Vous ne recevrez plus de conseils météo');
   };
 

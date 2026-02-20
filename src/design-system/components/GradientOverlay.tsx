@@ -16,7 +16,6 @@ interface GradientOverlayProps {
 }
 
 // Load LinearGradient only on native platforms (Expo official package)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let LinearGradient: React.ComponentType<Record<string, unknown>> | null = null;
 if (Platform.OS !== 'web') {
   try {
@@ -46,7 +45,7 @@ export const GradientOverlay: React.FC<GradientOverlayProps> = ({
         style={[
           style,
           {
-            // @ts-ignore - web-only CSS property
+            // @ts-expect-error - web-only CSS property not in RN types
             background: gradient,
             position: 'absolute'
           }
