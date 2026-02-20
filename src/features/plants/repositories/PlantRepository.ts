@@ -6,6 +6,64 @@
 
 import { supabase } from '@/lib/services/supabase';
 import { logger } from '@/lib/services/logger';
+import { z } from 'zod';
+
+/**
+ * Zod schema for runtime validation of Plant records from Supabase.
+ * Ensures data integrity even if the DB shape drifts from the TS type.
+ */
+const PlantRecordSchema = z.object({
+  id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  nom_commun: z.string(),
+  nom_scientifique: z.string().nullish(),
+  famille: z.string().nullish(),
+  personnalite: z.string(),
+  surnom: z.string().nullish(),
+  sante_score: z.number(),
+  current_xp: z.number(),
+  level: z.number(),
+  localisation: z.string().nullish(),
+  notes: z.string().nullish(),
+  arrosage_frequence_jours: z.number(),
+  lumiere: z.string().nullish(),
+  temperature_min: z.number().nullish(),
+  temperature_max: z.number().nullish(),
+  humidite: z.string().nullish(),
+  engrais_frequence_jours: z.number().nullish(),
+  last_watered_at: z.string().nullish(),
+  next_watering_at: z.string().nullish(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+
+/** Parse a single Supabase row into a validated Plant, or null on failure */
+function parsePlant(raw: unknown): Plant | null {
+  const result = PlantRecordSchema.safeParse(raw);
+  if (!result.success) {
+    logger.warn('[PlantRepository] Invalid plant record from DB', {
+      errors: result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', '),
+    });
+    return null;
+  }
+  // Convert nullish optional fields to match Plant interface (null → undefined)
+  const d = result.data;
+  return {
+    ...d,
+    nom_scientifique: d.nom_scientifique ?? undefined,
+    famille: d.famille ?? undefined,
+    surnom: d.surnom ?? undefined,
+    localisation: d.localisation ?? undefined,
+    notes: d.notes ?? undefined,
+    lumiere: d.lumiere ?? undefined,
+    temperature_min: d.temperature_min ?? undefined,
+    temperature_max: d.temperature_max ?? undefined,
+    humidite: d.humidite ?? undefined,
+    engrais_frequence_jours: d.engrais_frequence_jours ?? undefined,
+    last_watered_at: d.last_watered_at ?? undefined,
+    next_watering_at: d.next_watering_at ?? undefined,
+  };
+}
 
 export interface Plant {
   id: string;
@@ -83,7 +141,7 @@ export class SupabasePlantRepository implements IPlantRepository {
         throw error;
       }
 
-      return data as Plant;
+      return parsePlant(data);
     } catch (err) {
       logger.error('Failed to get plant:', err);
       throw err;
@@ -162,7 +220,7 @@ export class SupabasePlantRepository implements IPlantRepository {
       if (error) throw error;
 
       logger.info('✅ Plant added', { name: insertedPlant.nom_commun });
-      return insertedPlant as Plant;
+      return parsePlant(insertedPlant);
     } catch (err) {
       logger.error('❌ Add plant failed:', err);
       throw err;
@@ -181,7 +239,7 @@ export class SupabasePlantRepository implements IPlantRepository {
       if (error) throw error;
 
       logger.info('✅ Plant updated', { id });
-      return updatedPlant as Plant;
+      return parsePlant(updatedPlant);
     } catch (err) {
       logger.error('❌ Update plant failed:', err);
       throw err;

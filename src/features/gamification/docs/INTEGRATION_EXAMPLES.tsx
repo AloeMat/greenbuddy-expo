@@ -11,6 +11,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { logger } from '@/lib/services/logger';
 
 import {
   VocalInteraction,
@@ -75,12 +76,12 @@ export function PlantDetailScreenExample({ plantId }: { plantId: string }) {
 
   const handleMicroAction = (action: MicroActionType) => {
     setActiveMicroAction(action);
-    console.log('[PlantDetail] Micro-action:', action);
+    logger.debug('[PlantDetail] Micro-action:', { action });
     // Trigger actual animations here
   };
 
   const handlePhaseChange = (newPhase: AttachmentPhase) => {
-    console.log('[PlantDetail] Phase changed to:', newPhase);
+    logger.debug('[PlantDetail] Phase changed to:', { phase: newPhase });
     // Show celebration, unlock achievements, etc.
   };
 

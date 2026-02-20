@@ -6,6 +6,7 @@
 
 import { supabase } from './supabase';
 import { logger } from './logger';
+import { rateLimiter } from './rateLimiter';
 import { PlantPersonality, PlantAnalysis, AvatarEmotion, HealthDiagnosisResult } from '@/types';
 import { PERSONALITY_PROMPTS, CHAT_SYSTEM_INSTRUCTION_BASE } from '@/lib/constants/app';
 
@@ -50,6 +51,9 @@ class GeminiService implements IGeminiService {
    */
   async analyzeImage(imageBase64: string): Promise<Partial<PlantAnalysis>> {
     try {
+      if (!rateLimiter.tryAcquire('gemini-scan')) {
+        throw new Error('Rate limit exceeded — please wait before scanning again.');
+      }
       logger.info('🤖 Analyzing plant image with Gemini...');
 
       const { data, error } = await supabase.functions.invoke('gemini-proxy', {
@@ -198,6 +202,9 @@ class GeminiService implements IGeminiService {
     onChunk?: (chunk: string) => void
   ): Promise<string> {
     try {
+      if (!rateLimiter.tryAcquire('gemini-chat')) {
+        throw new Error('Rate limit exceeded — please wait before sending another message.');
+      }
       logger.info('💬 Chatting with plant...', {
         plant: plantAnalysis.commonName,
         message: message.substring(0, 50)

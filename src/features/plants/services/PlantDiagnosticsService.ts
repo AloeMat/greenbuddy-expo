@@ -13,6 +13,7 @@
 
 import { logger } from '@/lib/services/logger';
 import { supabase } from '@/lib/services/supabase';
+import { rateLimiter } from '@/lib/services/rateLimiter';
 import * as FileSystem from 'expo-file-system';
 
 export interface PlantDiagnosis {
@@ -63,6 +64,11 @@ export const PlantDiagnosticsService = {
         plantName,
         scientificName,
       });
+
+      if (!rateLimiter.tryAcquire('gemini-diagnosis')) {
+        logger.warn('[PlantDiagnosticsService] Rate limited');
+        return this.getDefaultDiagnosis();
+      }
 
       // Convert image to base64
       const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
