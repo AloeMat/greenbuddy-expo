@@ -26,6 +26,7 @@ export function useAuthHook(): Omit<AuthState, 'initializeAuth' | 'clearAuth'> {
     logout,
     refreshToken,
     getAccessToken,
+    getValidAccessToken,
   } = useAuthStore();
 
   return {
@@ -44,6 +45,7 @@ export function useAuthHook(): Omit<AuthState, 'initializeAuth' | 'clearAuth'> {
     logout,
     refreshToken,
     getAccessToken,
+    getValidAccessToken,
   };
 }
 

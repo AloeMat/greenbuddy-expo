@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { COLORS } from '@/design-system/tokens/colors';
+import { typography } from '@/design-system/tokens/typography';
 
 interface LoadingProps {
   message?: string;
@@ -24,7 +25,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   text: {
-    fontSize: 14,
+    fontSize: typography.body.md.fontSize,
+    lineHeight: typography.body.md.lineHeight,
     color: '#666666',
     marginTop: 12,
   },

@@ -11,6 +11,26 @@ import { logger } from '@/lib/services/logger';
 
 const authRepository = createAuthRepository();
 
+/**
+ * Decode JWT payload without external library.
+ * Returns null if token is invalid.
+ */
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    // base64url → base64 → decode
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const json = atob(base64);
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
+/** Buffer in seconds before actual expiry to trigger refresh */
+const TOKEN_EXPIRY_BUFFER_S = 60;
+
 export const useAuthStore = create<AuthState>()((set, get) => ({
   // Initial state
   user: null,
@@ -155,10 +175,46 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   /**
-   * Obtenir le token d'accès
+   * Obtenir le token d'accès (sans vérification d'expiration)
    */
   getAccessToken: () => {
     return get().accessToken;
+  },
+
+  /**
+   * Obtenir un token d'accès valide (S6 — vérifie l'expiration JWT)
+   * Auto-refresh si le token expire dans les 60 secondes
+   */
+  getValidAccessToken: async () => {
+    const token = get().accessToken;
+    if (!token) return null;
+
+    const payload = decodeJwtPayload(token);
+    if (!payload || typeof payload.exp !== 'number') {
+      // Token malformé — tenter un refresh
+      logger.warn('[authStore] Token malformé, tentative de refresh');
+      try {
+        await get().refreshToken();
+        return get().accessToken;
+      } catch {
+        return null;
+      }
+    }
+
+    const nowSec = Math.floor(Date.now() / 1000);
+    if (payload.exp - nowSec < TOKEN_EXPIRY_BUFFER_S) {
+      // Token expiré ou sur le point d'expirer — refresh
+      logger.debug('[authStore] Token expiring soon, refreshing...');
+      try {
+        await get().refreshToken();
+        return get().accessToken;
+      } catch {
+        logger.error('[authStore] Token refresh failed');
+        return null;
+      }
+    }
+
+    return token;
   },
 
   /**

@@ -36,6 +36,7 @@ export interface AuthState {
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
   getAccessToken: () => string | null | undefined;
+  getValidAccessToken: () => Promise<string | null | undefined>;
   initializeAuth?: () => Promise<void>;
   clearAuth?: () => void;
 
