@@ -31,6 +31,14 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 type TabBarProps = BottomTabBarProps;
 
+// Magic number constants
+const TAB_BAR_HEIGHT = 60;
+const TAB_BUTTON_MAX_WIDTH = 60;
+const FAB_SIZE = 64;
+const FAB_BORDER_RADIUS = 32;
+const BADGE_SIZE = 18;
+const BADGE_OFFSET = -4;
+
 interface TabConfig {
   name: string;
   label: string;
@@ -192,6 +200,9 @@ export default function CustomTabBar({
     onPress: () => void;
   }) => (
     <TouchableOpacity
+      accessibilityLabel={config.label}
+      accessibilityRole="tab"
+      testID={`tab-${config.name}`}
       onPress={onPress}
       style={[
         styles.tabButton,
@@ -210,6 +221,9 @@ export default function CustomTabBar({
   const FABButton = () => (
     <View style={styles.fabContainer}>
       <TouchableOpacity
+        accessibilityLabel="Scanner une plante"
+        accessibilityRole="button"
+        testID="tab-scan-fab"
         onPress={() => handleTabPress('scan', true)}
         style={styles.fab}
         activeOpacity={0.8}
@@ -280,7 +294,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    height: 60,
+    height: TAB_BAR_HEIGHT,
     position: 'relative',
   },
   tabsLeftGroup: {
@@ -299,7 +313,7 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     flex: 1,
-    maxWidth: 60,
+    maxWidth: TAB_BUTTON_MAX_WIDTH,
     paddingVertical: 8,
     paddingHorizontal: 12,
     alignItems: 'center',
@@ -325,9 +339,9 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   fab: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: FAB_SIZE,
+    height: FAB_SIZE,
+    borderRadius: FAB_BORDER_RADIUS,
     backgroundColor: COLORS.primary[600],
     alignItems: 'center',
     justifyContent: 'center',
@@ -339,11 +353,11 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: 'absolute',
-    top: -4,
-    right: -4,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    top: BADGE_OFFSET,
+    right: BADGE_OFFSET,
+    width: BADGE_SIZE,
+    height: BADGE_SIZE,
+    borderRadius: BADGE_SIZE / 2,
     backgroundColor: COLORS.semantic.danger,
     alignItems: 'center',
     justifyContent: 'center',

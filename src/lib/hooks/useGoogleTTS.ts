@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { googleTTSService } from '@/lib/services/googleTTS';
+import { googleTTSService } from '@/features/plants/services';
 import { logger } from '@/lib/services/logger';
 
 export interface UseGoogleTTSOptions {

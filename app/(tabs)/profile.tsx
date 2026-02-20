@@ -9,7 +9,7 @@ import {
   Switch,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import { useAuthStore } from '@/features/auth/store/authStore';
@@ -21,13 +21,15 @@ import { useGamificationStore } from '@/features/gamification/store/gamification
 import { usePlants } from '@/features/plants/hooks/usePlants';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { useDailyNotification } from '@/features/gamification/hooks/useDailyNotification';
+import { COLORS } from '@/design-system/tokens/colors';
 import { radius } from '@/design-system/tokens/radius';
+import { typography } from '@/design-system/tokens/typography';
 
 /** Returns the color for a health percentage bar */
 function getHealthColor(percentage: number): string {
-  if (percentage >= 80) return '#10B981';
-  if (percentage >= 50) return '#F59E0B';
-  return '#EF4444';
+  if (percentage >= 80) return COLORS.semantic.success;
+  if (percentage >= 50) return COLORS.accent['500'];
+  return COLORS.error['500'];
 }
 
 /**
@@ -35,6 +37,7 @@ function getHealthColor(percentage: number): string {
  * Displays user profile, stats, achievements, and settings
  */
 export default function ProfileScreen() {
+  const insets = useSafeAreaInsets();
   const { user, logout } = useAuthStore();
   const router = useRouter();
   const { totalXp, unlockedAchievements } = useGamificationStore();
@@ -149,8 +152,8 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <ScrollView style={{ paddingBottom: 80 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.neutral['50'] }}>
+      <ScrollView style={{ paddingBottom: insets.bottom + 70 }} testID="profile-scroll">
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Profil 👤</Text>
@@ -166,7 +169,7 @@ export default function ProfileScreen() {
         <View style={styles.levelSection}>
           <View style={styles.levelBadge}>
             <Text style={styles.levelNumber}>{currentLevel}</Text>
-            <Trophy size={28} color="#8B5CF6" style={{ marginTop: 6 }} />
+            <Trophy size={28} color={COLORS.secondary['500']} style={{ marginTop: 6 }} />
           </View>
           <View style={styles.levelInfo}>
             <Text style={styles.levelLabel}>Niveau Actuel</Text>
@@ -237,20 +240,23 @@ export default function ProfileScreen() {
           {/* Notifications */}
           <View style={styles.settingItem}>
             <View style={styles.settingContent}>
-              <Bell size={20} color="#F59E0B" />
+              <Bell size={20} color={COLORS.accent['500']} />
               <View style={styles.settingTextContainer}>
                 <Text style={styles.settingLabel}>Notifications</Text>
                 <Text style={styles.settingDescription}>{"Rappels d'arrosage"}</Text>
               </View>
             </View>
             {notificationsLoading ? (
-              <ActivityIndicator size="small" color="#10B981" />
+              <ActivityIndicator size="small" color={COLORS.semantic.success} />
             ) : (
               <Switch
+                accessibilityLabel="Activer les notifications"
+                accessibilityRole="switch"
+                testID="profile-notifications-switch"
                 value={notificationsEnabled}
                 onValueChange={handleNotificationsToggle}
-                trackColor={{ false: '#D1D5DB', true: '#10B98150' }}
-                thumbColor={notificationsEnabled ? '#10B981' : '#f4f3f4'}
+                trackColor={{ false: COLORS.neutral['300'], true: `${COLORS.semantic.success}50` }}
+                thumbColor={notificationsEnabled ? COLORS.semantic.success : COLORS.neutral['100']}
                 disabled={notificationsLoading}
               />
             )}
@@ -259,20 +265,23 @@ export default function ProfileScreen() {
           {/* Location */}
           <View style={styles.settingItem}>
             <View style={styles.settingContent}>
-              <Globe size={20} color="#0891B2" />
+              <Globe size={20} color={COLORS.secondary['600']} />
               <View style={styles.settingTextContainer}>
                 <Text style={styles.settingLabel}>Localisation</Text>
                 <Text style={styles.settingDescription}>Pour les conseils météo</Text>
               </View>
             </View>
             {locationLoading ? (
-              <ActivityIndicator size="small" color="#0891B2" />
+              <ActivityIndicator size="small" color={COLORS.secondary['600']} />
             ) : (
               <Switch
+                accessibilityLabel="Activer la localisation"
+                accessibilityRole="switch"
+                testID="profile-location-switch"
                 value={locationEnabled}
                 onValueChange={(value) => { void (value ? enableLocation() : disableLocation()); }}
-                trackColor={{ false: '#D1D5DB', true: '#0891B250' }}
-                thumbColor={locationEnabled ? '#0891B2' : '#f4f3f4'}
+                trackColor={{ false: COLORS.neutral['300'], true: `${COLORS.secondary['600']}50` }}
+                thumbColor={locationEnabled ? COLORS.secondary['600'] : COLORS.neutral['100']}
                 disabled={locationLoading}
               />
             )}
@@ -289,6 +298,9 @@ export default function ProfileScreen() {
 
         {/* Achievements Button */}
         <TouchableOpacity
+          accessibilityLabel="Voir les achievements"
+          accessibilityRole="button"
+          testID="profile-achievements-button"
           style={styles.achievementsButton}
           onPress={() => router.push('/achievements')}
         >
@@ -297,10 +309,13 @@ export default function ProfileScreen() {
 
         {/* Logout Button */}
         <TouchableOpacity
+          accessibilityLabel="Se déconnecter"
+          accessibilityRole="button"
+          testID="profile-logout-button"
           style={styles.logoutButton}
           onPress={handleLogout}
         >
-          <LogOut size={20} color="#fff" />
+          <LogOut size={20} color={COLORS.neutral['50']} />
           <Text style={styles.logoutButtonText}>Déconnexion</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -315,38 +330,36 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#000',
+    ...typography.heading.h2,
+    color: COLORS.text['900'],
   },
   emailCard: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#F0F9FF',
+    backgroundColor: COLORS.blue['50'],
     borderRadius: radius.md,
     borderLeftWidth: 4,
-    borderLeftColor: '#0891B2',
+    borderLeftColor: COLORS.secondary['600'],
   },
   emailLabel: {
-    fontSize: 12,
-    color: '#666',
+    ...typography.body.sm,
+    color: COLORS.text['500'],
     fontWeight: '600',
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   emailValue: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    ...typography.subtitle.md,
+    color: COLORS.text['900'],
   },
   levelSection: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#F3E8FF',
+    backgroundColor: COLORS.secondary['50'],
     borderRadius: radius.md,
     flexDirection: 'row',
     alignItems: 'center',
@@ -355,58 +368,56 @@ const styles = StyleSheet.create({
   levelBadge: {
     width: 70,
     height: 70,
-    borderRadius: 35,
-    backgroundColor: '#fff',
+    borderRadius: radius.full,
+    backgroundColor: COLORS.neutral['50'],
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#8B5CF6',
+    borderColor: COLORS.secondary['500'],
   },
   levelNumber: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#8B5CF6',
+    ...typography.heading.h1,
+    color: COLORS.secondary['500'],
   },
   levelInfo: {
     flex: 1,
   },
   levelLabel: {
-    fontSize: 11,
-    color: '#666',
+    ...typography.body.xs,
+    color: COLORS.text['500'],
     fontWeight: '600',
     textTransform: 'uppercase',
     marginBottom: 3,
   },
   levelDescription: {
-    fontSize: 14,
+    ...typography.label.lg,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.text['900'],
   },
   xpSection: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#FCD34D',
+    borderColor: COLORS.accent['300'],
   },
   xpProgressBar: {
     height: 8,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: COLORS.neutral['200'],
     borderRadius: radius.xs,
     overflow: 'hidden',
     marginBottom: 8,
   },
   xpProgressFill: {
     height: '100%',
-    backgroundColor: '#F59E0B',
+    backgroundColor: COLORS.accent['500'],
   },
   xpText: {
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '500',
+    ...typography.label.md,
+    color: COLORS.text['500'],
   },
   statsGrid: {
     flexDirection: 'row',
@@ -418,38 +429,36 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     minWidth: '47%',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     padding: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#f0f0f0',
+    borderColor: COLORS.neutral['100'],
   },
   statValue: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#000',
+    ...typography.heading.h4,
+    color: COLORS.text['900'],
     marginBottom: 2,
   },
   statLabel: {
-    fontSize: 11,
-    color: '#666',
-    fontWeight: '500',
+    ...typography.label.sm,
+    color: COLORS.text['500'],
   },
   gardenHealthSection: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: COLORS.blue['100'],
   },
   sectionTitle: {
-    fontSize: 16,
+    ...typography.subtitle.md,
     fontWeight: '700',
-    color: '#000',
+    color: COLORS.text['900'],
     marginBottom: 12,
   },
   healthContainer: {
@@ -457,7 +466,7 @@ const styles = StyleSheet.create({
   },
   healthBar: {
     height: 8,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: COLORS.neutral['200'],
     borderRadius: radius.xs,
     overflow: 'hidden',
   },
@@ -465,19 +474,19 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   healthText: {
-    fontSize: 13,
-    color: '#666',
+    ...typography.body.md,
     fontWeight: '500',
+    color: COLORS.text['500'],
   },
   settingsSection: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.neutral['200'],
   },
   settingItem: {
     flexDirection: 'row',
@@ -485,7 +494,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: COLORS.neutral['100'],
     gap: 12,
   },
   settingContent: {
@@ -498,24 +507,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   settingLabel: {
-    fontSize: 14,
+    ...typography.subtitle.sm,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.text['900'],
     marginBottom: 2,
   },
   settingLabelText: {
-    fontSize: 14,
+    ...typography.subtitle.sm,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.text['900'],
   },
   settingDescription: {
-    fontSize: 12,
-    color: '#999',
+    ...typography.body.sm,
+    color: COLORS.text['400'],
   },
   settingValue: {
-    fontSize: 13,
+    ...typography.body.md,
     fontWeight: '500',
-    color: '#666',
+    color: COLORS.text['500'],
   },
   achievementsButton: {
     marginHorizontal: 12,
@@ -523,23 +532,23 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: COLORS.accent['100'],
     borderRadius: radius.md,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#FCD34D',
+    borderColor: COLORS.accent['300'],
   },
   achievementsButtonText: {
-    fontSize: 14,
+    ...typography.label.lg,
     fontWeight: '600',
-    color: '#92400E',
+    color: COLORS.accent['800'],
   },
   logoutButton: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#DC2626',
+    backgroundColor: COLORS.error['600'],
     borderRadius: radius.md,
     flexDirection: 'row',
     alignItems: 'center',
@@ -547,8 +556,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   logoutButtonText: {
-    fontSize: 14,
+    ...typography.label.lg,
     fontWeight: '600',
-    color: '#fff',
+    color: COLORS.neutral['50'],
   },
 });

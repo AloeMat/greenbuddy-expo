@@ -11,15 +11,16 @@ import type {
 } from '@appTypes';
 
 const plant: Plant = {
-  id: '1',
-  userId: 'user1',
-  commonName: 'Monstera',
-  healthScore: 100,
-  healthStatus: 'excellent',
-  wateringFrequency: 7,
-  xp: 0,
+  id: '00000000-0000-0000-0000-000000000001',
+  user_id: 'user1',
+  nom_commun: 'Monstera',
+  personnalite: 'monstera',
+  sante_score: 100,
+  current_xp: 0,
   level: 1,
-  createdAt: Date.now(),
+  arrosage_frequence_jours: 7,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 };
 
 const user: AuthUser = {

@@ -7,7 +7,7 @@ export { createMockGeminiService, mockGeminiService } from './gemini.mock';
 export type { IGeminiService } from '@/lib/services/gemini';
 
 export { createMockGoogleTTSService, mockGoogleTTSService } from './googleTTS.mock';
-export type { IGoogleTTSService } from '@/lib/services/googleTTS';
+export type { IGoogleTTSService } from '@/features/plants/services';
 
 export { createMockCameraService, mockCameraService } from './camera.mock';
 export type { ICameraService } from '@/features/plants/services/camera';

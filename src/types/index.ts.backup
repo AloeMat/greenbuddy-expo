@@ -1,0 +1,210 @@
+/**
+ * GreenBuddy Types — Barrel Exports
+ * Ré-exports types depuis les features localisées
+ * 
+ * MIGRATION IN PROGRESS:
+ * - Phase 1 (Types): Déplacer types vers features/*/types/
+ * - Import pattern: import type { Plant } from '@/features/plants/types' ✅ PREFERRED
+ * - Legacy pattern: import type { Plant } from '@/types' (maintained for compatibility)
+ * 
+ * Status: Migrating from centralized to feature-localized types
+ */
+
+// ============================================
+// 🔐 AUTH TYPES (from features/auth/types/)
+
+export type { AuthUser, AuthState, AuthToken, TokenPayload } from '@/features/auth/types';
+
+// ============================================
+// 🌱 PLANT TYPES (from features/plants/types/)
+
+export type {
+  Plant,
+  CreatePlantDto,
+  UpdatePlantDto,
+  PlantAnalysis,
+  Dialogue,
+  CareRequirements,
+  PlantPersonality,
+  PlantHealthStatus,
+  CareStats,
+  HealthRecord,
+  TimeCapsule,
+  HolisticData,
+  PlantUI,
+  PlantsState,
+  ChatMessage,
+  AvatarEmotion,
+  HealthDiagnosisResult,
+} from '@/features/plants/types';
+
+export type {
+  GamificationState,
+  Achievement,
+  AchievementCategory,
+  LifeTreeTier,
+  RewardType,
+  XpReward,
+} from '@/features/gamification/types';
+  | 'COLLECTION_10'
+  | 'COLLECTION_25'
+  | 'CUSTOM';
+
+export interface XpReward {
+  amount: number;
+  source?: RewardType;
+  type?: RewardType;  // Alias for source
+  description?: string;
+  achievementId?: string;
+  timestamp?: string;
+}
+
+// ============================================
+// 🌍 WEATHER & ENVIRONMENT TYPES
+
+export interface WeatherData {
+  temp: number;
+  humidity: number;
+  outdoorHumidity: number;
+  indoorHumidity: number;
+  aqi: number;
+  outdoorAqi: number;
+  indoorAqi: number;
+  cloudCover: number;
+  condition: 'clear' | 'cloudy' | 'rain' | 'snow' | 'storm' | 'fog';
+  description: string;
+  isDay: boolean;
+  moon: MoonData;
+  locationName: string;
+}
+
+export interface MoonData {
+  phase: 'new' | 'waxing_crescent' | 'first_quarter' | 'waxing_gibbous' | 'full' | 'waning_gibbous' | 'last_quarter' | 'waning_crescent';
+  label: string;
+  illumination: number;
+  advice: string;
+}
+
+export type Season = 'printemps' | 'ete' | 'automne' | 'hiver';
+
+// ============================================
+// 🎨 UI & APP STATE TYPES
+
+export type AppState = 'ONBOARDING' | 'GARDEN' | 'DASHBOARD' | 'CHAT' | 'SCAN' | 'ANALYZING' | 'NAMING' | 'CELEBRATION' | 'PROFILE' | 'MAP';
+
+export type Theme = 'light' | 'dark' | 'auto';
+export type Language = 'fr' | 'en';
+
+export interface Toast {
+  id: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+  message: string;
+  duration?: number;
+}
+
+// ============================================
+// 📊 STORE SLICES
+
+/**
+ * @deprecated Legacy UI PlantsState — the real store uses plantsStore.ts
+ * Kept for type compatibility only.
+ */
+export interface PlantsState {
+  plants: Plant[];
+  selectedPlant: Plant | null;
+  loading: boolean;
+  error: string | null;
+
+  // Actions
+  fetchPlants: () => Promise<void>;
+  selectPlant: (plantId: string | null) => void;
+  addPlant: (plant: Plant) => void;
+  updatePlant: (plant: Plant) => void;
+  removePlant: (plantId: string) => void;
+  waterPlant: (plantId: string) => Promise<void>;
+}
+
+export interface UserState {
+  user: AuthUser | null;
+  preferences: UserPreferences;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface UserPreferences {
+  language: 'fr' | 'en';
+  voiceEnabled: boolean;
+  gamificationEnabled: boolean;
+  theme: 'light' | 'dark' | 'auto';
+  notificationsEnabled: boolean;
+  wateringReminders: boolean;
+}
+
+// ============================================
+// 📡 API TYPES
+
+export interface CreatePlantRequest {
+  name: string;
+  species: string;
+  scientificName?: string;
+  personality?: PlantPersonality;
+  wateringFrequency: number;
+  imageUrl?: string;
+}
+
+export interface UpdatePlantRequest {
+  name?: string;
+  healthScore?: number;
+  wateringFrequency?: number;
+  lastWatered?: string;
+  notes?: string;
+}
+
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+// ============================================
+// 👤 HUMAN DESIGN TYPES
+
+export interface HumanDesignProfile {
+  type: HumanDesignType;
+  strategy: string;
+  authority: string;
+  profile: string;
+  theme: string;
+}
+
+export type HumanDesignType = 'Manifestor' | 'ManifestedGenerator' | 'Generator' | 'Generator Reflector' | 'Reflector';
+
+export interface PersonalizationSettings {
+  avatarType: PlantPersonality;
+  notificationStyle: 'formal' | 'casual' | 'poetic' | 'scientific';
+  interactionLevel: 'minimal' | 'balanced' | 'intensive';
+  humanDesignType?: HumanDesignType;
+}
+
+// ============================================
+// 🔧 UTILITY TYPES
+
+export type Nullable<T> = T | null;
+export type Optional<T> = T | undefined;
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+
+export type PlantListItem = Plant;
+
+/** @deprecated Use PlantUI if you need the legacy camelCase shape */
+export type PlantListItemUI = PlantUI;
+
+/** Result from Gemini health diagnosis */
+export interface HealthDiagnosisResult {
+  issue: string;
+  treatment: string;
+  urgency: 'low' | 'medium' | 'high';
+  analysis?: Partial<PlantAnalysis>;
+}

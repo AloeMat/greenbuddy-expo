@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useCallback } from 'react';
-import { notificationService } from '@/lib/services/notifications';
+import { notificationService } from '@/features/plants/services';
 import { logger } from '@/lib/services/logger';
 import { Plant } from './usePlants';
 

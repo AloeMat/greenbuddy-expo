@@ -1,4 +1,6 @@
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
+import { typography } from '@/design-system/tokens/typography';
 /**
  * Plant Form Component
  * Add or edit plant details
@@ -550,52 +552,51 @@ const SliderInput: React.FC<SliderInputProps> = ({ value, onChange, disabled }) 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF'
+    backgroundColor: COLORS.neutral['50']
   },
   previewSection: {
     alignItems: 'center',
     paddingVertical: 24,
-    backgroundColor: '#F9FAFB'
+    backgroundColor: COLORS.neutral['50']
   },
   section: {
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB'
+    borderBottomColor: COLORS.neutral['200']
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#111',
+    ...typography.subtitle.md,
+    color: COLORS.text['900'],
     marginBottom: 12
   },
   field: {
     marginBottom: 12
   },
   fieldLabel: {
-    fontSize: 13,
+    ...typography.body.md,
     fontWeight: '600',
-    color: '#666',
+    color: COLORS.text['500'],
     marginBottom: 6
   },
   input: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: COLORS.neutral['50'],
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: COLORS.text['300'],
     borderRadius: radius.sm,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: 14,
-    color: '#111'
+    ...typography.body.md,
+    color: COLORS.text['900']
   },
   textArea: {
     minHeight: 100,
     textAlignVertical: 'top'
   },
   pickerButton: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: COLORS.neutral['50'],
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: COLORS.text['300'],
     borderRadius: radius.sm,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -604,13 +605,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   pickerButtonText: {
-    fontSize: 14,
-    color: '#111',
-    fontWeight: '500'
+    ...typography.label.lg,
+    color: COLORS.text['900']
   },
   pickerArrow: {
     fontSize: 10,
-    color: '#999'
+    color: COLORS.text['400']
   },
   temperatureRow: {
     flexDirection: 'row',
@@ -623,33 +623,33 @@ const styles = StyleSheet.create({
   },
   sliderButton: {
     fontSize: 20,
-    color: '#10B981',
+    color: COLORS.semantic.success,
     fontWeight: 'bold',
     paddingHorizontal: 8
   },
   sliderBar: {
     flex: 1,
     height: 8,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 4,
+    backgroundColor: COLORS.neutral['200'],
+    borderRadius: radius.xs,
     overflow: 'hidden'
   },
   sliderFill: {
     height: '100%',
-    backgroundColor: '#10B981',
-    borderRadius: 4
+    backgroundColor: COLORS.semantic.success,
+    borderRadius: radius.xs
   },
   sliderValue: {
-    fontSize: 12,
-    color: '#10B981',
+    ...typography.body.sm,
+    color: COLORS.semantic.success,
     fontWeight: 'bold',
     marginTop: 4,
     textAlign: 'right'
   },
   dateButton: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: COLORS.neutral['50'],
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: COLORS.text['300'],
     borderRadius: radius.sm,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -658,9 +658,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   dateButtonText: {
-    fontSize: 14,
-    color: '#111',
-    fontWeight: '500'
+    ...typography.label.lg,
+    color: COLORS.text['900']
   },
   dateIcon: {
     fontSize: 16
@@ -677,22 +676,20 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttonPrimary: {
-    backgroundColor: '#10B981'
+    backgroundColor: COLORS.semantic.success
   },
   buttonSecondary: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: COLORS.neutral['100'],
     borderWidth: 1,
-    borderColor: '#D1D5DB'
+    borderColor: COLORS.text['300']
   },
   buttonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFF'
+    ...typography.label.lg,
+    color: COLORS.neutral['50']
   },
   buttonTextSecondary: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#111'
+    ...typography.label.lg,
+    color: COLORS.text['900']
   },
   modalOverlay: {
     flex: 1,
@@ -700,21 +697,20 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   modalContent: {
-    backgroundColor: '#FFF',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    backgroundColor: COLORS.neutral['50'],
+    borderTopLeftRadius: radius.md,
+    borderTopRightRadius: radius.md,
     paddingBottom: 20,
     maxHeight: '80%'
   },
   modalTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#111',
+    ...typography.subtitle.md,
+    color: COLORS.text['900'],
     paddingHorizontal: 16,
     paddingVertical: 12,
     textAlign: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB'
+    borderBottomColor: COLORS.neutral['200']
   },
   modalList: {
     paddingHorizontal: 16,
@@ -727,12 +723,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginBottom: 8,
     borderRadius: radius.sm,
-    backgroundColor: '#F9FAFB'
+    backgroundColor: COLORS.neutral['50']
   },
   modalItemSelected: {
-    backgroundColor: '#F0FDF4',
+    backgroundColor: COLORS.primary['50'],
     borderWidth: 2,
-    borderColor: '#10B981'
+    borderColor: COLORS.semantic.success
   },
   modalItemAvatar: {
     marginRight: 12,
@@ -740,22 +736,20 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   modalItemText: {
-    fontSize: 14,
-    color: '#111',
-    fontWeight: '500',
+    ...typography.label.lg,
+    color: COLORS.text['900'],
     flex: 1
   },
   modalCloseButton: {
     marginHorizontal: 16,
     marginTop: 12,
-    backgroundColor: '#10B981',
+    backgroundColor: COLORS.semantic.success,
     paddingVertical: 12,
     borderRadius: radius.sm,
     alignItems: 'center'
   },
   modalCloseText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFF'
+    ...typography.label.lg,
+    color: COLORS.neutral['50']
   }
 });

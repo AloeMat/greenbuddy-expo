@@ -137,6 +137,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       isAuthenticated: false,
     });
 
+    // Cancel all scheduled notifications before clearing stores
+    try {
+      const { notificationService } = await import('@/lib/services/notifications');
+      await notificationService.cancelAllNotifications();
+      logger.debug('✅ All notifications cancelled');
+    } catch (notifError) {
+      logger.error('⚠️ Logout: failed to cancel notifications:', notifError);
+    }
+
     // Clear all other stores to prevent data leaking between sessions
     try {
       // Lazy imports to avoid circular dependencies

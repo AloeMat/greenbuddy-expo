@@ -23,6 +23,10 @@ import { PlantAvatar } from '@/features/plants/components/PlantAvatar';
 import { xpRewardService, RewardType as RewardTypeEnum } from '@/features/gamification/services/xpRewardService';
 import { PlantForm } from '@/features/plants/components/PlantForm';
 import { TypingIndicator } from '@/design-system/animations/TypingIndicator';
+import { COLORS } from '@/design-system/tokens/colors';
+import { radius } from '@/design-system/tokens/radius';
+import { typography } from '@/design-system/tokens/typography';
+import { spacing } from '@/design-system/tokens/spacing';
 import { logger } from '@/lib/services/logger';
 import { geminiService } from '@/lib/services/gemini';
 import { PlantActionHaptics, triggerHaptic } from '@/lib/services/hapticsFeedback';
@@ -200,7 +204,7 @@ export default function PlantDetailScreen() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#10B981" />
+          <ActivityIndicator size="large" color={COLORS.brand} />
         </View>
       </SafeAreaView>
     );
@@ -221,11 +225,21 @@ export default function PlantDetailScreen() {
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Header with back button */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity
+            accessibilityLabel="Retour"
+            accessibilityRole="button"
+            testID="plant-back-button"
+            onPress={() => router.back()}
+          >
             <Text style={styles.backButton}>← Retour</Text>
           </TouchableOpacity>
           <View style={{ flex: 1 }} />
-          <TouchableOpacity onPress={() => setShowEditModal(true)}>
+          <TouchableOpacity
+            accessibilityLabel="Modifier la plante"
+            accessibilityRole="button"
+            testID="plant-edit-button"
+            onPress={() => setShowEditModal(true)}
+          >
             <Text style={styles.editButton}>✏️ Éditer</Text>
           </TouchableOpacity>
         </View>
@@ -253,12 +267,12 @@ export default function PlantDetailScreen() {
         <View style={styles.healthSection}>
           <View style={styles.healthLabel}>
             <Text style={styles.healthText}>Santé</Text>
-            <Text style={[styles.healthScore, { color: plant.sante_score >= 80 ? '#10B981' : plant.sante_score >= 60 ? '#F59E0B' : '#DC2626' }]}>
+            <Text style={[styles.healthScore, { color: plant.sante_score >= 80 ? COLORS.semantic.success : plant.sante_score >= 60 ? COLORS.accent['500'] : COLORS.error['600'] }]}>
               {plant.sante_score}%
             </Text>
           </View>
           <View style={styles.healthBar}>
-            <View style={[styles.healthBarFill, { width: `${plant.sante_score}%`, backgroundColor: plant.sante_score >= 80 ? '#10B981' : plant.sante_score >= 60 ? '#F59E0B' : '#DC2626' }]} />
+            <View style={[styles.healthBarFill, { width: `${plant.sante_score}%`, backgroundColor: plant.sante_score >= 80 ? COLORS.semantic.success : plant.sante_score >= 60 ? COLORS.accent['500'] : COLORS.error['600'] }]} />
           </View>
         </View>
 
@@ -316,6 +330,8 @@ export default function PlantDetailScreen() {
             onPress={handleWater}
             loading={actionInProgress === 'water' && actingLoading}
             style={styles.actionButtonWater}
+            testID="plant-water-button"
+            accessibilityLabel="Arroser la plante"
           />
           <ActionButton
             icon="🌿"
@@ -323,12 +339,16 @@ export default function PlantDetailScreen() {
             onPress={handleFertilize}
             loading={actionInProgress === 'fertilize' && actingLoading}
             style={styles.actionButtonFertilize}
+            testID="plant-fertilize-button"
+            accessibilityLabel="Fertiliser la plante"
           />
           <ActionButton
             icon="🗑️"
             label="Supprimer"
             onPress={() => setShowDeleteConfirm(true)}
             style={styles.actionButtonDelete}
+            testID="plant-delete-button"
+            accessibilityLabel="Supprimer la plante"
           />
         </View>
 
@@ -340,6 +360,9 @@ export default function PlantDetailScreen() {
               <Text style={styles.deleteMessage}>Cette action est irréversible</Text>
               <View style={styles.deleteButtons}>
                 <TouchableOpacity
+                  accessibilityLabel="Confirmer la suppression"
+                  accessibilityRole="button"
+                  testID="plant-confirm-delete-button"
                   style={styles.deleteConfirmButton}
                   onPress={handleDelete}
                   disabled={actingLoading}
@@ -347,6 +370,9 @@ export default function PlantDetailScreen() {
                   <Text style={styles.deleteConfirmText}>Supprimer</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                  accessibilityLabel="Annuler"
+                  accessibilityRole="button"
+                  testID="plant-cancel-delete-button"
                   style={styles.deleteCancelButton}
                   onPress={() => setShowDeleteConfirm(false)}
                 >
@@ -361,7 +387,12 @@ export default function PlantDetailScreen() {
         <Modal visible={showEditModal} animationType="slide" onRequestClose={() => setShowEditModal(false)}>
           <SafeAreaView style={styles.modalContainer}>
             <View style={styles.editModalHeader}>
-              <TouchableOpacity onPress={() => setShowEditModal(false)}>
+              <TouchableOpacity
+                accessibilityLabel="Fermer"
+                accessibilityRole="button"
+                testID="plant-edit-modal-close-button"
+                onPress={() => setShowEditModal(false)}
+              >
                 <Text style={styles.editModalCloseButton}>❌</Text>
               </TouchableOpacity>
               <Text style={styles.editModalTitle}>Éditer la Plante</Text>
@@ -420,12 +451,21 @@ interface ActionButtonProps {
   onPress: () => void;
   loading?: boolean;
   style?: import('react-native').ViewStyle;
+  testID?: string;
+  accessibilityLabel?: string;
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({ icon, label, onPress, loading, style }) => (
-  <TouchableOpacity style={[styles.actionButton, style]} onPress={onPress} disabled={loading}>
+const ActionButton: React.FC<ActionButtonProps> = ({ icon, label, onPress, loading, style, testID, accessibilityLabel }) => (
+  <TouchableOpacity
+    style={[styles.actionButton, style]}
+    onPress={onPress}
+    disabled={loading}
+    testID={testID}
+    accessibilityLabel={accessibilityLabel}
+    accessibilityRole="button"
+  >
     {loading ? (
-      <ActivityIndicator size="small" color="#FFF" />
+      <ActivityIndicator size="small" color={COLORS.neutral['50']} />
     ) : (
       <>
         <Text style={styles.actionButtonIcon}>{icon}</Text>
@@ -436,53 +476,53 @@ const ActionButton: React.FC<ActionButtonProps> = ({ icon, label, onPress, loadi
 );
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#FFF' },
-  container: { flex: 1, backgroundColor: '#FFF' },
+  safeArea: { flex: 1, backgroundColor: COLORS.neutral['50'] },
+  container: { flex: 1, backgroundColor: COLORS.neutral['50'] },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   errorContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  errorText: { fontSize: 16, color: '#DC2626' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
-  backButton: { fontSize: 14, color: '#10B981', fontWeight: '600' },
-  editButton: { fontSize: 14, color: '#10B981', fontWeight: '600' },
-  avatarSection: { alignItems: 'center', paddingVertical: 24 },
-  infoSection: { alignItems: 'center', paddingHorizontal: 16, marginBottom: 20 },
-  commonName: { fontSize: 24, fontWeight: 'bold', color: '#111', marginBottom: 4 },
-  nickname: { fontSize: 14, color: '#666', fontStyle: 'italic', marginBottom: 4 },
-  scientificName: { fontSize: 13, color: '#999' },
-  family: { fontSize: 12, color: '#CCC', marginTop: 2 },
-  healthSection: { paddingHorizontal: 16, marginBottom: 20 },
-  healthLabel: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  healthText: { fontSize: 13, fontWeight: '600', color: '#666' },
-  healthScore: { fontSize: 14, fontWeight: 'bold' },
-  healthBar: { height: 8, backgroundColor: '#E5E7EB', borderRadius: 4, overflow: 'hidden' },
-  healthBarFill: { height: '100%', borderRadius: 4 },
-  detailsSection: { paddingHorizontal: 16, marginBottom: 20, backgroundColor: '#F9FAFB', borderRadius: 8, padding: 12 },
-  detailItem: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 12 },
-  detailIcon: { fontSize: 18, marginRight: 12, width: 24 },
+  errorText: { ...typography.body.lg, color: COLORS.error['600'] },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.lg, paddingVertical: spacing.md, borderBottomWidth: 1, borderBottomColor: COLORS.neutral['200'] },
+  backButton: { ...typography.subtitle.sm, color: COLORS.semantic.success },
+  editButton: { ...typography.subtitle.sm, color: COLORS.semantic.success },
+  avatarSection: { alignItems: 'center', paddingVertical: spacing['2xl'] },
+  infoSection: { alignItems: 'center', paddingHorizontal: spacing.lg, marginBottom: spacing.xl },
+  commonName: { ...typography.heading.h3, color: COLORS.text['900'], marginBottom: spacing.xs },
+  nickname: { ...typography.body.md, color: COLORS.text['500'], fontStyle: 'italic', marginBottom: spacing.xs },
+  scientificName: { ...typography.body.md, color: COLORS.text['400'] },
+  family: { ...typography.body.sm, color: COLORS.text['500'], marginTop: 2 },
+  healthSection: { paddingHorizontal: spacing.lg, marginBottom: spacing.xl },
+  healthLabel: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing.sm },
+  healthText: { ...typography.label.md, fontWeight: typography.weights.semiBold, color: COLORS.text['500'] },
+  healthScore: { ...typography.label.lg, fontWeight: typography.weights.bold },
+  healthBar: { height: 8, backgroundColor: COLORS.neutral['200'], borderRadius: radius.xs, overflow: 'hidden' },
+  healthBarFill: { height: '100%', borderRadius: radius.xs },
+  detailsSection: { paddingHorizontal: spacing.lg, marginBottom: spacing.xl, backgroundColor: COLORS.neutral['50'], borderRadius: radius.xs, padding: spacing.md },
+  detailItem: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: spacing.md },
+  detailIcon: { fontSize: 18, marginRight: spacing.md, width: 24 },
   detailContent: { flex: 1 },
-  detailLabel: { fontSize: 12, color: '#888', fontWeight: '500', marginBottom: 2 },
-  detailValue: { fontSize: 14, color: '#111', fontWeight: '500' },
-  careSection: { paddingHorizontal: 16, marginBottom: 20 },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#111', marginBottom: 12 },
-  wateringSection: { paddingHorizontal: 16, marginBottom: 20 },
-  actionsSection: { flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 20, gap: 8 },
-  actionButton: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: 8, gap: 4 },
-  actionButtonWater: { backgroundColor: '#3B82F6' },
-  actionButtonFertilize: { backgroundColor: '#10B981' },
-  actionButtonDelete: { backgroundColor: '#DC2626' },
+  detailLabel: { ...typography.label.md, color: COLORS.text['400'], marginBottom: 2 },
+  detailValue: { ...typography.label.lg, color: COLORS.text['900'] },
+  careSection: { paddingHorizontal: spacing.lg, marginBottom: spacing.xl },
+  sectionTitle: { ...typography.subtitle.md, fontWeight: typography.weights.bold, color: COLORS.text['900'], marginBottom: spacing.md },
+  wateringSection: { paddingHorizontal: spacing.lg, marginBottom: spacing.xl },
+  actionsSection: { flexDirection: 'row', paddingHorizontal: spacing.lg, paddingVertical: spacing.xl, gap: spacing.sm },
+  actionButton: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: spacing.md, borderRadius: radius.xs, gap: spacing.xs },
+  actionButtonWater: { backgroundColor: COLORS.blue['500'] },
+  actionButtonFertilize: { backgroundColor: COLORS.semantic.success },
+  actionButtonDelete: { backgroundColor: COLORS.error['600'] },
   actionButtonIcon: { fontSize: 16 },
-  actionButtonLabel: { fontSize: 13, fontWeight: '600', color: '#FFF' },
+  actionButtonLabel: { ...typography.label.md, fontWeight: typography.weights.semiBold, color: COLORS.neutral['50'] },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' },
-  deleteModal: { backgroundColor: '#FFF', borderRadius: 12, padding: 20, width: '80%', alignItems: 'center' },
-  deleteTitle: { fontSize: 16, fontWeight: 'bold', color: '#DC2626', marginBottom: 8, textAlign: 'center' },
-  deleteMessage: { fontSize: 13, color: '#666', marginBottom: 20, textAlign: 'center' },
-  deleteButtons: { flexDirection: 'row', gap: 12, width: '100%' },
-  deleteConfirmButton: { flex: 1, backgroundColor: '#DC2626', paddingVertical: 10, borderRadius: 6, alignItems: 'center' },
-  deleteConfirmText: { color: '#FFF', fontWeight: '600' },
-  deleteCancelButton: { flex: 1, backgroundColor: '#E5E7EB', paddingVertical: 10, borderRadius: 6, alignItems: 'center' },
-  deleteCancelText: { color: '#111', fontWeight: '600' },
-  modalContainer: { flex: 1, backgroundColor: '#FFF' },
-  editModalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
-  editModalTitle: { fontSize: 18, fontWeight: 'bold', color: '#111' },
-  editModalCloseButton: { fontSize: 16, paddingHorizontal: 8 }
+  deleteModal: { backgroundColor: COLORS.neutral['50'], borderRadius: radius.sm, padding: spacing.xl, width: '80%', alignItems: 'center' },
+  deleteTitle: { ...typography.subtitle.md, fontWeight: typography.weights.bold, color: COLORS.error['600'], marginBottom: spacing.sm, textAlign: 'center' },
+  deleteMessage: { ...typography.body.md, color: COLORS.text['500'], marginBottom: spacing.xl, textAlign: 'center' },
+  deleteButtons: { flexDirection: 'row', gap: spacing.md, width: '100%' },
+  deleteConfirmButton: { flex: 1, backgroundColor: COLORS.error['600'], paddingVertical: 10, borderRadius: radius.xs, alignItems: 'center' },
+  deleteConfirmText: { color: COLORS.neutral['50'], fontWeight: typography.weights.semiBold },
+  deleteCancelButton: { flex: 1, backgroundColor: COLORS.neutral['200'], paddingVertical: 10, borderRadius: radius.xs, alignItems: 'center' },
+  deleteCancelText: { color: COLORS.text['900'], fontWeight: typography.weights.semiBold },
+  modalContainer: { flex: 1, backgroundColor: COLORS.neutral['50'] },
+  editModalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: spacing.lg, paddingVertical: spacing.md, borderBottomWidth: 1, borderBottomColor: COLORS.neutral['200'] },
+  editModalTitle: { ...typography.subtitle.lg, fontWeight: typography.weights.bold, color: COLORS.text['900'] },
+  editModalCloseButton: { ...typography.body.lg, paddingHorizontal: spacing.sm }
 });

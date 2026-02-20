@@ -1,4 +1,6 @@
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
+import { typography } from '@/design-system/tokens/typography';
 /**
  * Plant Card Component
  * Displays plant summary with avatar, name, health status
@@ -47,10 +49,10 @@ const PlantCardComponent: React.FC<PlantCardProps> = ({
 }) => {
   // Determine health color
   const getHealthColor = (score: number) => {
-    if (score >= 80) return { color: '#10B981', label: 'Excellent' };
-    if (score >= 60) return { color: '#F59E0B', label: 'Bon' };
-    if (score >= 40) return { color: '#EF4444', label: 'Moyen' };
-    return { color: '#DC2626', label: 'Faible' };
+    if (score >= 80) return { color: COLORS.semantic.success, label: 'Excellent' };
+    if (score >= 60) return { color: COLORS.accent['500'], label: 'Bon' };
+    if (score >= 40) return { color: COLORS.error['500'], label: 'Moyen' };
+    return { color: COLORS.error['600'], label: 'Faible' };
   };
 
   const healthInfo = getHealthColor(healthScore);
@@ -181,9 +183,9 @@ const WateringInfo: React.FC<WateringInfoProps> = ({ label, date, value }) => {
     const today = new Date();
     const daysUntil = Math.ceil((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (daysUntil < 0) return { color: '#DC2626', label: 'URGENT' };
-    if (daysUntil === 0) return { color: '#F59E0B', label: 'AUJOURD\'HUI' };
-    if (daysUntil <= 2) return { color: '#EF4444', label: `DANS ${daysUntil}J` };
+    if (daysUntil < 0) return { color: COLORS.error['600'], label: 'URGENT' };
+    if (daysUntil === 0) return { color: COLORS.accent['500'], label: 'AUJOURD\'HUI' };
+    if (daysUntil <= 2) return { color: COLORS.error['500'], label: `DANS ${daysUntil}J` };
     return null;
   };
 
@@ -219,12 +221,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: radius.sm,
     overflow: 'hidden',
-    shadowColor: '#000',
+    shadowColor: COLORS.text['900'],
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 3,
-    backgroundColor: '#FFF'
+    backgroundColor: COLORS.neutral['50']
   },
   gradient: {
     padding: 12
@@ -244,22 +246,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   commonName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#111',
+    ...typography.subtitle.md,
+    color: COLORS.text['900'],
     marginBottom: 4
   },
   levelBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#F0FDF4',
+    backgroundColor: COLORS.primary['50'],
     paddingHorizontal: 8,
     paddingVertical: 2,
-    borderRadius: 4
+    borderRadius: radius.xs
   },
   levelText: {
-    fontSize: 12,
+    ...typography.body.sm,
     fontWeight: '600',
-    color: '#10B981'
+    color: COLORS.semantic.success
   },
   healthSection: {
     marginBottom: 12
@@ -271,17 +272,17 @@ const styles = StyleSheet.create({
     marginBottom: 4
   },
   healthLabelText: {
-    fontSize: 12,
+    ...typography.body.sm,
     fontWeight: '600',
-    color: '#666'
+    color: COLORS.text['500']
   },
   healthValue: {
-    fontSize: 13,
+    ...typography.body.md,
     fontWeight: 'bold'
   },
   healthBar: {
     height: 6,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: COLORS.neutral['200'],
     borderRadius: 3,
     overflow: 'hidden'
   },
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
   },
   wateringSection: {
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: COLORS.neutral['200'],
     paddingTop: 8
   },
   wateringInfo: {
@@ -310,22 +311,22 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   wateringLabelText: {
-    fontSize: 12,
-    color: '#666',
+    ...typography.body.sm,
+    color: COLORS.text['500'],
     fontWeight: '500'
   },
   wateringValue: {
-    fontSize: 13,
-    color: '#111',
+    ...typography.body.md,
+    color: COLORS.text['900'],
     fontWeight: '600'
   },
   urgencyBadge: {
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 4
+    borderRadius: radius.xs
   },
   urgencyText: {
-    fontSize: 11,
+    ...typography.body.xs,
     fontWeight: '700',
     textTransform: 'uppercase'
   },
@@ -337,6 +338,6 @@ const styles = StyleSheet.create({
   },
   actionArrow: {
     fontSize: 20,
-    color: '#10B981'
+    color: COLORS.semantic.success
   }
 });

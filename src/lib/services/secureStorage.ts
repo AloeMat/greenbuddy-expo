@@ -1,11 +1,25 @@
 /**
  * Secure Storage Adapter for Supabase Auth
  *
- * Uses expo-secure-store on native (encrypted keychain/keystore)
- * and falls back to a no-op on web (Supabase uses its own web storage).
+ * STORAGE SECURITY POLICY:
+ * ┌──────────────────────┬──────────────┬───────────────────────────────┐
+ * │ Data Type            │ Storage      │ Reason                        │
+ * ├──────────────────────┼──────────────┼───────────────────────────────┤
+ * │ Auth tokens (JWT)    │ SecureStore  │ Encrypted keychain/keystore   │
+ * │ Refresh tokens       │ SecureStore  │ Must not be readable at rest  │
+ * │ Plants/garden data   │ AsyncStorage │ Non-sensitive, needs >2KB     │
+ * │ Gamification (XP)    │ AsyncStorage │ Non-sensitive game state      │
+ * │ Onboarding progress  │ AsyncStorage │ Non-sensitive UI state        │
+ * │ Notification map     │ AsyncStorage │ Non-sensitive scheduling data │
+ * └──────────────────────┴──────────────┴───────────────────────────────┘
  *
- * This prevents auth tokens from being readable on rooted/jailbroken devices,
- * unlike AsyncStorage which stores data in plain text.
+ * Platform behavior:
+ * - iOS/Android: SecureStore uses encrypted Keychain/Keystore (hardware-backed)
+ * - Web (PWA): Falls back to Supabase default (localStorage). Not encrypted,
+ *   but acceptable for web context where XSS is the primary threat vector.
+ *
+ * Note: SecureStore has a 2048-byte limit per value. JWTs exceeding this
+ * are automatically chunked (see CHUNK_SIZE below).
  */
 
 import { Platform } from 'react-native';

@@ -23,6 +23,7 @@ import { COLORS } from '@/design-system/tokens/colors';
  * 5. Always show a loader to prevent black screen
  */
 export default function IndexScreen() {
+  console.log('🎯 IndexScreen mounted');
   const router = useRouter();
   const rootNavigationState = useRootNavigationState();
   const { isAuthenticated: authStoreAuth, isLoading: authLoading } = useAuthStore();

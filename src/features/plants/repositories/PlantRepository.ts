@@ -120,8 +120,9 @@ export class SupabasePlantRepository implements IPlantRepository {
       logger.info('✅ Plants fetched', { count: data?.length || 0 });
       return data || [];
     } catch (err) {
-      logger.error('❌ Fetch plants failed:', err);
-      throw err;
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error('❌ Fetch plants failed:', error);
+      throw error;
     }
   }
 
@@ -143,8 +144,9 @@ export class SupabasePlantRepository implements IPlantRepository {
 
       return parsePlant(data);
     } catch (err) {
-      logger.error('Failed to get plant:', err);
-      throw err;
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error('Failed to get plant:', error);
+      throw error;
     }
   }
 
@@ -164,8 +166,9 @@ export class SupabasePlantRepository implements IPlantRepository {
 
       return data || [];
     } catch (err) {
-      logger.error('Failed to get upcoming waterings:', err);
-      throw err;
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error('Failed to get upcoming waterings:', error);
+      throw error;
     }
   }
 
@@ -182,8 +185,9 @@ export class SupabasePlantRepository implements IPlantRepository {
 
       return data || [];
     } catch (err) {
-      logger.error('Failed to get urgent plants:', err);
-      throw err;
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error('Failed to get urgent plants:', error);
+      throw error;
     }
   }
 
@@ -222,8 +226,9 @@ export class SupabasePlantRepository implements IPlantRepository {
       logger.info('✅ Plant added', { name: insertedPlant.nom_commun });
       return parsePlant(insertedPlant);
     } catch (err) {
-      logger.error('❌ Add plant failed:', err);
-      throw err;
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error('❌ Add plant failed:', error);
+      throw error;
     }
   }
 
@@ -241,8 +246,9 @@ export class SupabasePlantRepository implements IPlantRepository {
       logger.info('✅ Plant updated', { id });
       return parsePlant(updatedPlant);
     } catch (err) {
-      logger.error('❌ Update plant failed:', err);
-      throw err;
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error('❌ Update plant failed:', error);
+      throw error;
     }
   }
 
@@ -258,8 +264,9 @@ export class SupabasePlantRepository implements IPlantRepository {
       logger.info('✅ Plant deleted', { id });
       return true;
     } catch (err) {
-      logger.error('❌ Delete plant failed:', err);
-      throw err;
+      const error = err instanceof Error ? err : new Error(String(err));
+      logger.error('❌ Delete plant failed:', error);
+      throw error;
     }
   }
 }

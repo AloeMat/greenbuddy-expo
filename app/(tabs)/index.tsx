@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/features/auth/store/authStore';
 import { StatsGrid } from '@/features/gamification/components/StatsGrid';
 import { DailyCheckInButton } from '@/features/gamification/components/DailyCheckInButton';
 import { DailyTipsCard } from '@/components/dashboard/DailyTipsCard';
 import { AlertsCard } from '@/components/dashboard/AlertsCard';
 import { UpcomingWateringsCard } from '@/components/dashboard/UpcomingWateringsCard';
+import { COLORS } from '@/design-system/tokens/colors';
+import { typography } from '@/design-system/tokens/typography';
 
 /**
  * Dashboard Screen
@@ -18,15 +20,16 @@ import { UpcomingWateringsCard } from '@/components/dashboard/UpcomingWateringsC
  * - Upcoming waterings
  */
 export default function DashboardScreen() {
+  const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <ScrollView style={{ paddingBottom: 80 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.neutral['50'] }}>
+      <ScrollView style={{ paddingBottom: insets.bottom + 70 }}>
         {/* Header */}
         <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
-          <Text style={{ fontSize: 28, fontWeight: '700', color: '#000' }}>Bienvenue 👋</Text>
-          <Text style={{ fontSize: 14, color: '#666', marginTop: 4 }}>
+          <Text style={{ ...typography.heading.h2, color: COLORS.text['900'] }}>Bienvenue 👋</Text>
+          <Text style={{ ...typography.body.md, color: COLORS.text['500'], marginTop: 4 }}>
             {user?.email || 'Non connecté'}
           </Text>
         </View>

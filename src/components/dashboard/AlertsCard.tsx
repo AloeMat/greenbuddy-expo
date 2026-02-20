@@ -4,6 +4,8 @@ import { AlertCircle } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { usePlants } from '@/features/plants/hooks/usePlants';
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
+import { typography } from '@/design-system/tokens/typography';
 
 /**
  * Alerts Card
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
     borderColor: '#FFE0E0',
@@ -84,14 +86,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     marginVertical: 12,
     padding: 16,
-    backgroundColor: '#F0FDF4',
+    backgroundColor: COLORS.primary['50'],
     borderRadius: radius.md,
     alignItems: 'center',
   },
   emptyText: {
-    fontSize: 14,
-    color: '#10B981',
-    fontWeight: '500',
+    ...typography.label.lg,
+    color: COLORS.semantic.success,
   },
   header: {
     flexDirection: 'row',
@@ -99,17 +100,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
+    ...typography.label.lg,
+    color: COLORS.text['900'],
     marginLeft: 8,
     flex: 1,
   },
   count: {
-    fontSize: 12,
+    ...typography.body.sm,
     fontWeight: '600',
-    backgroundColor: '#FEE2E2',
-    color: '#DC2626',
+    backgroundColor: COLORS.error['100'],
+    color: COLORS.error['600'],
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: radius.xs,
@@ -119,20 +119,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f5f5f5',
+    borderBottomColor: COLORS.neutral['100'],
   },
   alertContent: {
     flex: 1,
   },
   plantName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
+    ...typography.label.lg,
+    color: COLORS.text['900'],
     marginBottom: 6,
   },
   healthBar: {
     height: 6,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: COLORS.neutral['100'],
     borderRadius: radius.xs,
     overflow: 'hidden',
     marginBottom: 4,
@@ -141,12 +140,12 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   healthText: {
-    fontSize: 12,
-    color: '#666',
+    ...typography.body.sm,
+    color: COLORS.text['500'],
   },
   arrow: {
     fontSize: 16,
-    color: '#999',
+    color: COLORS.text['400'],
     marginLeft: 12,
   },
 });

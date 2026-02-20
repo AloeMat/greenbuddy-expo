@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Trophy, Zap } from 'lucide-react-native';
 import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
@@ -27,6 +28,7 @@ import {
  * Displays user XP, level, achievements, and progression stats
  */
 export default function ProgressScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { totalXp, unlockedAchievements } = useGamificationStore();
   const { plants = [] } = usePlants();
@@ -64,7 +66,7 @@ export default function ProgressScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <ScrollView style={{ paddingBottom: 80 }}>
+      <ScrollView style={{ paddingBottom: insets.bottom + 70 }}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Progression 📊</Text>

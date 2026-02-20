@@ -18,6 +18,8 @@ import {
   X,
 } from 'lucide-react-native';
 import { COLORS } from '@/design-system/tokens/colors';
+import { radius } from '@/design-system/tokens/radius';
+import { typography } from '@/design-system/tokens/typography';
 
 type AlertType = 'error' | 'warning' | 'success' | 'info';
 
@@ -178,7 +180,7 @@ export const AlertCard: React.FC<AlertCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
+    borderRadius: radius.sm,
     borderWidth: 1,
     padding: 12,
     marginBottom: 12,
@@ -197,13 +199,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...typography.label.lg,
     marginBottom: 4,
   },
   message: {
-    fontSize: 13,
-    lineHeight: 18,
+    ...typography.body.md,
     opacity: 0.8,
   },
   closeButton: {
@@ -214,11 +214,10 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingVertical: 10,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: radius.xs,
     alignItems: 'center',
   },
   actionText: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...typography.label.lg,
   },
 });

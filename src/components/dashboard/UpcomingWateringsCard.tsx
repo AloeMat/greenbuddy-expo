@@ -4,6 +4,8 @@ import { Droplets } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { usePlants } from '@/features/plants/hooks/usePlants';
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
+import { typography } from '@/design-system/tokens/typography';
 
 interface UpcomingWatering {
   plantId: string;
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingTop: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
     borderColor: '#CFFAFE',
@@ -112,9 +114,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyText: {
-    fontSize: 14,
+    ...typography.label.lg,
     color: '#06B6D4',
-    fontWeight: '500',
   },
   header: {
     flexDirection: 'row',
@@ -122,14 +123,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
+    ...typography.label.lg,
+    color: COLORS.text['900'],
     marginLeft: 8,
     flex: 1,
   },
   count: {
-    fontSize: 12,
+    ...typography.body.sm,
     fontWeight: '600',
     backgroundColor: '#CFFAFE',
     color: '#0891B2',
@@ -142,15 +142,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f5f5f5',
+    borderBottomColor: COLORS.neutral['100'],
   },
   wateringContent: {
     flex: 1,
   },
   plantName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
+    ...typography.label.lg,
+    color: COLORS.text['900'],
     marginBottom: 6,
   },
   daysContainer: {
@@ -158,23 +157,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   daysToday: {
-    fontSize: 12,
+    ...typography.body.sm,
     fontWeight: '600',
-    color: '#DC2626',
+    color: COLORS.error['600'],
   },
   daysSoon: {
-    fontSize: 12,
+    ...typography.body.sm,
     fontWeight: '600',
     color: '#EA8C55',
   },
   daysLater: {
-    fontSize: 12,
+    ...typography.body.sm,
     fontWeight: '600',
-    color: '#666',
+    color: COLORS.text['500'],
   },
   arrow: {
     fontSize: 16,
-    color: '#999',
+    color: COLORS.text['400'],
     marginLeft: 12,
   },
 });
