@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
 import { Home, Leaf, TrendingUp, User, Camera } from 'lucide-react-native';
+import { COLORS } from '@/design-system/tokens/colors';
 
 interface Tab {
   name: string;
@@ -65,7 +66,7 @@ export const BottomTabsBar: React.FC = () => {
               activeOpacity={0.7}
             >
               <View style={[styles.iconContainer, active && styles.iconActive]}>
-                <tab.Icon size={24} color={active ? '#2D5A27' : '#666'} />
+                <tab.Icon size={24} color={active ? COLORS.brand : '#666'} />
               </View>
             </TouchableOpacity>
           );

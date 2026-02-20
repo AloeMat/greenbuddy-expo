@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence, withTiming } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
 
 interface LevelUpModalProps {
   visible: boolean;
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2D5A27',
+    color: COLORS.brand,
     marginBottom: 8,
   },
   level: {
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   button: {
-    backgroundColor: '#2D5A27',
+    backgroundColor: COLORS.brand,
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: radius.xl,

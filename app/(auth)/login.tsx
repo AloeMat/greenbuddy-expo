@@ -10,6 +10,7 @@ import { ErrorMessage } from '@/design-system/components/ErrorMessage';
 import { Loading } from '@/design-system/components/Loading';
 import { logger } from '@/lib/services/logger';
 import { loginSchema, type LoginFormData } from '@/lib/validation/auth';
+import { COLORS } from '@/design-system/tokens/colors';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -38,7 +39,8 @@ export default function LoginScreen() {
     try {
       await signIn!(data.email, data.password);
       logger.info('User logged in successfully', { email: data.email });
-      router.replace('/(tabs)/');
+      // Redirect to central router — it will decide tabs vs onboarding
+      router.replace('/');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur de connexion';
       setApiError(errorMessage);
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#2D5A27',
+    color: COLORS.brand,
     marginBottom: 8,
   },
   subtitle: {
@@ -149,7 +151,7 @@ const styles = StyleSheet.create({
   },
   link: {
     fontSize: 14,
-    color: '#2D5A27',
+    color: COLORS.brand,
     fontWeight: '600',
   },
   errorText: {

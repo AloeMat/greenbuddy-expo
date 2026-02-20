@@ -215,6 +215,9 @@ export const colors = {
     badge: '#EAB308',
     streak: '#EF4444',
   },
+
+  // Brand — GreenBuddy identity color used across the app
+  brand: '#2D5A27',
 } as const;
 
 // Alias for easier imports

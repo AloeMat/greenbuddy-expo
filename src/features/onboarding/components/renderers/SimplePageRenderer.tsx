@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Leaf } from 'lucide-react-native';
@@ -9,6 +9,7 @@ import { OnboardingScreen, OnboardingHeader, OnboardingFooter, Title, Subtitle, 
 import { SimplePage } from '@/features/onboarding/types/onboardingSchema';
 import { getStepNumber } from '@/features/onboarding/utils/getStepNumber';
 import { GlassCard } from '../GlassCard';
+import { SignupModal } from '../SignupModal';
 import * as Haptics from 'expo-haptics';
 
 interface SimplePageRendererProps {
@@ -20,17 +21,27 @@ interface SimplePageRendererProps {
  * SimplePageRenderer
  *
  * Renders simple onboarding pages with title, text, and primary/secondary buttons
- * Examples: page1 (Welcome), page2 (Projection)
+ * Examples: page1 (Welcome), page2 (Projection), page9 (Signup), page10 (Celebration)
  *
  * Features:
  * - Animated entrance with FadeInDown
  * - Progress bar (from OnboardingHeader)
  * - Optional animation placeholder
  * - Haptic feedback on button press
+ * - SignupModal integration for page9 (action: "signup")
  */
 export function SimplePageRenderer({ page, onNavigate }: SimplePageRendererProps) {
+  const [showSignupModal, setShowSignupModal] = useState(false);
+
   const handlePrimaryPress = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    // Handle signup action: show SignupModal instead of navigating
+    if (page.cta_primary.action === 'signup') {
+      setShowSignupModal(true);
+      return;
+    }
+
     onNavigate(page.next);
   };
 
@@ -38,6 +49,11 @@ export function SimplePageRenderer({ page, onNavigate }: SimplePageRendererProps
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (page.cta_secondary?.action === 'show_info') {
       // TODO: Show info modal or bottom sheet
+      return;
+    }
+    // "Plus tard" on page9: skip signup and continue
+    if (page.cta_secondary?.action === 'go_next') {
+      onNavigate(page.next);
     }
   };
 
@@ -133,6 +149,20 @@ export function SimplePageRenderer({ page, onNavigate }: SimplePageRendererProps
           )}
         </Animated.View>
       </OnboardingFooter>
+
+      {/* SignupModal for page9 */}
+      <SignupModal
+        visible={showSignupModal}
+        onSignupSuccess={() => {
+          setShowSignupModal(false);
+          onNavigate(page.next);
+        }}
+        onCancel={() => {
+          setShowSignupModal(false);
+          // User cancelled signup — continue without account
+          onNavigate(page.next);
+        }}
+      />
     </OnboardingScreen>
   );
 }

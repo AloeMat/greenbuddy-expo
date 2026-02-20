@@ -201,6 +201,7 @@ export interface GamificationState {
   getTier: () => LifeTreeTier | undefined;
   getProgress: () => number;
   dismissLevelUp: () => void;
+  clearGamification: () => void;
   reset: () => void;
 }
 

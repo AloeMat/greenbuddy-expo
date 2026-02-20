@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
 
 type CardVariant = 'default' | 'elevated' | 'outlined';
 
@@ -34,7 +35,7 @@ function getVariantStyle(variant: CardVariant) {
     outlined: {
       backgroundColor: 'transparent',
       borderWidth: 2,
-      borderColor: '#2D5A27',
+      borderColor: COLORS.brand,
     },
   };
 

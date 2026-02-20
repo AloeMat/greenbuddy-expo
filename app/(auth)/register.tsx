@@ -10,6 +10,7 @@ import { ErrorMessage } from '@/design-system/components/ErrorMessage';
 import { Loading } from '@/design-system/components/Loading';
 import { logger } from '@/lib/services/logger';
 import { registerSchema, type RegisterFormData } from '@/lib/validation/auth';
+import { COLORS } from '@/design-system/tokens/colors';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -45,11 +46,8 @@ export default function RegisterScreen() {
       await login!(data.email, data.password);
       logger.info('User auto-logged in after registration', { email: data.email });
 
-      // Step 3: Redirect to app
-      // The router will check:
-      // - isAuthenticated ✅ true (just logged in)
-      // - isOnboardingComplete? ❌ false → redirect to /onboarding
-      router.replace('/(tabs)');
+      // Step 3: Redirect to central router — it will decide tabs vs onboarding
+      router.replace('/');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'inscription';
       setApiError(errorMessage);
@@ -146,7 +144,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#2D5A27',
+    color: COLORS.brand,
     marginBottom: 8,
   },
   subtitle: {
@@ -171,7 +169,7 @@ const styles = StyleSheet.create({
   },
   link: {
     fontSize: 14,
-    color: '#2D5A27',
+    color: COLORS.brand,
     fontWeight: '600',
   },
   errorText: {

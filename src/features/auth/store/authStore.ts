@@ -98,32 +98,39 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   /**
-   * Logout
+   * Logout — clear auth + all user data stores
    */
   logout: async () => {
     try {
       logger.debug('🔐 Logging out...');
       await authRepository.signOut();
-
-      set({
-        user: null,
-        session: null,
-        accessToken: null,
-        refreshTokenValue: null,
-        isAuthenticated: false,
-      });
-
-      logger.debug('✅ Logout successful');
     } catch (error) {
-      logger.error('❌ Logout error:', error);
-      // Clear state even if logout fails
-      set({
-        user: null,
-        session: null,
-        accessToken: null,
-        refreshTokenValue: null,
-        isAuthenticated: false,
-      });
+      logger.error('❌ Logout signOut error:', error);
+    }
+
+    // Always clear auth state, even if signOut failed
+    set({
+      user: null,
+      session: null,
+      accessToken: null,
+      refreshTokenValue: null,
+      isAuthenticated: false,
+    });
+
+    // Clear all other stores to prevent data leaking between sessions
+    try {
+      // Lazy imports to avoid circular dependencies
+      const { usePlantsStore } = await import('@/features/plants/store/plantsStore');
+      const { useGamificationStore } = await import('@/features/gamification/store/gamificationStore');
+      const { useOnboardingStore } = await import('@/features/onboarding/store/onboardingStore');
+
+      usePlantsStore.getState().clear();
+      useGamificationStore.getState().clearGamification();
+      useOnboardingStore.getState().resetOnboarding();
+
+      logger.debug('✅ Logout successful — all stores cleared');
+    } catch (storeError) {
+      logger.error('⚠️ Logout: failed to clear dependent stores:', storeError);
     }
   },
 

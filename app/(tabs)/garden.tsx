@@ -7,6 +7,7 @@ import { usePlants } from '@/features/plants/hooks/usePlants';
 import { FilterTabs, FilterOption, FilterTab } from '@/features/dashboard/components/FilterTabs';
 import { PlantList, PlantListItem } from '@/features/plants/components/PlantList';
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
 import type { Plant } from '@/features/plants/repositories/PlantRepository';
 import type { PlantPersonality } from '@/types';
 
@@ -104,7 +105,7 @@ export default function GardenScreen() {
 
             <TouchableOpacity
               style={{
-                backgroundColor: '#2D5A27',
+                backgroundColor: COLORS.brand,
                 paddingHorizontal: 24,
                 paddingVertical: 12,
                 borderRadius: radius.md,
@@ -127,7 +128,7 @@ export default function GardenScreen() {
   if (loading) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#2D5A27" />
+        <ActivityIndicator size="large" color={COLORS.brand} />
       </SafeAreaView>
     );
   }
@@ -176,7 +177,7 @@ export default function GardenScreen() {
         <View style={{ paddingHorizontal: 12, paddingVertical: 16 }}>
           <TouchableOpacity
             style={{
-              backgroundColor: '#2D5A27',
+              backgroundColor: COLORS.brand,
               paddingVertical: 14,
               borderRadius: radius.md,
               alignItems: 'center',

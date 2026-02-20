@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { COLORS } from '@/design-system/tokens/colors';
 
 interface LoadingProps {
   message?: string;
@@ -9,7 +10,7 @@ interface LoadingProps {
 export const Loading = ({ message, size = 'large' }: LoadingProps) => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={size} color="#2D5A27" />
+      <ActivityIndicator size={size} color={COLORS.brand} />
       {message && <Text style={styles.text}>{message}</Text>}
     </View>
   );

@@ -5,6 +5,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuthStore } from '@/features/auth/store/authStore';
 import { queryClient } from '@/lib/queryClient';
 import { initializeSentry } from '@/lib/services/sentry';
+import { COLORS } from '@/design-system/tokens/colors';
 
 // Initialize Sentry before app renders (no-ops if no DSN configured)
 initializeSentry();
@@ -26,7 +27,7 @@ export default function RootLayout() {
   if (isLoading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#2D5A27" />
+        <ActivityIndicator size="large" color={COLORS.brand} />
       </View>
     );
   }

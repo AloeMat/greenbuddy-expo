@@ -19,6 +19,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { PageRenderer } from './renderers/PageRenderer';
 import { useOnboardingStore } from '@/features/onboarding/store/onboardingStore';
+import { useAuthStore } from '@/features/auth/store/authStore';
 import { router } from 'expo-router';
 import onboardingConfigJson from '@/features/onboarding/constants/onboardingConfig.json';
 import { OnboardingConfig, OnboardingPage } from '@/features/onboarding/types/onboardingSchema';
@@ -153,7 +154,9 @@ export function OnboardingWizard() {
   };
 
   /**
-   * Complete onboarding and redirect to dashboard
+   * Complete onboarding and redirect based on auth state
+   * - Authenticated → /(tabs) (dashboard)
+   * - Not authenticated → /(auth) (signup/login first)
    */
   const completeOnboarding = async () => {
     try {
@@ -170,12 +173,18 @@ export function OnboardingWizard() {
         logger.info(`[OnboardingWizard] Onboarding complete! Total XP: ${finalXP}`);
       }
 
-      // Redirect to dashboard
-      router.replace('/(tabs)');
+      // Route based on auth state
+      const isAuthenticated = useAuthStore.getState().isAuthenticated;
+      if (isAuthenticated) {
+        router.replace('/(tabs)');
+      } else {
+        // User skipped signup during onboarding → send to auth
+        router.replace('/(auth)');
+      }
     } catch (error) {
       logger.error('[OnboardingWizard] Completion error:', error);
-      // Still redirect even if error
-      router.replace('/(tabs)');
+      // Fallback: redirect to central router
+      router.replace('/');
     }
   };
 

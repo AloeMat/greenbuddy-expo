@@ -232,7 +232,7 @@ export const useGamificationStore = create<GamificationState>()(
       /**
        * Réinitialiser l'état gamification
        */
-      clearGameification: () => {
+      clearGamification: () => {
         set({
           totalXp: 0,
           currentTier: 1,

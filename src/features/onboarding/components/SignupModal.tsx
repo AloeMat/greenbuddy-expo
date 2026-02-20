@@ -12,6 +12,7 @@ import { Button } from '@/design-system/components/Button';
 import { ErrorMessage } from '@/design-system/components/ErrorMessage';
 import { Loading } from '@/design-system/components/Loading';
 import { logger } from '@/lib/services/logger';
+import { COLORS } from '@/design-system/tokens/colors';
 
 interface SignupModalProps {
   visible: boolean;
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#2D5A27',
+    color: COLORS.brand,
     marginBottom: 12,
   },
   subtitle: {
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2D5A27',
+    color: COLORS.brand,
     marginLeft: 4,
   },
   hint: {

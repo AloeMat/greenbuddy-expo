@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outlined' | 'danger';
 type ButtonSize = 'small' | 'medium' | 'large';
@@ -57,9 +58,9 @@ function getStyles(variant: ButtonVariant, size: ButtonSize, disabled: boolean) 
   };
 
   const variantStyles: Record<ButtonVariant, { bg: string; text: string }> = {
-    primary: { bg: '#2D5A27', text: '#FFFFFF' },
+    primary: { bg: COLORS.brand, text: '#FFFFFF' },
     secondary: { bg: '#4A7C59', text: '#FFFFFF' },
-    outlined: { bg: 'transparent', text: '#2D5A27' },
+    outlined: { bg: 'transparent', text: COLORS.brand },
     danger: { bg: '#D32F2F', text: '#FFFFFF' },
   };
 
