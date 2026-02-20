@@ -1,19 +1,25 @@
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import { View } from 'react-native';
 import { BottomTabsBar } from '@/design-system/components';
+import { useAuthStore } from '@/features/auth/store/authStore';
 
 /**
  * Tabs Layout
  *
  * Renders the main app interface with bottom navigation
  *
- * IMPORTANT: Auth guards are handled upstream in app/index.tsx
- * This layout assumes the user is fully authenticated + onboarded
- * Do NOT add guards here to avoid black screen on redirect
+ * Primary auth guard is in app/index.tsx.
+ * This layout adds a defensive redirect for deep-link / direct navigation
+ * scenarios that bypass index.tsx routing.
  */
 export default function TabsLayout() {
-  // Render tabs with bottom navigation
-  // (Guards already enforced by app/index.tsx)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  // Defensive guard: redirect unauthenticated deep-link access
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)" />;
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>

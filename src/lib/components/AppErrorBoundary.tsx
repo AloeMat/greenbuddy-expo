@@ -108,8 +108,9 @@ export class AppErrorBoundary extends React.Component<
                 lineHeight: 21,
               }}
             >
-              {this.state.error.message ||
-                'Une erreur inattendue s\'est produite'}
+              {__DEV__
+                ? (this.state.error.message || 'Une erreur inattendue s\'est produite')
+                : 'Une erreur inattendue s\'est produite. Veuillez réessayer.'}
             </Text>
 
             {/* Development Details */}

@@ -12,6 +12,7 @@
  */
 
 import { logger } from '@/lib/services/logger';
+import { supabase } from '@/lib/services/supabase';
 import * as FileSystem from 'expo-file-system';
 
 export interface PlantDiagnosis {
@@ -71,36 +72,27 @@ export const PlantDiagnosticsService = {
       // Determine MIME type from file extension
       const mimeType = this.getMimeType(imageUri);
 
-      // Call Gemini Vision API
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-vision:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                {
-                  text: this.buildDiagnosisPrompt(plantName, scientificName),
-                },
-                {
-                  inlineData: {
-                    mimeType,
-                    data: imageBase64,
-                  },
-                },
-              ],
-            }],
-          }),
-        }
-      );
+      // Call Gemini Vision API via secure Supabase Edge Function proxy
+      // SECURITY: API key is stored server-side only, never exposed to the client
+      const { data: proxyData, error: proxyError } = await supabase.functions.invoke('gemini-proxy', {
+        body: {
+          model: 'gemini-2.0-flash',
+          isPublic: true, // Diagnosis can happen during onboarding (guest)
+          prompt: this.buildDiagnosisPrompt(plantName, scientificName),
+          images: [
+            {
+              mimeType,
+              data: imageBase64,
+            },
+          ],
+        },
+      });
 
-      if (!response.ok) {
-        throw new Error(`Gemini API error: ${response.statusText}`);
+      if (proxyError) {
+        throw new Error(`Gemini proxy error: ${proxyError.message}`);
       }
 
-      const data = await response.json();
-      const diagnosisJson = this.parseGeminiResponse(data);
+      const diagnosisJson = this.parseGeminiResponse(proxyData);
 
       logger.info('[PlantDiagnosticsService] Diagnosis complete', {
         healthScore: diagnosisJson.healthScore,

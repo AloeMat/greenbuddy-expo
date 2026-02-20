@@ -58,7 +58,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   login: async (email: string, password: string) => {
     set({ isLoading: true });
     try {
-      logger.debug('🔐 Logging in', { email });
+      logger.debug('🔐 Logging in');
       const { user, session } = await authRepository.signIn(email, password);
 
       logger.debug('✅ Login successful');

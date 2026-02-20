@@ -15,7 +15,8 @@ import {
   Modal,
   ActivityIndicator
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useAuthStore } from '@/features/auth/store/authStore';
 import { usePlants } from '@/features/plants/hooks/usePlants';
 import { useGamificationStore } from '@/features/gamification/store/gamificationStore';
 import { PlantAvatar } from '@/features/plants/components/PlantAvatar';
@@ -32,6 +33,7 @@ import type { PlantPersonality, CareRequirements } from '@/types';
 export default function PlantDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const { getPlant, updatePlant, deletePlant, waterPlant, fertilizePlant } = usePlants();
   const { addXp, unlockAchievement } = useGamificationStore();
@@ -42,6 +44,11 @@ export default function PlantDetailScreen() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [actingLoading, setActingLoading] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
+
+  // Defensive auth guard for deep-link access
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)" />;
+  }
 
   // Fetch plant on mount
   useEffect(() => {
