@@ -49,11 +49,6 @@ export default function PlantDetailScreen() {
   const [actingLoading, setActingLoading] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
 
-  // Defensive auth guard for deep-link access
-  if (!isAuthenticated) {
-    return <Redirect href="/(auth)" />;
-  }
-
   // Fetch plant on mount
   useEffect(() => {
     const fetchPlant = async () => {
@@ -78,6 +73,11 @@ export default function PlantDetailScreen() {
 
     fetchPlant();
   }, [id, getPlant]);
+
+  // Defensive auth guard for deep-link access
+  if (!isAuthenticated) {
+    return <Redirect href="/(auth)" />;
+  }
 
   // Handle water action
   const handleWater = async () => {

@@ -26,6 +26,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@appTypes$': '<rootDir>/src/types/index',
+    '^expo-notifications$': '<rootDir>/src/lib/services/__mocks__/expo-notifications.mock.ts',
   },
 
   // Transform TypeScript files

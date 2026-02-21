@@ -51,13 +51,18 @@ export { useAttachment, useAttachmentMulti } from './hooks/useAttachment';
 export { usePersonalization, useNotificationStyle, useAvatarPersonality } from './hooks/usePersonalization';
 
 // Services
-export * from './services/streakService';
-export * from './services/dailyNotificationService';
-export * from './services/avatarService';
-export * from './services/contextualReplyService';
-export * from './services/microInteractionService';
-export * from './services/attachmentService';
-export * from './services/personalizationService';
+export {
+  hapticFeedback,
+  hapticPatterns,
+  xpRewardService,
+  streakService,
+  personalizationService,
+  microInteractionService,
+  dailyNotificationService,
+  avatarService,
+  attachmentService,
+  contextualReplyService,
+} from './services';
 
 // Personalities (Phase 4.2)
 export {
