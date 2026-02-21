@@ -1,0 +1,1 @@
+export { DashboardTabsLayout } from './DashboardTabsLayout';
