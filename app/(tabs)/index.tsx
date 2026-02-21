@@ -4,9 +4,9 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAuthStore } from '@/features/auth/store/authStore';
 import { StatsGrid } from '@/features/gamification/components/StatsGrid';
 import { DailyCheckInButton } from '@/features/gamification/components/DailyCheckInButton';
-import { DailyTipsCard } from '@/components/dashboard/DailyTipsCard';
-import { AlertsCard } from '@/components/dashboard/AlertsCard';
-import { UpcomingWateringsCard } from '@/components/dashboard/UpcomingWateringsCard';
+import { DailyTipsCard } from '@/features/dashboard/components/DailyTipsCard';
+import { AlertsCard } from '@/features/dashboard/components/AlertsCard';
+import { UpcomingWateringsCard } from '@/features/dashboard/components/UpcomingWateringsCard';
 import { COLORS } from '@/design-system/tokens/colors';
 import { typography } from '@/design-system/tokens/typography';
 
