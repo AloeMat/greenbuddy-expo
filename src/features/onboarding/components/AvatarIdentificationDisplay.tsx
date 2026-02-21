@@ -299,7 +299,7 @@ export function AvatarIdentificationDisplay({
               textAlign: 'center',
             }}
           >
-            Impossible d'identifier la plante
+            Impossible d&apos;identifier la plante
           </Text>
           <Text
             style={{

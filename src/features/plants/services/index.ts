@@ -13,11 +13,5 @@ export type { IGardenService } from './GardenService';
 
 export { createMockGardenService, mockGardenService } from './GardenService.mock';
 
-export { PlantDiagnosticsService } from './PlantDiagnosticsService';
-
-// Presentation/Interaction services (Phase 3 migration)
-export { plantNotificationService } from './plantNotifications';
-export { plantTTSService } from './plantTTS';
-
 // Camera and PlantNet services exist in root services/ (legacy - will migrate in future PR)
 // These are used by camera screen for plant identification

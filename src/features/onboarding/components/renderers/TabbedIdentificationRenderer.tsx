@@ -306,7 +306,7 @@ export function TabbedIdentificationRenderer({
           <Animated.View entering={FadeInDown.delay(100)}>
             <View style={{ alignItems: 'center', marginVertical: spacing['3xl'] }}>
               <Text style={styles.tabDescription}>
-                Prenez une photo de votre plante pour l'identifier instantanément.
+                Prenez une photo de votre plante pour l&apos;identifier instantanément.
               </Text>
               <PrimaryButton
                 onPress={handleTakePhoto}
