@@ -14,6 +14,7 @@ import { useGamificationStore } from '@/features/gamification/store/gamification
 import { usePlants } from '@/features/plants/hooks/usePlants';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { radius } from '@/design-system/tokens/radius';
+import { COLORS } from '@/design-system/tokens/colors';
 import {
   BOTANISTE_ACHIEVEMENTS,
   SOIGNEUR_ACHIEVEMENTS,
@@ -65,7 +66,7 @@ export default function ProgressScreen() {
   }, [unlockedAchievements, allAchievements]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.neutral['50'] }}>
       <ScrollView style={{ paddingBottom: insets.bottom + 70 }}>
         {/* Header */}
         <View style={styles.header}>
@@ -76,7 +77,7 @@ export default function ProgressScreen() {
         <View style={styles.levelSection}>
           <View style={styles.levelBadge}>
             <Text style={styles.levelNumber}>{currentLevel}</Text>
-            <Trophy size={32} color="#8B5CF6" style={{ marginTop: 8 }} />
+            <Trophy size={32} color={COLORS.secondary['500']} style={{ marginTop: 8 }} />
           </View>
           <View style={styles.levelInfo}>
             <Text style={styles.levelLabel}>Niveau Actuel</Text>
@@ -89,7 +90,7 @@ export default function ProgressScreen() {
         {/* XP Progress */}
         <View style={styles.xpSection}>
           <View style={styles.xpHeader}>
-            <Zap size={20} color="#F59E0B" />
+            <Zap size={20} color={COLORS.accent['500']} />
             <Text style={styles.xpLabel}>Expérience</Text>
           </View>
 
@@ -232,14 +233,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#000',
+    color: COLORS.text['900'],
   },
   levelSection: {
     marginHorizontal: 12,
     marginVertical: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#F3E8FF',
+    backgroundColor: COLORS.secondary['50'],
     borderRadius: radius.md,
     flexDirection: 'row',
     alignItems: 'center',
@@ -249,23 +250,23 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#8B5CF6',
+    borderColor: COLORS.secondary['500'],
   },
   levelNumber: {
     fontSize: 36,
     fontWeight: '700',
-    color: '#8B5CF6',
+    color: COLORS.secondary['500'],
   },
   levelInfo: {
     flex: 1,
   },
   levelLabel: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.text['500'],
     fontWeight: '600',
     textTransform: 'uppercase',
     marginBottom: 4,
@@ -273,17 +274,17 @@ const styles = StyleSheet.create({
   levelDescription: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.text['900'],
   },
   xpSection: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#FCD34D',
+    borderColor: COLORS.accent['300'],
   },
   xpHeader: {
     flexDirection: 'row',
@@ -294,28 +295,28 @@ const styles = StyleSheet.create({
   xpLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.text['900'],
   },
   xpProgressBar: {
     height: 8,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: COLORS.neutral['200'],
     borderRadius: radius.xs,
     overflow: 'hidden',
     marginBottom: 12,
   },
   xpProgressFill: {
     height: '100%',
-    backgroundColor: '#F59E0B',
+    backgroundColor: COLORS.accent['500'],
   },
   xpText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#666',
+    color: COLORS.text['500'],
     marginBottom: 4,
   },
   xpTotal: {
     fontSize: 12,
-    color: '#999',
+    color: COLORS.text['400'],
     fontStyle: 'italic',
   },
   statsGrid: {
@@ -328,22 +329,22 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     minWidth: '47%',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     padding: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#f0f0f0',
+    borderColor: COLORS.neutral['100'],
   },
   statValue: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#000',
+    color: COLORS.text['900'],
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.text['500'],
     fontWeight: '500',
   },
   achievementsSection: {
@@ -351,10 +352,10 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#FEE2E2',
+    borderColor: COLORS.error['50'],
   },
   achievementsHeader: {
     flexDirection: 'row',
@@ -365,13 +366,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000',
+    color: COLORS.text['900'],
   },
   achievementCount: {
     fontSize: 12,
     fontWeight: '600',
-    backgroundColor: '#FEE2E2',
-    color: '#DC2626',
+    backgroundColor: COLORS.error['50'],
+    color: COLORS.error['600'],
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: radius.xs,
@@ -382,14 +383,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: COLORS.neutral['100'],
     gap: 12,
   },
   achievementIconContainer: {
     width: 48,
     height: 48,
     borderRadius: radius.sm,
-    backgroundColor: '#FFF9C4',
+    backgroundColor: COLORS.warning['50'],
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -399,17 +400,17 @@ const styles = StyleSheet.create({
   achievementName: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.text['900'],
     marginBottom: 2,
   },
   achievementDescription: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.text['500'],
     marginBottom: 4,
   },
   achievementReward: {
     fontSize: 11,
-    color: '#FFD700',
+    color: COLORS.warning['600'],
     fontWeight: '600',
   },
   emptyState: {
@@ -419,49 +420,49 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
+    color: COLORS.text['500'],
     marginBottom: 4,
   },
   emptySubText: {
     fontSize: 12,
-    color: '#999',
+    color: COLORS.text['400'],
   },
   viewAllButton: {
     marginTop: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#FEE2E2',
+    backgroundColor: COLORS.error['50'],
     borderRadius: radius.md,
     alignItems: 'center',
   },
   viewAllButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#DC2626',
+    color: COLORS.error['600'],
   },
   milestonesSection: {
     marginHorizontal: 12,
     marginVertical: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.neutral['50'],
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: COLORS.blue['50'],
   },
   milestoneItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f5f5f5',
+    borderBottomColor: COLORS.neutral['100'],
     gap: 12,
   },
   milestoneIcon: {
     fontSize: 24,
     width: 40,
     height: 40,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: COLORS.blue['50'],
     borderRadius: radius.sm,
     alignItems: 'center',
     justifyContent: 'center',
@@ -472,11 +473,11 @@ const styles = StyleSheet.create({
   milestoneName: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.text['900'],
     marginBottom: 2,
   },
   milestoneProgress: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.text['500'],
   },
 });
